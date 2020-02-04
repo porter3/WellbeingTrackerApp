@@ -15,7 +15,7 @@ CREATE TABLE UserAccount(
 
 CREATE TABLE DayLog(
 	DayLogId INT PRIMARY KEY AUTO_INCREMENT,
-    UserId INT NOT NULL,
+    UserAccountId INT NOT NULL,
     LogDate DATE NOT NULL,
     CONSTRAINT fk_User_DayLog FOREIGN KEY (UserAccountId)
 		REFERENCES UserAccount(UserAccountId)
@@ -57,6 +57,7 @@ CREATE TABLE StandaloneMetricEntry(
     DayLogId INT NOT NULL,
     MetricTypeId INT NOT NULL,
     MetricValue INT NOT NULL,
+    EntryTime TIME NOT NULL,
     CONSTRAINT fk_DayLog_StandaloneMetricEntry FOREIGN KEY (DayLogId)
 		REFERENCES DayLog(DayLogId),
 	CONSTRAINT fk_MetricType_StandaloneMetricEntry FOREIGN KEY (MetricTypeId)
