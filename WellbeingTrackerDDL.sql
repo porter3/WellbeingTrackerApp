@@ -17,7 +17,8 @@ CREATE TABLE DayLog(
 	DayLogId INT PRIMARY KEY AUTO_INCREMENT,
     UserAccountId INT NOT NULL,
     LogDate DATE NOT NULL,
-    CONSTRAINT fk_User_DayLog FOREIGN KEY (UserAccountId)
+    Notes VARCHAR(1200) NULL,
+    CONSTRAINT fk_UserAccount_DayLog FOREIGN KEY (UserAccountId)
 		REFERENCES UserAccount(UserAccountId)
 	-- STRECH: Composite key of DayLogId and UserId (should begin incrementing at 1 for a new user)
 );
@@ -33,34 +34,15 @@ CREATE TABLE MetricType(
 		REFERENCES UserAccount(UserAccountId)
 );
 
-CREATE TABLE MetricSetEntry(
-	MetricSetEntryId INT PRIMARY KEY AUTO_INCREMENT,
-    DayLogId INT NOT NULL,
-    CONSTRAINT fk_DayLog_MetricSetEntry FOREIGN KEY (DayLogId)
-		REFERENCES DayLog(DayLogId)
-);
-    
-CREATE TABLE MetricSetChildEntry(
-	MetricSetChildEntryId INT PRIMARY KEY AUTO_INCREMENT,
-    MetricSetEntryId INT NOT NULL,
-    MetricTypeId INT NOT NULL,
-    MetricValue INT NOT NULL,
-    EntryTime TIME NOT NULL,
-    CONSTRAINT fk_MetricSetEntry_MetricSetChildEntry FOREIGN KEY (MetricSetEntryId)
-		REFERENCES MetricSetEntry(MetricSetEntryId),
-	CONSTRAINT fk_MetricType_MetricSetChildEntry FOREIGN KEY (MetricTypeId)
-		REFERENCES MetricType(MetricTypeId)
-);
-
-CREATE TABLE StandaloneMetricEntry(
-	StandaloneMetricEntryId INT PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE MetricEntry(
+	MetricEntryId INT PRIMARY KEY AUTO_INCREMENT,
     DayLogId INT NOT NULL,
     MetricTypeId INT NOT NULL,
     MetricValue INT NOT NULL,
     EntryTime TIME NOT NULL,
-    CONSTRAINT fk_DayLog_StandaloneMetricEntry FOREIGN KEY (DayLogId)
+    CONSTRAINT fk_DayLog_SMetricEntry FOREIGN KEY (DayLogId)
 		REFERENCES DayLog(DayLogId),
-	CONSTRAINT fk_MetricType_StandaloneMetricEntry FOREIGN KEY (MetricTypeId)
+	CONSTRAINT fk_MetricType_MetricEntry FOREIGN KEY (MetricTypeId)
 		REFERENCES MetricType(MetricTypeId)
 );
 
