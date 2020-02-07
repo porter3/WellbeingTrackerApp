@@ -3,17 +3,29 @@
     align-items: stretch;
 }
 
-#sidebar { /* means the sidebar is visible on desktops */
+#sidebar {
     min-width: 250px;
     max-width: 250px;
     min-height: 100vh;
 }
 
-#sidebar.active { /* means the sidebar is hidden on desktops */
+#sidebar.active {
     margin-left: -250px;
 }
 
-@media (max-width: 768px) { /* reverses the active style specified above. Sidebar will be initially hidden on mobile. */
+a[data-toggle="collapse"] {
+    position: relative;
+}
+
+.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+}
+
+@media (max-width: 768px) {
     #sidebar {
         margin-left: -250px;
     }
@@ -22,16 +34,17 @@
     }
 }
 
-@import "https://fonts.googleapis.com/css?family=Source+Code+Pro:200&display=swap";
+/* Styling for inside the sidebar */
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
 
 body {
-    font-family: 'Source Code Pro', monospace;
+    font-family: 'Poppins', sans-serif;
     background: #fafafa;
 }
 
 p {
-    font-family: 'Source Code Pro', monospace;
+    font-family: 'Poppins', sans-serif;
     font-size: 1.1em;
     font-weight: 300;
     line-height: 1.7em;
