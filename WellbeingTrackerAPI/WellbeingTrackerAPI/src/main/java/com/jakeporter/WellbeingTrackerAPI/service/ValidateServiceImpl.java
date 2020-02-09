@@ -1,8 +1,10 @@
 package com.jakeporter.WellbeingTrackerAPI.service;
 
 import com.jakeporter.WellbeingTrackerAPI.data.UserAccountDao;
+import com.jakeporter.WellbeingTrackerAPI.entities.MetricType;
 import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidEmailException;
+import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidMetricTypeException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidPasswordException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidUsernameException;
 import java.util.Set;
@@ -70,6 +72,21 @@ public class ValidateServiceImpl {
                 .stream().map(UserAccount::getEmail).collect(Collectors.toSet());
         if (emails.contains(email)){
             throw new InvalidEmailException("Email is already registered.");
+        }
+    }
+    
+    // compiler implicitly creates an array in the parameter list when this is called
+    public void validateMetricTypes(MetricType... types) throws InvalidMetricTypeException{
+        for (MetricType type : types){
+            if (type.getMetricName() == null){
+                throw new InvalidMetricTypeException("Metric type's name cannot be empty.");
+            }
+            if (type.getUser() == null){
+                throw new InvalidMetricTypeException("Metric type must be associated with a user.");
+            }
+//            if ((type.getScale() == null) && (type.getUnit() == null)){
+//                
+//            }
         }
     }
 

@@ -1,8 +1,10 @@
 package com.jakeporter.WellbeingTrackerAPI.controllers;
 
 import com.jakeporter.WellbeingTrackerAPI.entities.DayLog;
+import com.jakeporter.WellbeingTrackerAPI.entities.MetricType;
 import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidEmailException;
+import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidMetricTypeException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidPasswordException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidUsernameException;
 import com.jakeporter.WellbeingTrackerAPI.service.AddServiceImpl;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,6 +57,15 @@ public class WellbeingTrackerController {
         // add user to DB
         user = addService.createNewAccount(user);
         return new ResponseEntity(user, HttpStatus.CREATED);
+    }
+    
+    @PostMapping("/addMetrics/{userId}")
+    public ResponseEntity<List<MetricType>> createMetricSettings(@PathVariable int userId, @RequestBody MetricType[] metricTypes) throws InvalidMetricTypeException{
+        // validate user's initial MetricType settings
+        validateService.validateMetricTypes(metricTypes);
+        // add MetricTypes to DB
+        List<MetricType> populatedTypeList = addService.addMetricTypes(metricTypes);
+        return new ResponseEntity(populatedTypeList, HttpStatus.CREATED);
     }
     
     // Gets all DayLogs for a given UserAccount
