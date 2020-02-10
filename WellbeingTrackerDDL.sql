@@ -5,12 +5,25 @@ USE WellbeingTracker;
 CREATE TABLE UserAccount(
 	UserAccountId INT PRIMARY KEY AUTO_INCREMENT,
     UserName VARCHAR(15) UNIQUE NOT NULL,
-    UserPassword VARCHAR(50) NOT NULL,
+    UserPassword VARCHAR(200) NOT NULL,
     FirstName VARCHAR(30) NOT NULL,
     LastName VARCHAR(30) NOT NULL,
     Email VARCHAR(254) NOT NULL,
     CreationTimestamp DATETIME NOT NULL,
     TimeZone VARCHAR(40) NOT NULL
+);
+
+CREATE TABLE `role`(
+	RoleId INT PRIMARY KEY AUTO_INCREMENT,
+    RoleName VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE User_Role(
+	UserAccountId INT NOT NULL,
+    RoleId INT NOT NULL,
+    PRIMARY KEY(UserAccountId, RoleId),
+    FOREIGN KEY (UserAccountId) REFERENCES UserAccount(UserAccountId),
+    FOREIGN KEY (RoleId) REFERENCES `role`(RoleId)
 );
 
 CREATE TABLE DayLog(
