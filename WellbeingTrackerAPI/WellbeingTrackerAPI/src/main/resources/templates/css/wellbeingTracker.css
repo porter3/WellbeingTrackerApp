@@ -1,0 +1,12 @@
+.metricInput{
+    width: 80px !important;
+    margin-left: 14px !important;
+}
+
+.btn-info, .btn-info:hover, .btn-info:active, .btn-info:visited {
+    background-color: #283F3B !important;
+}
+
+#updateGraphButton{
+    margin-top: 225px;
+}

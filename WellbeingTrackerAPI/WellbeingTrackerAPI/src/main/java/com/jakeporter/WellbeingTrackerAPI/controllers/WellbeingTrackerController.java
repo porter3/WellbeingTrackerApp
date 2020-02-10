@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
@@ -30,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @Controller
-@RequestMapping("/tracker")
+@RequestMapping
 public class WellbeingTrackerController {
     
     // TODO: CHANGE ALL SERVICE LAYER IMPLEMENTATION REFERENCES TO INTERFACES WHEN THEY'RE CREATED
@@ -50,11 +49,15 @@ public class WellbeingTrackerController {
     @Autowired
     ValidateServiceImpl validateService;
     
-    @GetMapping("/testLogin")
-    public String renderTestLogin(){
-        return "TestLogin";
+    @GetMapping("/")
+    public String displayHome(){
+        return "home";
     }
     
+    @GetMapping("/login")
+    public String displayLoginPage() {
+        return "TestLogin";
+    }
 
     // Creates a new user account
     @PostMapping("/api/createUser")

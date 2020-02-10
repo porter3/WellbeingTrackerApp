@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,7 +43,6 @@ public class UserAccountDaoDBImpl implements UserAccountDao{
             user.setEmail(rs.getString("email"));
             user.setCreationTime(Timestamp.valueOf(rs.getString("creationtimestamp")).toLocalDateTime());
             user.setTimeZone(rs.getString("timezone"));
-            user.setRoles(roles);
             return user;
         }
     }
@@ -108,11 +106,11 @@ public class UserAccountDaoDBImpl implements UserAccountDao{
         }
     }
 
-     private Set<Role> getRolesForUser(int id) throws DataAccessException {
-        final String SELECT_ROLES_FOR_USER = "SELECT r.* FROM user_role ur "
-                + "JOIN role r ON ur.role_id = r.id "
-                + "WHERE ur.user_id = ?";
-        Set<Role> roles = new HashSet(jdbc.query(SELECT_ROLES_FOR_USER, new RoleMapper(), id));
+     private Set<Role> getRolesForUser(int userId) throws DataAccessException {
+        final String SELECT_ROLES_FOR_USER = "SELECT * FROM user_role "
+                + "JOIN role ON user_role.roleid = role.roleid "
+                + "WHERE user_role.useraccountid = ?";
+        Set<Role> roles = new HashSet(jdbc.query(SELECT_ROLES_FOR_USER, new RoleMapper(), userId));
         return roles;
     }
 }

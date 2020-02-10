@@ -1,6 +1,7 @@
 package com.jakeporter.WellbeingTrackerAPI.service;
 
 import com.jakeporter.WellbeingTrackerAPI.data.UserAccountDao;
+import com.jakeporter.WellbeingTrackerAPI.entities.Role;
 import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,6 +30,9 @@ public class UserDetailsServiceImpl implements UserDetailsService{
         UserAccount user = userDao.getUserByUsername(username);
         
         Set<GrantedAuthority> grantedAuthorities = new HashSet();
+        for (Role role : user.getRoles()){
+            grantedAuthorities.add(new SimpleGrantedAuthority(role.getRoleName()));
+        }
         
         return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), grantedAuthorities);
     }
