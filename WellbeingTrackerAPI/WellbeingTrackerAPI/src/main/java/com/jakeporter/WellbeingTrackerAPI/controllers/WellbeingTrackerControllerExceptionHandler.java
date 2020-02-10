@@ -4,6 +4,7 @@ import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidEmailException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidMetricTypeException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidPasswordException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidUsernameException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -46,6 +47,13 @@ public class WellbeingTrackerControllerExceptionHandler {
     public final ResponseEntity<Error> handleInvalidMetricTypeException(InvalidMetricTypeException e, WebRequest request){
         Error error = new Error();
         error.setMessage(e.getMessage());
+        return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
+    }
+    
+    @ExceptionHandler(DataAccessException.class)
+    public final ResponseEntity<Error> handleDataAccessException(DataAccessException e, WebRequest request){
+        Error error = new Error();
+        error.setMessage("Something you're looking for doesn't exist.");
         return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
     }
 }

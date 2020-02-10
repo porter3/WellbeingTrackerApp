@@ -7,6 +7,7 @@ import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidEmailException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidMetricTypeException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidPasswordException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidUsernameException;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -23,6 +24,10 @@ public class ValidateServiceImpl {
     
     @Autowired
     UserAccountDao userDao;
+    
+    // TODO: change to interface when created
+    @Autowired
+    LookupServiceImpl lookupService;
 
     public void validateNewAccountSettings(UserAccount user) throws InvalidUsernameException, InvalidPasswordException, InvalidEmailException{
         validateUsername(user.getUserName());
@@ -76,7 +81,7 @@ public class ValidateServiceImpl {
     }
     
     // compiler implicitly creates an array in the parameter list when this is called
-    public void validateMetricTypes(MetricType... types) throws InvalidMetricTypeException{
+    public void validateMetricTypes(int userId, MetricType... types) throws InvalidMetricTypeException{
         for (MetricType type : types){
             if (type.getMetricName() == null){
                 throw new InvalidMetricTypeException("Metric type's name cannot be empty.");
@@ -84,9 +89,16 @@ public class ValidateServiceImpl {
             if (type.getUser() == null){
                 throw new InvalidMetricTypeException("Metric type must be associated with a user.");
             }
-//            if ((type.getScale() == null) && (type.getUnit() == null)){
-//                
-//            }
+            
+            if ((type.getScale() == 0) && (type.getUnit() == null)){
+                throw new InvalidMetricTypeException("A metric type's scale and unit cannot both be empty.");
+            }
+            List<MetricType> typesForUser = lookupService.getMetricTypesForUser(userId);
+            for (MetricType existingType : typesForUser){
+                if (existingType.getMetricName().equalsIgnoreCase(type.getMetricName())){
+                    throw new InvalidMetricTypeException("Metric type already exists for user.");
+                }
+            }
         }
     }
 

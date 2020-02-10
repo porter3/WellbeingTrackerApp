@@ -2,6 +2,7 @@ package com.jakeporter.WellbeingTrackerAPI.data;
 
 import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
 import java.util.List;
+import org.springframework.security.core.userdetails.User;
 
 /**
  *
@@ -18,4 +19,6 @@ public interface UserAccountDao {
     public UserAccount editUserAccount(UserAccount updatedUser);
     
     public void deleteUserAccount (int userId);
+
+    public UserAccount getUserByUsername(String username);
 }

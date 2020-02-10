@@ -60,7 +60,8 @@ public class MetricTypeDaoDBImpl implements MetricTypeDao{
 
     @Override
     public List<MetricType> getAllMetricTypes() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final String SELECT_ALL_METRIC_TYPES = "SELECT * FROM metrictype";
+        return jdbc.query(SELECT_ALL_METRIC_TYPES, new MetricTypeMapper());
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.jakeporter.WellbeingTrackerAPI.entities;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  *
@@ -16,6 +17,8 @@ public class UserAccount {
     private String email;
     private LocalDateTime creationTime;
     private String timeZone;
+    
+    private Set<Role> roles;
 
     public int getUserAccountId() {
         return userAccountId;
@@ -80,7 +83,15 @@ public class UserAccount {
     public void setTimeZone(String timeZone) {
         this.timeZone = timeZone;
     }
+    
+    public Set<Role> getRoles() {
+        return roles;
+    }
 
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 3;
