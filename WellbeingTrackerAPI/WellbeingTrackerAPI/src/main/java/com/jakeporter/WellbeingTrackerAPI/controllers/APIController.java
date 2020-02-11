@@ -1,6 +1,7 @@
 package com.jakeporter.WellbeingTrackerAPI.controllers;
 
 import com.jakeporter.WellbeingTrackerAPI.entities.DayLog;
+import com.jakeporter.WellbeingTrackerAPI.entities.MetricEntry;
 import com.jakeporter.WellbeingTrackerAPI.entities.MetricType;
 import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidEmailException;
@@ -74,11 +75,14 @@ public class APIController {
     
     // Gets all MetricEntries for a given UserAccount (default graph view endpoint)
     @GetMapping("/metricentries/{userId}")
-    public ResponseEntity<List<DayLog>> getDayLogsForUser(@PathVariable int userId){
-        System.out.println("USER ID= " + userId);
-        List<DayLog> dayLogsForUser = lookupService.getDayLogsForUser(userId);
+    public ResponseEntity<List<List<MetricEntry>>> getAllMetricEntriesForUser(@PathVariable int userId){
+        // Get all entries for a user
+        List<MetricEntry> userEntries = lookupService.getMetricEntriesForUser(userId);
+        
+        // for each type the User has, grab all entries for that type and put them together
         
         // don't actually want to return this when finished
-        return new ResponseEntity(dayLogsForUser, HttpStatus.CREATED);
+        return new ResponseEntity(userEntries, HttpStatus.CREATED);
+        // return 
     }
 }

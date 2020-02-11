@@ -55,7 +55,8 @@ public class MetricTypeDaoDBImpl implements MetricTypeDao{
 
     @Override
     public MetricType getMetricTypeById(int typeId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final String SELECT_METRICTYPE_BY_ID = "SELECT * FROM metrictype WHERE metrictypeid = ?";
+        return jdbc.queryForObject(SELECT_METRICTYPE_BY_ID, new MetricTypeMapper(), typeId);
     }
 
     @Override

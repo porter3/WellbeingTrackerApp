@@ -49,7 +49,8 @@ public class DayLogDaoDBImpl implements DayLogDao{
 
     @Override
     public DayLog getDayLogById(int dayLogId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final String SELECT_DAYLOG_BY_ID = "SELECT * FROM daylog WHERE daylogid = ?";
+        return jdbc.queryForObject(SELECT_DAYLOG_BY_ID, new DayLogMapper(), dayLogId);
     }
 
     @Override

@@ -1,8 +1,10 @@
 package com.jakeporter.WellbeingTrackerAPI.service;
 
 import com.jakeporter.WellbeingTrackerAPI.data.DayLogDao;
+import com.jakeporter.WellbeingTrackerAPI.data.MetricEntryDao;
 import com.jakeporter.WellbeingTrackerAPI.data.MetricTypeDao;
 import com.jakeporter.WellbeingTrackerAPI.entities.DayLog;
+import com.jakeporter.WellbeingTrackerAPI.entities.MetricEntry;
 import com.jakeporter.WellbeingTrackerAPI.entities.MetricType;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,11 +23,20 @@ public class LookupServiceImpl {
     DayLogDao logDao;
     
     @Autowired
+    MetricEntryDao entryDao;
+    
+    @Autowired
     MetricTypeDao typeDao;
     
     public List<DayLog> getDayLogsForUser(int userId){
         return logDao.getAllDayLogs().stream()
                 .filter(log -> log.getUser().getUserAccountId() == userId)
+                .collect(Collectors.toList());
+    }
+    
+    public List<MetricEntry> getMetricEntriesForUser(int userId){
+        return entryDao.getAllMetricEntries().stream()
+                .filter(entry -> entry.getDayLog().getUser().getUserAccountId() == userId)
                 .collect(Collectors.toList());
     }
     
