@@ -10,7 +10,7 @@ import java.util.Set;
  */
 public class UserAccount {
     private int userAccountId;
-    private String userName;
+    private String username;
     private String password;
     private String firstName;
     private String lastName;
@@ -28,12 +28,12 @@ public class UserAccount {
         this.userAccountId = userAccountId;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String userName) {
+        this.username = userName;
     }
 
     public String getPassword() {
@@ -96,7 +96,7 @@ public class UserAccount {
     public int hashCode() {
         int hash = 3;
         hash = 41 * hash + this.userAccountId;
-        hash = 41 * hash + Objects.hashCode(this.userName);
+        hash = 41 * hash + Objects.hashCode(this.username);
         hash = 41 * hash + Objects.hashCode(this.password);
         hash = 41 * hash + Objects.hashCode(this.firstName);
         hash = 41 * hash + Objects.hashCode(this.lastName);
@@ -121,7 +121,7 @@ public class UserAccount {
         if (this.userAccountId != other.userAccountId) {
             return false;
         }
-        if (!Objects.equals(this.userName, other.userName)) {
+        if (!Objects.equals(this.username, other.username)) {
             return false;
         }
         if (!Objects.equals(this.password, other.password)) {

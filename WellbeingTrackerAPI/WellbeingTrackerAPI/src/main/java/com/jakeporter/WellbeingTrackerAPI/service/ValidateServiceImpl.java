@@ -30,7 +30,7 @@ public class ValidateServiceImpl {
     LookupServiceImpl lookupService;
 
     public void validateNewAccountSettings(UserAccount user) throws InvalidUsernameException, InvalidPasswordException, InvalidEmailException{
-        validateUsername(user.getUserName());
+        validateUsername(user.getUsername());
         validatePassword(user.getPassword());
         validateEmail(user.getPassword());
     }
@@ -45,7 +45,7 @@ public class ValidateServiceImpl {
     
     private void validateUsernameDoesNotExist(String username) throws InvalidUsernameException{
         Set<String> usernames = userDao.getAllUserAccounts()
-                .stream().map(UserAccount::getUserName).collect(Collectors.toSet());
+                .stream().map(UserAccount::getUsername).collect(Collectors.toSet());
         if (usernames.contains(username)){
             throw new InvalidUsernameException("Username already exists.");
         }

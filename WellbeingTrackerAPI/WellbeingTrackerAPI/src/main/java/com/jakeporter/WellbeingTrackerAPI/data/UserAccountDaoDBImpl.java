@@ -36,7 +36,7 @@ public class UserAccountDaoDBImpl implements UserAccountDao{
         public UserAccount mapRow(ResultSet rs, int i) throws SQLException {
             UserAccount user = new UserAccount();
             user.setUserAccountId(rs.getInt("useraccountid"));
-            user.setUserName(rs.getString("username"));
+            user.setUsername(rs.getString("username"));
             user.setPassword(rs.getString("userpassword"));
             user.setFirstName(rs.getString("firstname"));
             user.setLastName(rs.getString("lastname"));
@@ -55,7 +55,7 @@ public class UserAccountDaoDBImpl implements UserAccountDao{
                 + " VALUES(?,?,?,?,?,?,?)";
         LocalDateTime creationTime = LocalDateTime.now().withNano(0);
         Timestamp creationTimestamp = Timestamp.valueOf(creationTime);
-        jdbc.update(INSERT_USER, user.getUserName(), user.getPassword(), user.getFirstName(), 
+        jdbc.update(INSERT_USER, user.getUsername(), user.getPassword(), user.getFirstName(), 
                 user.getLastName(), user.getEmail(), creationTimestamp, user.getTimeZone());
         
         // set user's creation time and ID
