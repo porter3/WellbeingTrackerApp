@@ -1,0 +1,5 @@
+To re-enable security:
+
+-un-comment annotations over App class and Config class
+-un-comment Initializer class
+-un-comment csrf tags in login.html and dataView page
