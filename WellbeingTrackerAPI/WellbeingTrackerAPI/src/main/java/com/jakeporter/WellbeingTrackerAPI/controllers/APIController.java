@@ -52,7 +52,7 @@ public class APIController {
     ValidateServiceImpl validateService;
 
     // Creates a new user account
-    @PostMapping("/createUser")
+    @PostMapping("/createuser")
     public ResponseEntity<UserAccount> createAccount(@RequestBody UserAccount user) throws InvalidUsernameException, InvalidPasswordException, InvalidEmailException{
         // validate user
         validateService.validateNewAccountSettings(user);
@@ -61,7 +61,7 @@ public class APIController {
         return new ResponseEntity(user, HttpStatus.CREATED);
     }
     
-    @PostMapping("/addMetrics/{userId}")
+    @PostMapping("/addmetrics/{userId}")
     public ResponseEntity<List<MetricType>> createMetricSettings(@PathVariable int userId, @RequestBody MetricType[] metricTypes) throws InvalidMetricTypeException{
         // lookup the user using the ID from the PathVariable and assign to each MetricType
         updateService.populateMetricTypesWithUser(userId, metricTypes);
@@ -72,13 +72,13 @@ public class APIController {
         return new ResponseEntity(populatedTypeList, HttpStatus.CREATED);
     }
     
-    // Gets all DayLogs for a given UserAccount
-    @GetMapping("/dayLogs/{userId}")
+    // Gets all MetricEntries for a given UserAccount (default graph view endpoint)
+    @GetMapping("/metricentries/{userId}")
     public ResponseEntity<List<DayLog>> getDayLogsForUser(@PathVariable int userId){
-        // List<DayLog> userLogs = service.getDayLogsForUser(userId;
-        //
+        System.out.println("USER ID= " + userId);
+        List<DayLog> dayLogsForUser = lookupService.getDayLogsForUser(userId);
         
-        String test = "test";
-        return new ResponseEntity(test, HttpStatus.CREATED);
+        // don't actually want to return this when finished
+        return new ResponseEntity(dayLogsForUser, HttpStatus.CREATED);
     }
 }
