@@ -26,20 +26,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-            .antMatchers("/admin").hasRole("ADMIN")
-            .antMatchers("/", "/home").permitAll()
-            .antMatchers("/css/**", "/js/**", "/fonts/**").permitAll()
-            .anyRequest().hasRole("USER")
-        .and()
-        .formLogin()
-            .loginPage("/login")
-            .failureUrl("/login?login_error=1")
-            .permitAll()
-        .and()
-        .logout()
-            .logoutSuccessUrl("/")
-            .permitAll();   
+        http    
+                .authorizeRequests()
+                    .antMatchers("/admin").hasRole("ADMIN")
+                    .antMatchers("/", "/home").permitAll()
+                    .antMatchers("/css/**", "/js/**", "/fonts/**", "/assets/**").permitAll()
+                    .anyRequest().hasRole("USER")
+                .and()
+                .formLogin()
+                    .loginPage("/login")
+                    .failureUrl("/login?login_error=1")
+                    .permitAll()
+                .and()
+                .logout()
+                    .logoutSuccessUrl("/")
+                    .permitAll();
     }
     
     @Autowired
@@ -51,4 +52,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
     }
+    
 }
