@@ -31,7 +31,7 @@ xmlns="http://www.w3.org/1999/xhtml"
                     <li>
                         <div sec:authorize="isAuthenticated()">
                             <form method="POST" action="/logout">
-                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/> -->
                                 <a><button class="sidebarLink btn" id="logOutButton" type="submit">log out</button></a>
                             </form>
                         </div>
@@ -124,7 +124,7 @@ xmlns="http://www.w3.org/1999/xhtml"
                             <p>User status: ADMIN</p>
                         </div>
                         <div>
-                            Logged in as <span th:text="${#authentication.name}"></span>
+                            <!-- Logged in as <span th:text="${#authentication.name}"></span> -->
                         </div>
                         <button type="button" class="btn btn-info" id="updateGraphButton"><i class="fa fa-refresh fa-3x" aria-hidden="true"></i></button>
                     </div>

@@ -61,6 +61,16 @@ public class UserAccountDaoDBImpl implements UserAccountDao{
         // set user's creation time and ID
         user.setCreationTime(creationTime);
         user.setUserAccountId(jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class));
+        
+        // add ROLE_USER for user (yes, it's hard-coded)
+        final String INSERT_USER_ROLE = "INSERT INTO user_role(useraccountid, roleid) VALUES(?,?)";
+        jdbc.update(INSERT_USER_ROLE, user.getUserAccountId(), 2);
+        Role userRole = new Role();
+        userRole.setRoleId(2);
+        userRole.setRoleName("ROLE_USER");
+        Set<Role> roleList = Set.of(userRole);
+        user.setRoles(roleList);
+        
         return user;
     }
 
