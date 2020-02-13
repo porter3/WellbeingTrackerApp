@@ -55,9 +55,11 @@ public class LookupServiceImpl {
     }
     
     public List<MetricEntry> getMetricEntriesByDate(int userId, LocalDate date){
-        return getMetricEntriesForUser(userId).stream()
-                .filter(entry -> entry.getDayLog().getLogDate() == date)
+        
+        List<MetricEntry> entryList = getMetricEntriesForUser(userId).stream()
+                .filter(entry -> entry.getDayLog().getLogDate().isEqual(date))
                 .collect(Collectors.toList());
+        return entryList;
     }
     
     public List<MetricType> getMetricTypesForUser(int userId){
