@@ -107,8 +107,7 @@ public class APIController {
     // get all entries for a user by date
     @GetMapping("/metricentries/{userId}/{date}")
     public ResponseEntity<List<MetricEntry>> getMetricEntriesByDate(@PathVariable int userId, @PathVariable String date){
-        // as of now, date from front end may not get passed in like this
-        LocalDate convertedDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+        LocalDate convertedDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("MM-dd-yyyy"));
         return new ResponseEntity(lookupService.getMetricEntriesByDate(userId, convertedDate), HttpStatus.OK);
     }
 }

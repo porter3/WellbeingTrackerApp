@@ -36,7 +36,6 @@ public class DayLogDaoDBImpl implements DayLogDao{
             DayLog log = new DayLog();
             log.setDayLogId(rs.getInt("daylogid"));
             log.setUser(userDao.getUserAccountById(rs.getInt("useraccountid")));
-            System.out.println("LOG DATE: " + rs.getString("logdate"));
             log.setLogDate(LocalDate.parse(rs.getString("logdate"), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             return log;
         }
@@ -56,7 +55,6 @@ public class DayLogDaoDBImpl implements DayLogDao{
     @Override
     public List<DayLog> getAllDayLogs() {
         final String SELECT_ALl_DAYLOGS = "SELECT * FROM daylog";
-        System.out.println("JDBC IS ABOUT TO QUERY");
         return jdbc.query(SELECT_ALl_DAYLOGS, new DayLogMapper());
     }
 

@@ -66,7 +66,6 @@ public class MetricEntryDaoDBImpl implements MetricEntryDao{
             entry.setDayLog(logDao.getDayLogById(rs.getInt("daylogid")));
             entry.setMetricType(typeDao.getMetricTypeById(rs.getInt("metrictypeid")));
             entry.setMetricValue(rs.getInt("metricvalue"));
-            System.out.println("METRIC ENTRY TIME: " + rs.getString("entrytime"));
             entry.setEntryTime(Time.valueOf(rs.getString("entrytime")));
             return entry;
         }

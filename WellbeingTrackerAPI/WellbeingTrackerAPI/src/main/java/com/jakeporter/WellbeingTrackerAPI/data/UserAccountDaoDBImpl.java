@@ -76,7 +76,6 @@ public class UserAccountDaoDBImpl implements UserAccountDao{
 
     @Override
     public UserAccount getUserAccountById(int userId) {
-        System.out.println("getUserAccountById() executes!!!!");
         try{
             final String SELECT_USER_BY_ID = "SELECT * FROM useraccount WHERE useraccountid = ?";
             UserAccount user = jdbc.queryForObject(SELECT_USER_BY_ID, new UserAccountMapper(), userId);
