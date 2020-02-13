@@ -24,9 +24,9 @@ public class MetricTypeDaoDBImpl implements MetricTypeDao{
     
     // must be static for use in MetricTypeMapper
     @Autowired
-    private static UserAccountDao userDao;
+    private UserAccountDao userDao;
     
-    public static final class MetricTypeMapper implements RowMapper<MetricType>{
+    public final class MetricTypeMapper implements RowMapper<MetricType>{
 
         @Override
         public MetricType mapRow(ResultSet rs, int i) throws SQLException {

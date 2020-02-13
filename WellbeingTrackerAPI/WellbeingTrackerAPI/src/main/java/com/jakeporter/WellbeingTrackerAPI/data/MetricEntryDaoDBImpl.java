@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @Profile("database")
-public class MetricEntryDaoDBImpl {
+public class MetricEntryDaoDBImpl implements MetricEntryDao{
     
     @Autowired
     private JdbcTemplate jdbc;
@@ -30,6 +30,32 @@ public class MetricEntryDaoDBImpl {
     
     @Autowired
     MetricTypeDao typeDao;
+
+    @Override
+    public MetricEntry addMetricEntry(MetricEntry entry) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public MetricEntry getMetricEntryById(int entryId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public List<MetricEntry> getAllMetricEntries(){
+        final String SELECT_ALL_METRIC_ENTRIES = "SELECT * FROM metricentry";
+        return jdbc.query(SELECT_ALL_METRIC_ENTRIES, new MetricEntryMapper());
+    }
+
+    @Override
+    public MetricEntry editMetricEntry(MetricEntry updatedEntry) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void deleteMetricEntry(int entryId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
         public final class MetricEntryMapper implements RowMapper<MetricEntry>{
 
@@ -46,8 +72,5 @@ public class MetricEntryDaoDBImpl {
         }
     }
 
-    public List<MetricEntry> getAllMetricEntries(){
-        final String SELECT_ALL_METRIC_ENTRIES = "SELECT * FROM metricentry";
-        return jdbc.query(SELECT_ALL_METRIC_ENTRIES, new MetricEntryMapper());
-    }
+
 }

@@ -13,6 +13,9 @@ import com.jakeporter.WellbeingTrackerAPI.service.DeleteServiceImpl;
 import com.jakeporter.WellbeingTrackerAPI.service.LookupServiceImpl;
 import com.jakeporter.WellbeingTrackerAPI.service.UpdateServiceImpl;
 import com.jakeporter.WellbeingTrackerAPI.service.ValidateServiceImpl;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -73,16 +76,39 @@ public class APIController {
         return new ResponseEntity(populatedTypeList, HttpStatus.CREATED);
     }
     
-    // Gets all MetricEntries for a given UserAccount (default graph view endpoint)
+    // get all log dates for a user (FOR GRAPH VIEW)
+    @GetMapping("/dates/{userId}")
+    public ResponseEntity<List<LocalDate>> getAllLogDatesForUser(@PathVariable int userId){
+        return new ResponseEntity(lookupService.getDatesForUser(userId), HttpStatus.OK);
+    }
+    
+    // get all metric types for a user (FOR GRAPH VIEW)
+    @GetMapping("/metrictypes/{userId}")
+    public ResponseEntity<List<MetricType>> getAllMetricTypesForUser(@PathVariable int userId){
+        return new ResponseEntity(lookupService.getMetricTypesForUser(userId), HttpStatus.OK);
+    }
+    
+    // get all metric entries for a user (FOR GRAPH VIEW)
     @GetMapping("/metricentries/{userId}")
     public ResponseEntity<List<List<MetricEntry>>> getAllMetricEntriesForUser(@PathVariable int userId){
-        // Get all entries for a user
-        List<MetricEntry> userEntries = lookupService.getMetricEntriesForUser(userId);
-        
-        // for each type the User has, grab all entries for that type and put them together
-        
-        // don't actually want to return this when finished
-        return new ResponseEntity(userEntries, HttpStatus.CREATED);
-        // return 
+        // Get all types for a user
+        List<MetricType> userTypes = lookupService.getMetricTypesForUser(userId);
+        // List of MetricEntry-containing Lists
+        List<List<MetricEntry>> entryLists = new ArrayList();
+        // for each type the user has, get all the entries for that type in a list
+        for (MetricType type : userTypes){
+            List<MetricEntry> entryList = lookupService.getMetricEntriesForType(type.getMetricTypeId());
+            // add all entries for that type to the list of MetricEntry-containing lists
+            entryLists.add(entryList);
+        }
+        return new ResponseEntity(entryLists, HttpStatus.OK);
+    }
+    
+    // get all entries for a user by date
+    @GetMapping("/metricentries/{userId}/{date}")
+    public ResponseEntity<List<MetricEntry>> getMetricEntriesByDate(@PathVariable int userId, @PathVariable String date){
+        // as of now, date from front end may not get passed in like this
+        LocalDate convertedDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+        return new ResponseEntity(lookupService.getMetricEntriesByDate(userId, convertedDate), HttpStatus.OK);
     }
 }
