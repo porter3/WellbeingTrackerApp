@@ -1,7 +1,11 @@
 package com.jakeporter.WellbeingTrackerAPI.service;
 
+import com.jakeporter.WellbeingTrackerAPI.data.DayLogDao;
+import com.jakeporter.WellbeingTrackerAPI.data.MetricEntryDao;
 import com.jakeporter.WellbeingTrackerAPI.data.MetricTypeDao;
 import com.jakeporter.WellbeingTrackerAPI.data.UserAccountDao;
+import com.jakeporter.WellbeingTrackerAPI.entities.DayLog;
+import com.jakeporter.WellbeingTrackerAPI.entities.MetricEntry;
 import com.jakeporter.WellbeingTrackerAPI.entities.MetricType;
 import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
 import java.util.ArrayList;
@@ -22,6 +26,12 @@ public class AddServiceImpl {
     
     @Autowired
     MetricTypeDao typeDao;
+    
+    @Autowired
+    DayLogDao logDao;
+    
+    @Autowired
+    MetricEntryDao entryDao;
 
     public UserAccount createNewAccount(UserAccount user){
         return userDao.addUserAccount(user);
@@ -35,5 +45,13 @@ public class AddServiceImpl {
             populatedTypeList.add(populatedType);
         }
         return populatedTypeList;
+    }
+    
+    public DayLog addDayLog(DayLog log){
+        return logDao.addDayLog(log);
+    }
+    
+    public MetricEntry addMetricEntry(MetricEntry entry){
+        return entryDao.addMetricEntry(entry);
     }
 }

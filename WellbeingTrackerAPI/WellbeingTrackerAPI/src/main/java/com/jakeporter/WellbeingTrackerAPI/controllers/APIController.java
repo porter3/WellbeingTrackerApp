@@ -1,8 +1,11 @@
 package com.jakeporter.WellbeingTrackerAPI.controllers;
 
 import com.jakeporter.WellbeingTrackerAPI.entities.DayLog;
+import com.jakeporter.WellbeingTrackerAPI.entities.LogHolder;
 import com.jakeporter.WellbeingTrackerAPI.entities.MetricEntry;
 import com.jakeporter.WellbeingTrackerAPI.entities.MetricType;
+import com.jakeporter.WellbeingTrackerAPI.entities.NewEntryInfo;
+import com.jakeporter.WellbeingTrackerAPI.entities.UpdatedEntryInfo;
 import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidEmailException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidMetricTypeException;
@@ -13,10 +16,13 @@ import com.jakeporter.WellbeingTrackerAPI.service.DeleteServiceImpl;
 import com.jakeporter.WellbeingTrackerAPI.service.LookupServiceImpl;
 import com.jakeporter.WellbeingTrackerAPI.service.UpdateServiceImpl;
 import com.jakeporter.WellbeingTrackerAPI.service.ValidateServiceImpl;
+import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,6 +85,11 @@ public class APIController {
     // get all log dates for a user (FOR GRAPH VIEW)
     @GetMapping("/dates/{userId}")
     public ResponseEntity<List<LocalDate>> getAllLogDatesForUser(@PathVariable int userId){
+        List<LocalDate> dates = lookupService.getDatesForUser(userId);
+        System.out.println("ALL THEM DATES: ");
+        for (LocalDate date : dates){
+            System.out.println("DATE: " + date.toString());
+        }
         return new ResponseEntity(lookupService.getDatesForUser(userId), HttpStatus.OK);
     }
     
@@ -109,5 +120,88 @@ public class APIController {
     public ResponseEntity<List<MetricEntry>> getMetricEntriesByDate(@PathVariable int userId, @PathVariable String date){
         LocalDate convertedDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("MM-dd-yyyy"));
         return new ResponseEntity(lookupService.getMetricEntriesByDate(userId, convertedDate), HttpStatus.OK);
+    }
+    
+    @PostMapping("/updateLog/{userId}")
+    public ResponseEntity updateLogEntries(@PathVariable int userId, @RequestBody LogHolder holder){
+        LocalDate convertedDate = LocalDate.parse(holder.getDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
+        UpdatedEntryInfo[] updatedEntries = holder.getUpdatedEntries();
+        NewEntryInfo[] newEntries = holder.getNewEntries();
+        
+        // Holds all the types for entries created/updated in this POST request (used for deletion below)
+        List<MetricType> createdAndUpdatedTypes = new ArrayList();
+        
+        boolean onlyNewEntries = false;
+        // if there are no updatedEntries, then there are only new entries
+        if (updatedEntries.length == 0){
+            onlyNewEntries = true;
+        }
+        
+        // DayLog reference- will either point to an existing DayLog or become a new one
+        DayLog log = null;
+        
+        // check if DayLog has already been created
+        log = lookupService.getDayLogByDateAndUser(userId, convertedDate);
+        
+        // if there are existing entries:
+        if (!onlyNewEntries){
+            // EDITING ENTRIES
+            for (int i = 0; i < updatedEntries.length; i++){
+                // get the original entry from DB
+                MetricEntry originalEntry = lookupService.getMetricEntryById(updatedEntries[i].getEntryId());
+                    System.out.println("ORIGINAL ENTRY VALUE: " + originalEntry.getMetricValue());
+                originalEntry.setMetricValue(updatedEntries[i].getValue());
+                MetricEntry updatedEntry = updateService.updateMetricEntry(originalEntry);
+                    System.out.println("NEW ENTRY VALUE: " + updatedEntry.getMetricValue());
+                createdAndUpdatedTypes.add(updatedEntry.getMetricType());
+            }
+        }
+        
+        
+        // if log is still null (meaning there are only new entries), create a new one
+        if (log == null){
+            log = new DayLog();
+            log.setLogDate(convertedDate);
+            log.setUser(lookupService.getUserAccountById(userId));
+            log = addService.addDayLog(log);
+        }
+        
+        // ADDING NEW ENTRIES
+        for (int j = 0; j < newEntries.length; j++){
+            MetricEntry newEntry = new MetricEntry();
+            newEntry.setDayLog(log);
+            newEntry.setMetricType(lookupService.getMetricTypeById(newEntries[j].getTypeId()));
+            newEntry.setMetricValue(newEntries[j].getValue());
+            newEntry.setEntryTime(Time.valueOf(LocalTime.now())); // TODO: change to user's time zone (shouldn't be that hard), ha
+            // newEntry is added to DB, its type is also added to createdAndUpdatedEntries
+            createdAndUpdatedTypes.add(addService.addMetricEntry(newEntry).getMetricType());
+        }
+        
+        // DELETE ANY REMOVED ENTRIES
+        /* 
+        Compare the types of existing entries for the current date in the database
+        against the types of the entries just passed in. If the type
+        of an existing entry (typesForTheDatesEntries) does NOT
+        have an entry in the new POST request (createdAndUpdatedTypes),
+        delete it from the database.
+        */
+        List<MetricEntry> entriesForDate = lookupService.getMetricEntriesByDate(userId, convertedDate);
+        List<MetricType> typesForTheDatesEntries = entriesForDate.stream()
+                .map(MetricEntry::getMetricType)
+                .collect(Collectors.toList());
+        for (int k = 0; k < typesForTheDatesEntries.size(); k++){
+            // if the POST request types do not contain a preexisting type
+            if (!createdAndUpdatedTypes.contains(typesForTheDatesEntries.get(k))){
+                // delete the entry associated with that type and date
+                deleteService.deleteMetricEntry(entriesForDate.get(k).getMetricEntryId());
+            }
+        }
+        
+        // if DayLog has no metric entries, delete DayLog
+        if (lookupService.getMetricEntriesByDate(userId, log.getLogDate()).isEmpty()){
+            deleteService.deleteDayLog(log.getDayLogId());
+        }
+        
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

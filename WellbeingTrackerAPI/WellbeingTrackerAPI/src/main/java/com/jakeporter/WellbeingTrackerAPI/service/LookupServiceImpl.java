@@ -3,9 +3,11 @@ package com.jakeporter.WellbeingTrackerAPI.service;
 import com.jakeporter.WellbeingTrackerAPI.data.DayLogDao;
 import com.jakeporter.WellbeingTrackerAPI.data.MetricEntryDao;
 import com.jakeporter.WellbeingTrackerAPI.data.MetricTypeDao;
+import com.jakeporter.WellbeingTrackerAPI.data.UserAccountDao;
 import com.jakeporter.WellbeingTrackerAPI.entities.DayLog;
 import com.jakeporter.WellbeingTrackerAPI.entities.MetricEntry;
 import com.jakeporter.WellbeingTrackerAPI.entities.MetricType;
+import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +30,9 @@ public class LookupServiceImpl {
     
     @Autowired
     MetricTypeDao typeDao;
+    
+    @Autowired
+    UserAccountDao userDao;
     
     public List<DayLog> getDayLogsForUser(int userId){
         return logDao.getAllDayLogs().stream()
@@ -66,5 +71,23 @@ public class LookupServiceImpl {
         return typeDao.getAllMetricTypes().stream()
                 .filter(type -> type.getUser().getUserAccountId() == userId)
                 .collect(Collectors.toList());
+    }
+
+    public MetricEntry getMetricEntryById(int entryId) {
+        return entryDao.getMetricEntryById(entryId);
+    }
+    
+    public MetricType getMetricTypeById(int typeId){
+        return typeDao.getMetricTypeById(typeId);
+    }
+    
+    public UserAccount getUserAccountById(int userId){
+        return userDao.getUserAccountById(userId);
+    }
+
+    public DayLog getDayLogByDateAndUser(int userId, LocalDate convertedDate) {
+        return getDayLogsForUser(userId).stream()
+                .filter(log -> log.getLogDate().isEqual(convertedDate))
+                .findFirst().orElse(null);
     }
 }

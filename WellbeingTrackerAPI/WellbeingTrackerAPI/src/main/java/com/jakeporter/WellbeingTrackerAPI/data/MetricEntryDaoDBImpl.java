@@ -33,12 +33,21 @@ public class MetricEntryDaoDBImpl implements MetricEntryDao{
 
     @Override
     public MetricEntry addMetricEntry(MetricEntry entry) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final String INSERT_METRIC_ENTRY = "INSERT INTO metricentry"
+                + "(daylogid, metrictypeid, metricvalue, entrytime) VALUES"
+                + "(?, ?, ?, ?)";
+        jdbc.update(INSERT_METRIC_ENTRY, entry.getDayLog().getDayLogId(), 
+                entry.getMetricType().getMetricTypeId(), entry.getMetricValue(),
+                entry.getEntryTime());
+        // set ID
+        entry.setMetricEntryId(jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class));
+        return entry;
     }
 
     @Override
     public MetricEntry getMetricEntryById(int entryId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final String SELECT_ENTRY_BY_ID = "SELECT * FROM metricentry WHERE metricentryid = ?";
+        return jdbc.queryForObject(SELECT_ENTRY_BY_ID, new MetricEntryMapper(), entryId);
     }
     
     @Override
@@ -49,12 +58,16 @@ public class MetricEntryDaoDBImpl implements MetricEntryDao{
 
     @Override
     public MetricEntry editMetricEntry(MetricEntry updatedEntry) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final String UPDATE_ENTRY = "UPDATE metricentry SET daylogid = ?, metrictypeid = ?, metricvalue = ?, entrytime = ? WHERE metricentryid = ?";
+        jdbc.update(UPDATE_ENTRY, updatedEntry.getDayLog().getDayLogId(), updatedEntry.getMetricType().getMetricTypeId(),
+                updatedEntry.getMetricValue(), updatedEntry.getEntryTime(), updatedEntry.getMetricEntryId());
+        return getMetricEntryById(updatedEntry.getMetricEntryId());
     }
 
     @Override
     public void deleteMetricEntry(int entryId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final String DELETE_ENTRY = "DELETE FROM metricentry WHERE metricentryid = ?";
+        jdbc.update(DELETE_ENTRY, entryId);
     }
     
         public final class MetricEntryMapper implements RowMapper<MetricEntry>{

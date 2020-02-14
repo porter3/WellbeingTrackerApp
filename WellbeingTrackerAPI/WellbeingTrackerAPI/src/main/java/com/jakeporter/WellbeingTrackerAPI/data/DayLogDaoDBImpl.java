@@ -37,13 +37,21 @@ public class DayLogDaoDBImpl implements DayLogDao{
             log.setDayLogId(rs.getInt("daylogid"));
             log.setUser(userDao.getUserAccountById(rs.getInt("useraccountid")));
             log.setLogDate(LocalDate.parse(rs.getString("logdate"), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            log.setNotes(rs.getString("notes"));
             return log;
         }
     }
 
     @Override
     public DayLog addDayLog(DayLog dayLog) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final String INSERT_DAYLOG = "INSERT INTO daylog(useraccountid, logdate, notes)"
+                + " VALUES (?, ?, ?)";
+        jdbc.update(INSERT_DAYLOG, dayLog.getUser().getUserAccountId(), dayLog.getLogDate(),
+                dayLog.getNotes());
+        
+        // set ID
+        dayLog.setDayLogId(jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class));
+        return dayLog;
     }
 
     @Override
@@ -65,7 +73,8 @@ public class DayLogDaoDBImpl implements DayLogDao{
 
     @Override
     public void deleteDayLog(int dayLogId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final String DELETE_DAYLOG = "DELETE FROM daylog WHERE daylogid = ?";
+        jdbc.update(DELETE_DAYLOG, dayLogId);
     }
     
 

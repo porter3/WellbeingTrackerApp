@@ -11,6 +11,7 @@ public class DayLog {
     private int dayLogId;
     private UserAccount user;
     private LocalDate logDate;
+    private String notes;
 
     public int getDayLogId() {
         return dayLogId;
@@ -36,12 +37,21 @@ public class DayLog {
         this.logDate = logDate;
     }
 
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 67 * hash + this.dayLogId;
-        hash = 67 * hash + Objects.hashCode(this.user);
-        hash = 67 * hash + Objects.hashCode(this.logDate);
+        hash = 97 * hash + this.dayLogId;
+        hash = 97 * hash + Objects.hashCode(this.user);
+        hash = 97 * hash + Objects.hashCode(this.logDate);
+        hash = 97 * hash + Objects.hashCode(this.notes);
         return hash;
     }
 
@@ -60,6 +70,9 @@ public class DayLog {
         if (this.dayLogId != other.dayLogId) {
             return false;
         }
+        if (!Objects.equals(this.notes, other.notes)) {
+            return false;
+        }
         if (!Objects.equals(this.user, other.user)) {
             return false;
         }
@@ -68,4 +81,5 @@ public class DayLog {
         }
         return true;
     }
+
 }
