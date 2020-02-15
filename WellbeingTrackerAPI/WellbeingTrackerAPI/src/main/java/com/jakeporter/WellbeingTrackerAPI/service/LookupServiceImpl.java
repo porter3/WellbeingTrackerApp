@@ -34,15 +34,19 @@ public class LookupServiceImpl {
     @Autowired
     UserAccountDao userDao;
     
+    // need to create a Comparator for DayLog that sorts by logDate if you want these sorted
     public List<DayLog> getDayLogsForUser(int userId){
-        return logDao.getAllDayLogs().stream()
+        List<DayLog> dayLogs = logDao.getAllDayLogs().stream()
                 .filter(log -> log.getUser().getUserAccountId() == userId)
                 .collect(Collectors.toList());
+        return dayLogs;
     }
     
+    // sorted (natural order)
     public List<LocalDate> getDatesForUser(int userId){
         return getDayLogsForUser(userId).stream()
                 .map(DayLog::getLogDate)
+                .sorted()
                 .collect(Collectors.toList());
     }
     

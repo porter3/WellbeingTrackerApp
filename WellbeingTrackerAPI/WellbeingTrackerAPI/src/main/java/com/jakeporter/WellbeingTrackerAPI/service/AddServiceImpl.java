@@ -8,6 +8,8 @@ import com.jakeporter.WellbeingTrackerAPI.entities.DayLog;
 import com.jakeporter.WellbeingTrackerAPI.entities.MetricEntry;
 import com.jakeporter.WellbeingTrackerAPI.entities.MetricType;
 import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
+import java.time.LocalDate;
+import static java.time.temporal.ChronoUnit.DAYS;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,10 @@ public class AddServiceImpl {
     
     @Autowired
     MetricEntryDao entryDao;
+    
+    // TODO: change after creating an interface
+    @Autowired
+    LookupServiceImpl lookupService;
 
     public UserAccount createNewAccount(UserAccount user){
         return userDao.addUserAccount(user);
@@ -53,5 +59,30 @@ public class AddServiceImpl {
     
     public MetricEntry addMetricEntry(MetricEntry entry){
         return entryDao.addMetricEntry(entry);
+    }
+
+    public void fillDayLogGaps(int userId) {
+        List<LocalDate> dates = lookupService.getDatesForUser(userId);
+        int i;
+
+            for (i = 0; i < dates.size()-1; i++){
+                LocalDate firstDate = dates.get(i);
+                LocalDate secondDate = dates.get(i + 1);
+                System.out.println("First date: " + firstDate.toString());
+                System.out.println("Second date: " + secondDate.toString());
+                // if the number of days between the first date and the second date is greater than 0:
+                long missingDays = DAYS.between(firstDate, secondDate) - 1;
+                System.out.println("MISSING DAYS: " + missingDays);
+                if (missingDays > 0){
+                    DayLog fillerLog = new DayLog();
+                    fillerLog.setUser(userDao.getUserAccountById(userId));
+                    for (long j = 1; j <= missingDays; j++){ // plusDays() takes a long, didn't want to upcast the counter each loop
+                        // get the date that's missing
+                        LocalDate fillerDate = firstDate.plusDays(j);
+                        fillerLog.setLogDate(fillerDate);
+                        addDayLog(fillerLog);
+                    }
+                }
+            }
     }
 }

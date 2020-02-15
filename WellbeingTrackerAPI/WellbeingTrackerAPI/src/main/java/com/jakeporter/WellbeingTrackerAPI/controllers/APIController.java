@@ -85,11 +85,6 @@ public class APIController {
     // get all log dates for a user (FOR GRAPH VIEW)
     @GetMapping("/dates/{userId}")
     public ResponseEntity<List<LocalDate>> getAllLogDatesForUser(@PathVariable int userId){
-        List<LocalDate> dates = lookupService.getDatesForUser(userId);
-        System.out.println("ALL THEM DATES: ");
-        for (LocalDate date : dates){
-            System.out.println("DATE: " + date.toString());
-        }
         return new ResponseEntity(lookupService.getDatesForUser(userId), HttpStatus.OK);
     }
     
@@ -122,9 +117,11 @@ public class APIController {
         return new ResponseEntity(lookupService.getMetricEntriesByDate(userId, convertedDate), HttpStatus.OK);
     }
     
+    // maybe could improve conditionals here, but it keeps breaking when I try to improve it so it's staying like this for now
     @PostMapping("/updateLog/{userId}")
     public ResponseEntity updateLogEntries(@PathVariable int userId, @RequestBody LogHolder holder){
         LocalDate convertedDate = LocalDate.parse(holder.getDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
+        System.out.println("DATE COMING INTO API: " + convertedDate);
         UpdatedEntryInfo[] updatedEntries = holder.getUpdatedEntries();
         NewEntryInfo[] newEntries = holder.getNewEntries();
         
@@ -132,9 +129,13 @@ public class APIController {
         List<MetricType> createdAndUpdatedTypes = new ArrayList();
         
         boolean onlyNewEntries = false;
+        
         // if there are no updatedEntries, then there are only new entries
         if (updatedEntries.length == 0){
             onlyNewEntries = true;
+        }
+        if (updatedEntries.length == 0 && newEntries.length == 0){
+            onlyNewEntries = false;
         }
         
         // DayLog reference- will either point to an existing DayLog or become a new one
@@ -201,6 +202,9 @@ public class APIController {
         if (lookupService.getMetricEntriesByDate(userId, log.getLogDate()).isEmpty()){
             deleteService.deleteDayLog(log.getDayLogId());
         }
+        
+        // add any missing DayLogs (dates with no entries) for user
+        addService.fillDayLogGaps(userId);
         
         return new ResponseEntity(HttpStatus.OK);
     }
