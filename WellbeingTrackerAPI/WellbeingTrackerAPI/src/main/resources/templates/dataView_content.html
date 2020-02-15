@@ -60,7 +60,6 @@ xmlns="http://www.w3.org/1999/xhtml"
                     <!-- UPDATE GRAPH BUTTON -->
                     <div class="col">
                         <div class="row">
-                            <input type="hidden" id="date">
                             <div id="dateDisplay"></div>
                         </div>
                         <div sec:authorize="hasRole('ROLE_USER')">
@@ -80,22 +79,7 @@ xmlns="http://www.w3.org/1999/xhtml"
                     <div class="col">
                         <table class="table table-striped">
                             <tbody id="entryTableBody">
-                                <!-- unfinished input example row  -->
-                                <tr>
-                                    <td>
-                                        <label class="control-label">Sugar Intake</label>
-                                        <input class="form-control border-dark metricInput" type="number">
-                                    </td>
-                                </tr>
-                                <!-- completed input example row -->
-                                <tr>
-                                    <td>
-                                        <p>Mood (1-10)</p>
-                                    </td>
-                                    <td>9</td>
-                                    <td><button class="btn border-dark">Edit</button></td>
-                                    <td><button class="btn border-dark">Delete</button></td>
-                                </tr>
+                                <!-- entry rows appended here -->
                             </tbody>
                         </table>
                     </div>

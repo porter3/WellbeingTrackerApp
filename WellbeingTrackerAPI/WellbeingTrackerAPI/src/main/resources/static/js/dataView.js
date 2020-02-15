@@ -5,13 +5,13 @@ $(document).ready(function () {
         $('#sidebar').toggleClass('active');
     });
 
-    displayDate();
+    var formattedDate = displayDate();
 
     getDataDisplayGraph();
     updateGraph(); // listens for button click
 
-    displayEntryTable();
-    updateEntries();
+    displayEntryTable(formattedDate);
+    updateEntries(formattedDate);
 });
 
 function displayDummyGraph(){
@@ -89,6 +89,9 @@ function displayDate(){
 
     //display today's date
     $("#dateDisplay").text(selectedDate);
+
+    // return a formatted date for making AJAX requests (MM-dd-yyyy)
+    return $("#dateDisplay").text().split("/").join("-");
 
     // TODO: if user clicks back button, display yesterday's date
 }
@@ -296,18 +299,21 @@ function updateGraph(){
 }
 
 // display entry table
-function displayEntryTable(){
+function displayEntryTable(date){
     // get all the MetricTypes associated with the user's account
     // get all the entries for the date being displayed
-        // if an entry exists, it will contain an edit and delete button
-    var date = $("#dateDisplay").text().split("/").join("-");
 
     // after all AJAX calls are made:
     $.when(getMetricTypes(), getEntriesForDate(date)).done(function(typeList, entryList){
+
         var typeArray = typeList[0];
         var entriesForDateArray = entryList[0];
 
         var tableBody = $('#entryTableBody');
+
+        // clear entry table
+        tableBody.empty();
+
         // for all the metricTypes in typeArray, append a row to the table body
         for (i = 0; i < typeArray.length; i++){
             var metricName = typeArray[i].metricName;
@@ -390,17 +396,32 @@ function editEntry(editButtonHTML, deleteButtonHTML){
     });
 }
 
-function sendEntriesToApi(updatedEntryArray, newEntryArray){
+// AJAX: HAS HARDCODED USER ID
+function sendEntriesToApi(updatedEntryArray, newEntryArray, date){
+
+    console.log("UPDATED ENTRY ARRAY: ", updatedEntryArray);
+
+    var data = {
+            "date": date,
+			"updatedEntries": updatedEntryArray,
+			"newEntries": newEntryArray,
+			"notes": ""
+    };
+
     $.ajax({
         type: "POST",
-        url: "url",
+        url: "http://localhost:8080/api/updateLog/" + "1",
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        dataType: "json",
+        data: JSON.stringify(data),
         success: function (response) {
-            
+            getDataDisplayGraph();
+            displayEntryTable(date);
+        },
+        error: function(xhr){
+            alert("Request status: " + xhr.status + "Status text: " + xhr.statusText + xhr.responseText);
         }
     });
 }
@@ -411,7 +432,7 @@ function sendEntriesToApi(updatedEntryArray, newEntryArray){
     Will send them to API in two arrays. Back-end will delete entries
     based on which ones don't exist for the DayLog.
 */
-function updateEntries(){
+function updateEntries(date){
     $('#saveChangesButton').click(function(){
 
         // array to hold previously existing entries
@@ -442,11 +463,12 @@ function updateEntries(){
                 var newEntry = {"typeId": index + 1, "value": entryValue};
                 newEntryArray.push(newEntry);
             }
-            
-            sendEntriesToApi(updatedEntryArray, newEntryArray);
-
         });
+        console.log("UPDATED ENTRY ARRAY: ", updatedEntryArray);
+        console.log("NEW ENTRY ARRAY: ", newEntryArray);
 
+        console.log("DATE: ", date);
 
+        sendEntriesToApi(updatedEntryArray, newEntryArray, date);
     });
 }

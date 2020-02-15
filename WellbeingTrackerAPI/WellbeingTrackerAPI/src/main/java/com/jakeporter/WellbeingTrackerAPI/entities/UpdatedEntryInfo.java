@@ -16,6 +16,11 @@ public class UpdatedEntryInfo {
     public int getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return "UpdatedEntryInfo{" + "entryId=" + entryId + ", value=" + value + '}';
+    }
     
     
 

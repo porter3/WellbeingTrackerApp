@@ -1,6 +1,7 @@
 package com.jakeporter.WellbeingTrackerAPI.controllers;
 
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidEmailException;
+import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidEntryException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidMetricTypeException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidPasswordException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidUsernameException;
@@ -45,6 +46,13 @@ public class WellbeingTrackerControllerExceptionHandler {
     
     @ExceptionHandler(InvalidMetricTypeException.class)
     public final ResponseEntity<Error> handleInvalidMetricTypeException(InvalidMetricTypeException e, WebRequest request){
+        Error error = new Error();
+        error.setMessage(e.getMessage());
+        return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
+    }
+    
+    @ExceptionHandler(InvalidEntryException.class)
+    public final ResponseEntity<Error> handleInvalidEntryException(InvalidMetricTypeException e, WebRequest request){
         Error error = new Error();
         error.setMessage(e.getMessage());
         return new ResponseEntity(error, HttpStatus.BAD_REQUEST);

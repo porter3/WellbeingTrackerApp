@@ -1,9 +1,11 @@
 package com.jakeporter.WellbeingTrackerAPI.service;
 
 import com.jakeporter.WellbeingTrackerAPI.data.UserAccountDao;
+import com.jakeporter.WellbeingTrackerAPI.entities.MetricEntry;
 import com.jakeporter.WellbeingTrackerAPI.entities.MetricType;
 import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidEmailException;
+import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidEntryException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidMetricTypeException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidPasswordException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidUsernameException;
@@ -100,6 +102,38 @@ public class ValidateServiceImpl {
                 }
             }
         }
+    }
+
+    public void validateMetricEntry(MetricEntry entry) throws InvalidEntryException, InvalidMetricTypeException {
+        int value = entry.getMetricValue();
+        MetricType type = entry.getMetricType();
+        int scale = type.getScale();
+        // check if entry has metricType
+        if (type == null){
+            throw new InvalidEntryException("Entry has no associated type.");
+        }
+        // check that type exists for the user
+        if (type.getUser() == null){
+            throw new InvalidMetricTypeException("Type of entry is not associated with user.");
+        }
+        // check that entry has a metricValue
+        if (value <= 0){
+            throw new InvalidEntryException("Entry must contain a positive value.");
+        }
+        // if entry has subjective type, check that its value is between 1 and the scale
+        if (checkIfSubjective(entry)){
+            if (!(value > 1 && value <= scale)){
+                throw new InvalidEntryException("Entry value must be between 1 and " + scale);
+            }
+        }
+    }
+    
+    private boolean checkIfSubjective(MetricEntry entry){
+        // ints can't be null, default to 0 if not explicitly initialized
+        if (entry.getMetricType().getScale() == 0){
+            return false;
+        }
+        return true;
     }
 
 }

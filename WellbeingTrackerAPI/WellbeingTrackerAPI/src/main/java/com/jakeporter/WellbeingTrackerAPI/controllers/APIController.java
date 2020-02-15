@@ -8,6 +8,7 @@ import com.jakeporter.WellbeingTrackerAPI.entities.NewEntryInfo;
 import com.jakeporter.WellbeingTrackerAPI.entities.UpdatedEntryInfo;
 import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidEmailException;
+import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidEntryException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidMetricTypeException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidPasswordException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidUsernameException;
@@ -20,7 +21,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,11 +120,16 @@ public class APIController {
     
     // maybe could improve conditionals here, but it keeps breaking when I try to improve it so it's staying like this for now
     @PostMapping("/updateLog/{userId}")
-    public ResponseEntity updateLogEntries(@PathVariable int userId, @RequestBody LogHolder holder){
+    public ResponseEntity updateLogEntries(@PathVariable int userId, @RequestBody LogHolder holder) throws InvalidEntryException, InvalidMetricTypeException{
         LocalDate convertedDate = LocalDate.parse(holder.getDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
-        System.out.println("DATE COMING INTO API: " + convertedDate);
         UpdatedEntryInfo[] updatedEntries = holder.getUpdatedEntries();
+        for (UpdatedEntryInfo info: updatedEntries){
+            System.out.println("UPDATED ENTRY: " + info.toString());
+        }
         NewEntryInfo[] newEntries = holder.getNewEntries();
+        for (NewEntryInfo newInfo : newEntries){
+            System.out.println("NEW ENTRY- id: " + newInfo.getTypeId() + ", value: " + newInfo.getValue());
+        }
         
         // Holds all the types for entries created/updated in this POST request (used for deletion below)
         List<MetricType> createdAndUpdatedTypes = new ArrayList();
@@ -150,10 +156,16 @@ public class APIController {
             for (int i = 0; i < updatedEntries.length; i++){
                 // get the original entry from DB
                 MetricEntry originalEntry = lookupService.getMetricEntryById(updatedEntries[i].getEntryId());
-                    System.out.println("ORIGINAL ENTRY VALUE: " + originalEntry.getMetricValue());
+                // DELETION
+                if (updatedEntries[i].getValue() == 0){
+                    deleteService.deleteMetricEntry(updatedEntries[i].getEntryId());
+                    continue;
+                }
+                System.out.println("ORIGINAL ENTRY's value: " + originalEntry.getMetricValue());
                 originalEntry.setMetricValue(updatedEntries[i].getValue());
+                System.out.println("UPDATED ENTRY's value: " + originalEntry.getMetricValue());
+                //validateService.validateMetricEntry(originalEntry);
                 MetricEntry updatedEntry = updateService.updateMetricEntry(originalEntry);
-                    System.out.println("NEW ENTRY VALUE: " + updatedEntry.getMetricValue());
                 createdAndUpdatedTypes.add(updatedEntry.getMetricType());
             }
         }
@@ -186,17 +198,17 @@ public class APIController {
         have an entry in the new POST request (createdAndUpdatedTypes),
         delete it from the database.
         */
-        List<MetricEntry> entriesForDate = lookupService.getMetricEntriesByDate(userId, convertedDate);
-        List<MetricType> typesForTheDatesEntries = entriesForDate.stream()
-                .map(MetricEntry::getMetricType)
-                .collect(Collectors.toList());
-        for (int k = 0; k < typesForTheDatesEntries.size(); k++){
-            // if the POST request types do not contain a preexisting type
-            if (!createdAndUpdatedTypes.contains(typesForTheDatesEntries.get(k))){
-                // delete the entry associated with that type and date
-                deleteService.deleteMetricEntry(entriesForDate.get(k).getMetricEntryId());
-            }
-        }
+//        List<MetricEntry> entriesForDate = lookupService.getMetricEntriesByDate(userId, convertedDate);
+//        List<MetricType> typesForTheDatesEntries = entriesForDate.stream()
+//                .map(MetricEntry::getMetricType)
+//                .collect(Collectors.toList());
+//        for (int k = 0; k < typesForTheDatesEntries.size(); k++){
+//            // if the POST request types do not contain a preexisting type
+//            if (!createdAndUpdatedTypes.contains(typesForTheDatesEntries.get(k))){
+//                // delete the entry associated with that type and date
+//                deleteService.deleteMetricEntry(entriesForDate.get(k).getMetricEntryId());
+//            }
+//        }
         
         // if DayLog has no metric entries, delete DayLog
         if (lookupService.getMetricEntriesByDate(userId, log.getLogDate()).isEmpty()){

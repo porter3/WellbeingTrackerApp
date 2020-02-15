@@ -1,0 +1,5 @@
+Scalablilty goals:
+
+-Change database and some DAOs
+	-MetricEntryIds and DayLog IDs need to either reset at a lower number if many are created and deleted
+		OR need to make compound primary keys for them

@@ -53,6 +53,10 @@ public class AddServiceImpl {
         return populatedTypeList;
     }
     
+    public MetricType addMetricType(MetricType type){
+        return typeDao.addMetricType(type);
+    }
+    
     public DayLog addDayLog(DayLog log){
         return logDao.addDayLog(log);
     }
@@ -68,11 +72,8 @@ public class AddServiceImpl {
             for (i = 0; i < dates.size()-1; i++){
                 LocalDate firstDate = dates.get(i);
                 LocalDate secondDate = dates.get(i + 1);
-                System.out.println("First date: " + firstDate.toString());
-                System.out.println("Second date: " + secondDate.toString());
                 // if the number of days between the first date and the second date is greater than 0:
                 long missingDays = DAYS.between(firstDate, secondDate) - 1;
-                System.out.println("MISSING DAYS: " + missingDays);
                 if (missingDays > 0){
                     DayLog fillerLog = new DayLog();
                     fillerLog.setUser(userDao.getUserAccountById(userId));
