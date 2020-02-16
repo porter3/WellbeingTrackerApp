@@ -15,4 +15,9 @@ public class ContentController {
     public String displayContentPage() {
         return "dataView_content";
     }
+    
+    @GetMapping("/trackingsettings")
+    public String displayUserSettings(){
+        return "trackingSettings";
+    }
 }

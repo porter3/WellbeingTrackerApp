@@ -9,17 +9,11 @@
     min-height: 100vh;
 }
 
-#sidebar.active { /* means the sidebar is hidden on desktops */
+#sidebar {
     margin-left: -250px;
 }
-
-@media (max-width: 768px) { /* reverses the active style specified above. Sidebar will be initially hidden on mobile. */
-    #sidebar {
-        margin-left: -250px;
-    }
-    #sidebar.active {
-        margin-left: 0;
-    }
+#sidebar.active {
+    margin-left: 0;
 }
 
 @import "https://fonts.googleapis.com/css?family=Source+Code+Pro:200&display=swap";

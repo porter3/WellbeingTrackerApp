@@ -72,7 +72,7 @@ public class APIController {
         return new ResponseEntity(user, HttpStatus.CREATED);
     }
     
-    @PostMapping("/addmetrics/{userId}")
+    @PostMapping("/addmetrictypes/{userId}")
     public ResponseEntity<List<MetricType>> createMetricSettings(@PathVariable int userId, @RequestBody MetricType[] metricTypes) throws InvalidMetricTypeException{
         // lookup the user using the ID from the PathVariable and assign to each MetricType
         updateService.populateMetricTypesWithUser(userId, metricTypes);
@@ -123,13 +123,7 @@ public class APIController {
     public ResponseEntity updateLogEntries(@PathVariable int userId, @RequestBody LogHolder holder) throws InvalidEntryException, InvalidMetricTypeException{
         LocalDate convertedDate = LocalDate.parse(holder.getDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
         UpdatedEntryInfo[] updatedEntries = holder.getUpdatedEntries();
-        for (UpdatedEntryInfo info: updatedEntries){
-            System.out.println("UPDATED ENTRY: " + info.toString());
-        }
         NewEntryInfo[] newEntries = holder.getNewEntries();
-        for (NewEntryInfo newInfo : newEntries){
-            System.out.println("NEW ENTRY- id: " + newInfo.getTypeId() + ", value: " + newInfo.getValue());
-        }
         
         // Holds all the types for entries created/updated in this POST request (used for deletion below)
         List<MetricType> createdAndUpdatedTypes = new ArrayList();
@@ -161,10 +155,8 @@ public class APIController {
                     deleteService.deleteMetricEntry(updatedEntries[i].getEntryId());
                     continue;
                 }
-                System.out.println("ORIGINAL ENTRY's value: " + originalEntry.getMetricValue());
                 originalEntry.setMetricValue(updatedEntries[i].getValue());
-                System.out.println("UPDATED ENTRY's value: " + originalEntry.getMetricValue());
-                //validateService.validateMetricEntry(originalEntry);
+                validateService.validateMetricEntry(originalEntry);
                 MetricEntry updatedEntry = updateService.updateMetricEntry(originalEntry);
                 createdAndUpdatedTypes.add(updatedEntry.getMetricType());
             }
