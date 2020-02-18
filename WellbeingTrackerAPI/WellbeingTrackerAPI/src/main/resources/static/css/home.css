@@ -1,0 +1,22 @@
+@import "https://fonts.googleapis.com/css?family=Montserrat|Source+Code+Pro&display=swap";
+
+#content{
+    margin-top: 25vh;
+}
+
+#logInButton {
+    margin-bottom: 30px;
+}
+
+body {
+    background: #fafafa;
+}
+
+h1 {
+    font-family: 'Source Code Pro', monospace;
+    margin-bottom: 30px;
+}
+
+p {
+    font-family: 'Montserrat', sans-serif;
+}
