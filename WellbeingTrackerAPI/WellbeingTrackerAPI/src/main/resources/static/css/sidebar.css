@@ -30,24 +30,24 @@ a, a:hover, a:focus, .sidebarLink, .sidebarLink:hover, .sidebarLink:focus {
 }
 
 .btn-info, .btn-info:hover, .btn-info:active, .btn-info:visited {
-    background-color: #283F3B !important;
+    background-color: #000000 !important;
 }
 
 #sidebar {
     /* don't forget to add all the previously mentioned styles here too */
-    background: #628D80;
+    background: #333C3C;
     color: #fff;
     transition: all 0.3s;
 }
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: #628D80;
+    background: #333C3C;
 }
 
 #sidebar ul.components {
     padding: 20px 0;
-    border-bottom: 1px solid #628D80;
+    border-bottom: 1px solid #97B4B2;
 }
 
 #sidebar ul p {
@@ -61,13 +61,13 @@ a, a:hover, a:focus, .sidebarLink, .sidebarLink:hover, .sidebarLink:focus {
     display: block;
 }
 #sidebar ul li a:hover {
-    color: #628D80;
+    color: #333C3C;
     background: #fff;
 }
 
 #sidebar ul li.active > a, a[aria-expanded="true"] {
     color: #fff;
-    background: #283F3B;
+    background: #586F7C;
 }
 ul ul a {
     font-size: 0.9em !important;

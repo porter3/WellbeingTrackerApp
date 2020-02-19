@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -59,7 +60,14 @@ public class MetricTypeDaoDBImpl implements MetricTypeDao{
     @Override
     public MetricType getMetricTypeById(int typeId) {
         final String SELECT_METRICTYPE_BY_ID = "SELECT * FROM metrictype WHERE metrictypeid = ?";
-        return jdbc.queryForObject(SELECT_METRICTYPE_BY_ID, new MetricTypeMapper(), typeId);
+        MetricType type = new MetricType();
+        try{
+            type = jdbc.queryForObject(SELECT_METRICTYPE_BY_ID, new MetricTypeMapper(), typeId);
+        }
+        catch(EmptyResultDataAccessException e){
+            type = null;
+        }
+        return type;
     }
 
     @Override

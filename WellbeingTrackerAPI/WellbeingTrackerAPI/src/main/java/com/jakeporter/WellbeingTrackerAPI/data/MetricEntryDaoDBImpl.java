@@ -7,6 +7,7 @@ import java.sql.Time;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -45,7 +46,14 @@ public class MetricEntryDaoDBImpl implements MetricEntryDao{
     @Override
     public MetricEntry getMetricEntryById(int entryId) {
         final String SELECT_ENTRY_BY_ID = "SELECT * FROM metricentry WHERE metricentryid = ?";
-        return jdbc.queryForObject(SELECT_ENTRY_BY_ID, new MetricEntryMapper(), entryId);
+        MetricEntry entry = new MetricEntry();
+        try{
+            entry = jdbc.queryForObject(SELECT_ENTRY_BY_ID, new MetricEntryMapper(), entryId);
+        }
+        catch(EmptyResultDataAccessException e){
+            entry = null;
+        }
+        return entry;
     }
     
     @Override

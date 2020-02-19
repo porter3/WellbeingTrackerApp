@@ -61,8 +61,13 @@ public class UserAccountDaoDBImpl implements UserAccountDao{
                 user.getLastName(), user.getEmail(), creationTimestamp, user.getTimeZone());
         
         // set user's creation time and ID
-        user.setCreationTime(creationTime);
-        user.setUserAccountId(jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class));
+        int userId = jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
+        user.setUserAccountId(userId);
+        creationTimestamp = (jdbc.queryForObject("SELECT creationtimestamp FROM useraccount WHERE useraccountid = ?", Timestamp.class, userId));
+        user.setCreationTime(creationTimestamp.toLocalDateTime());
+        
+        // There is a discrepancy of milleseconds between the timestamps of Users pulled from the DB and the same Users when they're added.
+        // Throws off somet tests.
         
         // add ROLE_USER for user (yes, it's hard-coded)
         final String INSERT_USER_ROLE = "INSERT INTO user_role(useraccountid, roleid) VALUES(?,?)";

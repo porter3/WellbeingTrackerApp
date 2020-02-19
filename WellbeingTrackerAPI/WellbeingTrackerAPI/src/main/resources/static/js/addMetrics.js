@@ -78,64 +78,69 @@ $(document).ready(function () {
         {
             metricName: "social time",
             scale: 0,
-            unit: "min",
+            unit: "min"
         },
         {
             metricName: "meditation",
             scale: 0,
-            unit: "min",
+            unit: "min"
         },
         {
             metricName: "prayer",
             scale: 0,
-            unit: "min",
+            unit: "min"
         },
         {
             metricName: "silence",
             scale: 0,
-            unit: "min",
+            unit: "min"
         },
         {
             metricName: "time outdoors",
             scale: 0,
-            unit: "min",
+            unit: "min"
         },
         {
             metricName: "reading",
             scale: 0,
-            unit: "min",
+            unit: "min"
         },
         {
             metricName: "studying",
             scale: 0,
-            unit: "min",
+            unit: "min"
         },
         {
             metricName: "watching tv",
             scale: 0,
-            unit: "min",
+            unit: "min"
         },
         {
             metricName: "playing video games",
             scale: 0,
-            unit: "min",
+            unit: "min"
         }
     ];
     var predefinedSubjectiveTypes = [
         {
             metricName: "mood",
             scale: 10,
-            unit: "",
+            unit: ""
         },
         {
             metricName: "energy",
             scale: 10,
-            unit: "",
+            unit: ""
         },
         {
             metricName: "sociability",
             scale: 10,
-            unit: "",
+            unit: ""
+        },
+        {
+            metricName: "stress",
+            scale: 10,
+            unit: ""
         }
     ];
     var allPredefinedTypes = [
@@ -149,11 +154,12 @@ $(document).ready(function () {
     displayMetricTypes(allPredefinedTypes);
 });
 
-// AJAX: HAS HARDCODED USER ID
-function getMetricTypes(){
+// AJAX
+function getMetricTypes(userId){
+    console.log("USER ID: ", userId);
     return $.ajax({
         type: "GET",
-        url: "http://localhost:8080/api/metrictypes/" + "1",
+        url: "http://localhost:8080/api/metrictypes/" + userId,
         success: function (metricTypesForUser) {
             
         },
@@ -163,8 +169,8 @@ function getMetricTypes(){
     });
 }
 
-// AJAX: HAS HARDCODED USER ID
-function sendAddedMetricTypesToApi(metricTypeArray){
+// AJAX
+function sendAddedMetricTypesToApi(userId, metricTypeArray){
 
     $('#addMetricsButton').click(function (event) { 
         event.preventDefault();
@@ -173,11 +179,11 @@ function sendAddedMetricTypesToApi(metricTypeArray){
 
         $(document).ajaxSend(function (e, xhr, options) {
             xhr.setRequestHeader(header, token);
-          });
+        });
         
         $.ajax({
             type: "POST",
-            url: "http://localhost:8080/api/addmetrictypes/" + "1",
+            url: "http://localhost:8080/api/addmetrictypes/" + userId,
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -194,7 +200,9 @@ function sendAddedMetricTypesToApi(metricTypeArray){
 }
 
 function displayMetricTypes(allPredefinedTypes){
-    $.when(getMetricTypes()).done(function(metricTypesForUser){
+    var userId = $('#userId').text();
+
+    $.when(getMetricTypes(userId)).done(function(metricTypesForUser){
 
         console.log("PREDEFINED TYPES: ", allPredefinedTypes);
         console.log("METRIC TYPES FOR USER: ", metricTypesForUser);
@@ -237,10 +245,10 @@ function displayMetricTypes(allPredefinedTypes){
                     if (!userHasType){
                         // if type is subjective (i.e. has a scale)
                         if (predefinedTypeUnit === ''){
-                            html += '<a class="type" id="' + predefinedTypeName + '"><p>' + predefinedTypeName + ' (1 - ' + predefinedTypeScale + ')</p></a>';
+                            html += '<a class="type" id="' + predefinedTypeName + '"><p class="item">' + predefinedTypeName + ' (1 - ' + predefinedTypeScale + ')</p></a>';
                         }
                         else{
-                            html += '<a class="type" id="' + predefinedTypeName + '"><p>' + predefinedTypeName + ' (' + predefinedTypeUnit + ')</p></a>';
+                            html += '<a class="type" id="' + predefinedTypeName + '"><p class="item">' + predefinedTypeName + ' (' + predefinedTypeUnit + ')</p></a>';
                         }
                         // add each type that user doesn't have to an array
                         typesUserDoesntHave.push(allPredefinedTypes[i].types[j]);
@@ -302,6 +310,6 @@ function displayMetricTypes(allPredefinedTypes){
             });
 
             // send metricTypes to API
-            sendAddedMetricTypesToApi(typesToAddForUser);
+            sendAddedMetricTypesToApi(userId, typesToAddForUser);
     });
 }

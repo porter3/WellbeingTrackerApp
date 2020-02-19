@@ -5,3 +5,18 @@
 .subtypeHeader{
     margin-top: 30px;
 }
+
+.item:hover{
+    background-color: black;
+    color: white;
+}
+
+#addMetricsButton{
+    width: 140px;
+    height: 50px;
+}
+
+#addMetricsButton:hover{
+    background-color: black;
+    color: white;
+}

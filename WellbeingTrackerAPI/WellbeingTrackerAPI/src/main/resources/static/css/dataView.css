@@ -1,6 +1,9 @@
+label{
+    margin-top: 8px;
+}
+
 .metricInput{
     width: 100px !important;
-    margin-left: 14px !important;
 }
 
 .btn-info, .btn-info:hover, .btn-info:active, .btn-info:visited {
@@ -12,7 +15,12 @@
 }
 
 #saveChangesButton{
-    margin-top: 40px;
+    margin-top: 80px;
+}
+
+#saveChangesButton:hover{
+    background-color: black;
+    color: white;
 }
 
 /* back and forward buttons */
@@ -21,12 +29,12 @@
 text-decoration: none;
 display: inline-block;
 padding: 8px 16px;
-background-color: #628D80;
-color: black;
+background-color: #333C3C;
+color: #fff;
 border-radius: 50%;
 }
 
 .selector:hover {
-background-color: #283F3B;
-color: white;
+background-color: #fafafa;
+color: #333C3C;
 }

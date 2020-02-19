@@ -92,18 +92,19 @@ public class UserAccount {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 41 * hash + this.userAccountId;
-        hash = 41 * hash + Objects.hashCode(this.username);
-        hash = 41 * hash + Objects.hashCode(this.password);
-        hash = 41 * hash + Objects.hashCode(this.firstName);
-        hash = 41 * hash + Objects.hashCode(this.lastName);
-        hash = 41 * hash + Objects.hashCode(this.email);
-        hash = 41 * hash + Objects.hashCode(this.creationTime);
-        hash = 41 * hash + Objects.hashCode(this.timeZone);
+        hash = 73 * hash + this.userAccountId;
+        hash = 73 * hash + Objects.hashCode(this.username);
+        hash = 73 * hash + Objects.hashCode(this.password);
+        hash = 73 * hash + Objects.hashCode(this.firstName);
+        hash = 73 * hash + Objects.hashCode(this.lastName);
+        hash = 73 * hash + Objects.hashCode(this.email);
+        hash = 73 * hash + Objects.hashCode(this.creationTime);
+        hash = 73 * hash + Objects.hashCode(this.timeZone);
+        hash = 73 * hash + Objects.hashCode(this.roles);
         return hash;
     }
 
@@ -143,6 +144,17 @@ public class UserAccount {
         if (!Objects.equals(this.creationTime, other.creationTime)) {
             return false;
         }
+        if (!Objects.equals(this.roles, other.roles)) {
+            return false;
+        }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "UserAccount{" + "userAccountId=" + userAccountId + ", username=" + username + ", password=" + password + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", creationTime=" + creationTime + ", timeZone=" + timeZone + ", roles=" + roles + '}';
+    }
+    
+    
+
 }

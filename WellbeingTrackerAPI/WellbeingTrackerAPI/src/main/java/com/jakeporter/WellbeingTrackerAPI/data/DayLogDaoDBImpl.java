@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -57,7 +58,14 @@ public class DayLogDaoDBImpl implements DayLogDao{
     @Override
     public DayLog getDayLogById(int dayLogId) {
         final String SELECT_DAYLOG_BY_ID = "SELECT * FROM daylog WHERE daylogid = ?";
-        return jdbc.queryForObject(SELECT_DAYLOG_BY_ID, new DayLogMapper(), dayLogId);
+        DayLog log = new DayLog();
+        try{
+            log = jdbc.queryForObject(SELECT_DAYLOG_BY_ID, new DayLogMapper(), dayLogId);
+        }
+        catch(EmptyResultDataAccessException e){
+            log = null;
+        }
+        return log;
     }
 
     @Override

@@ -53,7 +53,10 @@ public class ContentController {
     }
     
     @GetMapping("/addmetrics")
-    public String displayAddMetrics(){
+    public String displayAddMetrics(Model model, @AuthenticationPrincipal UserDetails currentUser){
+        UserAccount user = lookupService.getUserByUsername(currentUser.getUsername()); // CHANGE TO SERVICE METHOD
+        model.addAttribute("currentUser", user);
+        
         return "addMetrics";
     }
     

@@ -1,7 +1,7 @@
 $(document).ready(function () {
-    // collapse the sidebar when the button is clicked
-    $('#sidebarCollapse').on('click', function() {
-        $('#sidebar').toggleClass('active');
+    // collapse the sideline when the button is clicked
+    $('#sidelineCollapse').on('click', function() {
+        $('#sideline').toggleClass('active');
     });
     
     displayTodaysDate();
@@ -189,10 +189,19 @@ function getEntriesForDate(userId, date){
 
 function displayGraph(labels, dataSets, yAxes){
     // get the canvas element. for whatever reason, using the jQuery selector here screws this up.
-    var canvas = document.getElementById('lineGraph');
-    // make a new graph, passing in the canvas element to display it in there
-    var lineGraph = new Chart(canvas, {
-        type: 'line',
+    // var canvas = document.getElementById('lineGraph').getContext('2d');
+    // var lineGraph;
+    // // make a new graph, passing in the canvas element to display it in there
+    // if(lineGraph != undefined){
+    //     lineGraph.destroy();
+    // }
+
+    var ctxLine = document.getElementById("lineGraph").getContext("2d");
+    // don't know what window.bar is, but doing this prevents the graph from glitching
+    if(window.bar != undefined){
+        window.bar.destroy(); 
+    }
+        window.bar = new Chart(ctxLine, {type: 'line',
         data: {
             labels: labels,
             datasets: dataSets,
@@ -213,8 +222,7 @@ function displayGraph(labels, dataSets, yAxes){
             legend:{
                 position: "left"
             }
-        }
-    });
+        }});
 }
 
 function getDataDisplayGraph(){
@@ -348,6 +356,7 @@ function displayEntryTable(){
     // get all the entries for the date being displayed
 
     var userId = $('#userId').text();
+    console.log("USERID: ", userId);
     var date = $("#dateDisplay").text().split("/").join("-");
     // after all AJAX calls are made:
     $.when(getMetricTypes(userId), getEntriesForDate(userId, date)).done(function(typeList, entryList){

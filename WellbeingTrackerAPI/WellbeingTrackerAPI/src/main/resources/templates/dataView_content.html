@@ -17,6 +17,7 @@ xmlns="http://www.w3.org/1999/xhtml"
         <title>Data View</title>
     </head>
     <body>
+        <noscript>This app doesn't work without JavaScript enabled.</noscript>
         <!-- USER ID -->
         <span id="userId" hidden th:text="${currentUser.userAccountId}"></span>
 
@@ -65,6 +66,9 @@ xmlns="http://www.w3.org/1999/xhtml"
 
                 <!-- GRAPH AND ENTRY ROW -->
                 <div class="row">
+                    <div>
+                        Logged in as <span th:text="${#authentication.name}"></span>
+                    </div>
                     <!-- GRAPH -->
                     <div id="graph col">
                         <canvas id="lineGraph" width="1100" height="450"></canvas>
@@ -78,20 +82,17 @@ xmlns="http://www.w3.org/1999/xhtml"
                             <a href="#" id="backButton" class="selector">&#8249;</a>
                             <a href="#" id="forwardButton" class="selector">&#8250;</a>
                         </div>
-                        <div sec:authorize="hasRole('ROLE_USER')">
+                        <!-- <div sec:authorize="hasRole('ROLE_USER')">
                             <p>User status: USER</p>
                         </div>
                         <div sec:authorize="hasRole('ROLE_ADMIN')">
                             <p>User status: ADMIN</p>
-                        </div>
-                        <div>
-                            <!-- Logged in as <span th:text="${#authentication.name}"></span> -->
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <!-- ENTRY FORM -->
                 <div class="row">
-                    <div class="col">
+                    <div class="col-md-5">
                         <table class="table table-striped">
                             <tbody id="entryTableBody">
                                 <!-- entry rows appended here -->
@@ -100,7 +101,7 @@ xmlns="http://www.w3.org/1999/xhtml"
                     </div>
                     <!-- SAVE CHANGES BUTTON -->
                     <div class="col">
-                        <button id="saveChangesButton" class="btn border-primary">save changes</button>
+                        <button id="saveChangesButton" class="btn border-dark btn-lg">save changes</button>
                     </div>
                 </div>
             </div>

@@ -16,6 +16,10 @@ xmlns="http://www.w3.org/1999/xhtml"
         <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     </head>
     <body>
+        <noscript>You can't add metrics without JavaScript enabled.</noscript>
+        <!-- USER ID -->
+        <span id="userId" hidden th:text="${currentUser.userAccountId}"></span>
+
         <div class="wrapper">
             <nav id="sidebar">
                 <div class="sidebar-header">
@@ -63,9 +67,12 @@ xmlns="http://www.w3.org/1999/xhtml"
                 </div>
                 <div class="row">
                     <div class="col-md-3">
-                        <div class="row">
-                            <button id="addMetricsButton" class="btn border-dark">add metrics</button>
+                        <div class="row text-center">
+                            <div class="col-md-4 offset-md-3">
+                                <button id="addMetricsButton" class="btn border-dark">add metrics</button>
+                            </div>
                         </div>
+                        <hr/>
                         <div id="metricAddingDiv" class="row">
                             <ul id="metricAddingArea">
                             <!-- METRICS TO BE ADDED LISTED HERE -->
