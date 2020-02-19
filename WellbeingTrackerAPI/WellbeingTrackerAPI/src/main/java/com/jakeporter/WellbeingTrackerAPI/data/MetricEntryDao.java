@@ -13,7 +13,7 @@ public interface MetricEntryDao {
     
     public MetricEntry getMetricEntryById(int entryId);
     
-    public List<MetricEntry> getAllMetricEntries();
+    public List<MetricEntry> getAllMetricEntriesSorted();
     
     public MetricEntry editMetricEntry(MetricEntry updatedEntry);
     

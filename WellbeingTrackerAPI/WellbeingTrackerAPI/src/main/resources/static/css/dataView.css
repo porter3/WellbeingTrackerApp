@@ -1,5 +1,5 @@
 .metricInput{
-    width: 80px !important;
+    width: 100px !important;
     margin-left: 14px !important;
 }
 
@@ -7,6 +7,26 @@
     background-color: #283F3B !important;
 }
 
+#dateDisplay{
+    font-size: x-large;
+}
+
 #saveChangesButton{
     margin-top: 40px;
+}
+
+/* back and forward buttons */
+
+.selector {
+text-decoration: none;
+display: inline-block;
+padding: 8px 16px;
+background-color: #628D80;
+color: black;
+border-radius: 50%;
+}
+
+.selector:hover {
+background-color: #283F3B;
+color: white;
 }

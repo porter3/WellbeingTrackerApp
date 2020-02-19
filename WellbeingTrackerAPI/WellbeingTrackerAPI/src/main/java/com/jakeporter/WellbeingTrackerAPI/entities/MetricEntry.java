@@ -11,7 +11,7 @@ public class MetricEntry {
     private int metricEntryId;
     private DayLog dayLog;
     private MetricType metricType;
-    private int metricValue;
+    private float metricValue;
     private Time entryTime;
 
     public int getMetricEntryId() {
@@ -38,11 +38,11 @@ public class MetricEntry {
         this.metricType = metricType;
     }
 
-    public int getMetricValue() {
+    public float getMetricValue() {
         return metricValue;
     }
 
-    public void setMetricValue(int metricValue) {
+    public void setMetricValue(float metricValue) {
         this.metricValue = metricValue;
     }
 
@@ -57,11 +57,11 @@ public class MetricEntry {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 89 * hash + this.metricEntryId;
-        hash = 89 * hash + Objects.hashCode(this.dayLog);
-        hash = 89 * hash + Objects.hashCode(this.metricType);
-        hash = 89 * hash + this.metricValue;
-        hash = 89 * hash + Objects.hashCode(this.entryTime);
+        hash = 19 * hash + this.metricEntryId;
+        hash = 19 * hash + Objects.hashCode(this.dayLog);
+        hash = 19 * hash + Objects.hashCode(this.metricType);
+        hash = 19 * hash + Float.floatToIntBits(this.metricValue);
+        hash = 19 * hash + Objects.hashCode(this.entryTime);
         return hash;
     }
 
@@ -80,7 +80,7 @@ public class MetricEntry {
         if (this.metricEntryId != other.metricEntryId) {
             return false;
         }
-        if (this.metricValue != other.metricValue) {
+        if (Float.floatToIntBits(this.metricValue) != Float.floatToIntBits(other.metricValue)) {
             return false;
         }
         if (!Objects.equals(this.dayLog, other.dayLog)) {
@@ -94,4 +94,11 @@ public class MetricEntry {
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "MetricEntry{" + "metricEntryId=" + metricEntryId + ", dayLog=" + dayLog + ", metricType=" + metricType + ", metricValue=" + metricValue + ", entryTime=" + entryTime + '}';
+    }
+
+    
 }

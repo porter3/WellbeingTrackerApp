@@ -1,6 +1,7 @@
-DROP DATABASE IF EXISTS WellbeingTracker;
-CREATE DATABASE WellbeingTracker;
-USE WellbeingTracker;
+DROP DATABASE IF EXISTS wellbeingtrackertest;
+
+CREATE DATABASE WellbeingTrackertest;
+USE WellbeingTrackertest;
 
 CREATE TABLE UserAccount(
 	UserAccountId INT PRIMARY KEY AUTO_INCREMENT,
@@ -17,6 +18,10 @@ CREATE TABLE `role`(
 	RoleId INT PRIMARY KEY AUTO_INCREMENT,
     RoleName VARCHAR(30) NOT NULL
 );
+
+INSERT INTO `role`(RoleId, RoleName) VALUES
+(1, "ROLE_ADMIN"),
+(2, "ROLE_USER");
 
 CREATE TABLE User_Role(
 	UserAccountId INT NOT NULL,
@@ -51,13 +56,12 @@ CREATE TABLE MetricEntry(
 	MetricEntryId INT PRIMARY KEY AUTO_INCREMENT,
     DayLogId INT NOT NULL,
     MetricTypeId INT NOT NULL,
-    MetricValue INT NOT NULL,
+    MetricValue FLOAT NOT NULL,
     EntryTime TIME NOT NULL,
     CONSTRAINT fk_DayLog_SMetricEntry FOREIGN KEY (DayLogId)
 		REFERENCES DayLog(DayLogId),
 	CONSTRAINT fk_MetricType_MetricEntry FOREIGN KEY (MetricTypeId)
 		REFERENCES MetricType(MetricTypeId)
 );
-
 
 

@@ -1,6 +1,8 @@
 package com.jakeporter.WellbeingTrackerAPI.data;
 
+import com.jakeporter.WellbeingTrackerAPI.entities.MetricEntry;
 import com.jakeporter.WellbeingTrackerAPI.entities.MetricType;
+import com.jakeporter.WellbeingTrackerAPI.service.LookupServiceImpl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -24,7 +26,8 @@ public class MetricTypeDaoDBImpl implements MetricTypeDao{
     
     // must be static for use in MetricTypeMapper
     @Autowired
-    private UserAccountDao userDao;
+    UserAccountDao userDao;
+    
     
     public final class MetricTypeMapper implements RowMapper<MetricType>{
 
@@ -72,7 +75,8 @@ public class MetricTypeDaoDBImpl implements MetricTypeDao{
 
     @Override
     public void deleteMetricType(int typeId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final String DELETE_TYPE = "DELETE FROM metrictype WHERE metrictypeid = ?";
+        jdbc.update(DELETE_TYPE, typeId);
     }
 
 }

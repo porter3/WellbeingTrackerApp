@@ -1,6 +1,7 @@
 package com.jakeporter.WellbeingTrackerAPI.entities;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -18,7 +19,7 @@ public class UserAccount {
     private LocalDateTime creationTime;
     private String timeZone;
     
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet();
 
     public int getUserAccountId() {
         return userAccountId;

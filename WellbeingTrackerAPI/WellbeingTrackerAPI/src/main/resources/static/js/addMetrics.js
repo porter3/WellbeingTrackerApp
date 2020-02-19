@@ -1,6 +1,4 @@
 $(document).ready(function () {
-
-    // collapse the sidebar when the button is clicked
     $('#sidebarCollapse').on('click', function() {
         $('#sidebar').toggleClass('active');
     });
@@ -170,6 +168,12 @@ function sendAddedMetricTypesToApi(metricTypeArray){
 
     $('#addMetricsButton').click(function (event) { 
         event.preventDefault();
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(header, token);
+          });
         
         $.ajax({
             type: "POST",
@@ -233,10 +237,10 @@ function displayMetricTypes(allPredefinedTypes){
                     if (!userHasType){
                         // if type is subjective (i.e. has a scale)
                         if (predefinedTypeUnit === ''){
-                            html += '<a id="' + predefinedTypeName + '"><p>' + predefinedTypeName + ' (1 - ' + predefinedTypeScale + ')</p></a>';
+                            html += '<a class="type" id="' + predefinedTypeName + '"><p>' + predefinedTypeName + ' (1 - ' + predefinedTypeScale + ')</p></a>';
                         }
                         else{
-                            html += '<a id="' + predefinedTypeName + '"><p>' + predefinedTypeName + ' (' + predefinedTypeUnit + ')</p></a>';
+                            html += '<a class="type" id="' + predefinedTypeName + '"><p>' + predefinedTypeName + ' (' + predefinedTypeUnit + ')</p></a>';
                         }
                         // add each type that user doesn't have to an array
                         typesUserDoesntHave.push(allPredefinedTypes[i].types[j]);
@@ -251,7 +255,7 @@ function displayMetricTypes(allPredefinedTypes){
 
 
             // add items to metricAddingArea, return them as types in an array
-            $('a').click(function (element) { 
+            $('a.type').click(function (element) { 
                 element.preventDefault();
                 
                 $('#metricAddingArea').append('<p id="' + $(this).attr('id') + '">' + $(this).text() + '</p>');

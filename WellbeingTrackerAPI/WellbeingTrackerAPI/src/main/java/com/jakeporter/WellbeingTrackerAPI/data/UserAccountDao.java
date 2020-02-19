@@ -2,12 +2,13 @@ package com.jakeporter.WellbeingTrackerAPI.data;
 
 import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
 import java.util.List;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
  *
  * @author jake
  */
-public interface UserAccountDao {
+public interface UserAccountDao{
 
     public UserAccount addUserAccount(UserAccount user);
     

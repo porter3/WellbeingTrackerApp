@@ -1,16 +1,21 @@
-USE WellbeingTracker;
+USE WellbeingTrackerPresentation;
 
 INSERT INTO useraccount(username, userpassword, firstname, lastname, email, creationtimestamp, timezone) VALUES
 ('jakep310', '$2a$10$7CjTHzwJJRjecs57ITJEDeuPPyy.mduJiDMP/sfael7JUnhsX7w/y', 'Jake', 'Porter', 'jakeporter310@gmail.com', '2019-02-04 11:32:00', 'EST');
 
+INSERT INTO useraccount(username, userpassword, firstname, lastname, email, creationtimestamp, timezone) VALUES
+('billsusername', '$2a$10$7CjTHzwJJRjecs57ITJEDeuPPyy.mduJiDMP/sfael7JUnhsX7w/y', 'Bill', 'Smith', 'bill@gmail.com', '2019-02-18 11:32:00', 'EST');
+
 SELECT * FROM useraccount;
 
 INSERT INTO metrictype(useraccountid, metricname, scale, unit) VALUES
-(1, 'Hours of Sleep', 0, 'hours'),
-(1, 'Protein Intake', 0, 'g'),
-(1, 'Mood', 10, '');
+(1, 'sleep time', 0, 'hours'),
+(1, 'protein', 0, 'g'),
+(1, 'mood', 10, '');
 
 SELECT * FROM metrictype;
+
+DELETE FROM metrictype WHERE metrictypeid = 5;
 
 INSERT INTO daylog(useraccountid, logdate, notes) VALUES
 (1, '2020-02-10', 'random notes'),
@@ -28,8 +33,7 @@ INSERT INTO metricentry(daylogid, metrictypeid, metricvalue, entrytime) VALUES
 (2, 2, 130, '10:20:12.0000000'),
 (2, 3, 9, '10:20:12.0000000'),
 (3, 2, 210, '10:20:12.0000000'),
-(3, 3, 6,  '10:20:12.0000000'),
-(4, 2, 40, '08:20:12.0000000');
+(3, 3, 6,  '10:20:12.0000000');
 
 SELECT * FROM metricentry;
 
@@ -37,12 +41,13 @@ DELETE FROM metricentry WHERE daylogid = 17;
 
 UPDATE metricentry SET daylogid = 1, metrictypeid = 1, metricvalue = 2, entrytime = '08:20:12.0000000' WHERE metricentryid = 1;
 
-INSERT INTO `role`(RoleId, RoleName) VALUES
-(1, "ROLE_ADMIN"),
-(2, "ROLE_USER");
-
 INSERT INTO User_Role(UserAccountId, RoleId) VALUES
 (1,1),
 (1,2);
 
+INSERT INTO User_Role(UserAccountId, RoleId) VALUES
+(2, 2);
+
 SET SQL_SAFE_UPDATES=0;
+
+SELECT * FROM metricentry INNER JOIN daylog ON metricentry.daylogid = daylog.DayLogId ORDER BY logdate, metricentryid;

@@ -82,4 +82,11 @@ public class DayLog {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "DayLog{" + "dayLogId=" + dayLogId + ", user=" + user + ", logDate=" + logDate + ", notes=" + notes + '}';
+    }
+    
+    
+
 }

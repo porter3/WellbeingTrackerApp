@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class AddServiceImpl {
+public class AddServiceImpl implements AddService{
     
     @Autowired
     UserAccountDao userDao;
@@ -35,9 +35,8 @@ public class AddServiceImpl {
     @Autowired
     MetricEntryDao entryDao;
     
-    // TODO: change after creating an interface
     @Autowired
-    LookupServiceImpl lookupService;
+    LookupService lookupService;
 
     public UserAccount createNewAccount(UserAccount user){
         return userDao.addUserAccount(user);

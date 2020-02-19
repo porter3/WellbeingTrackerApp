@@ -23,8 +23,11 @@ xmlns="http://www.w3.org/1999/xhtml"
                     <li>
                         <a href="content"><button class="sidebarLink btn" >view data / log metrics</button></a>
                     </li>
+                    <li>
+                        <a href="addmetrics"><button class="sidebarLink btn">add metrics</button></a>
+                    </li>
                     <li class="active">
-                        <a href=""><button class="sidebarLink btn">tracking settings</button></a>
+                        <a href=""><button class="sidebarLink btn">remove metrics</button></a>
                     </li>
                     <li>
                         <a href="usersettings"><button class="sidebarLink btn">user settings</button></a>
@@ -63,7 +66,7 @@ xmlns="http://www.w3.org/1999/xhtml"
                                 <div th:each="type : ${typeList}">
                                 <tr class="typeElement">
                                     <td th:text="${type.metricName}"></td>
-                                    <td><button type="button" class="btn border-dark deleteButton" th:id="${type.metricTypeId}" th:text="delete"></button></td>
+                                    <td><a href="#" th:href="@{/deleteconfirmation(id=${type.metricTypeId})}"><button type="button" class="btn border-dark deleteButton" th:id="${type.metricTypeId}" th:text="delete"></button></a></td>
                                 </tr>
                                 </div>
                             </table>

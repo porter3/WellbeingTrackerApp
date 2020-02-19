@@ -7,40 +7,37 @@ xmlns="http://www.w3.org/1999/xhtml"
         <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <script src="https://kit.fontawesome.com/37225b9be6.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" type="text/css">
+        <link rel="stylesheet" href="css/home.css" type="text/css">
 
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
-        <title>Landing Page</title>
+        <title>the well-being tracker</title>
     </head>
     <body>
         <div class="container">
-            <h1>Hello Security</h1>
-            <hr/>
-            <div class="navbar">
-                <ul class="nav nav-tabs">
-                    <li role="presentation" class="nav-item">
-                        <a class="nav-link active" href="home">
-                            Home
-                        </a>
-                    </li>
-                    <li role="presentation" class="nav-item">
-                        <a class="nav-link" href="content">
-                            Content (must have the user role)
-                        </a>
-                    </li>
-                    <li role="presentation" class="nav-item">
-                        <a class="nav-link" href="admin">
-                            Admin (must have the admin role)
-                        </a>
-                    </li>
-                </ul>    
+            <div id="content" class="row">
+                <div class="col-md-7">
+                    <h1>what do you need to track?</h1>
+                    <!-- <p>every day, we make many small decisions about how we live our lives. some are conscious, some are not so much.</p>
+                    <p>these constant small decisions become habits.</p>
+                    <p>habits can make it easy to live on autopilot, leading to a lack of awareness about what small decisions are making your life better or worse.</p>
+                    <p>do you need to motivation to change? do you want to see what habits and decisions make the biggest difference?</p>
+                    <p>start tracking and start changing.</p> -->
+                </div>
+                <div class="col-md-3 offset-md-1 align-self-center">
+                    <div id="logInButtonDiv" class="text-center align-middle">
+                        <a href="content"><button id="logInButton" type="button" class="btn btn-lg border-dark">log in</button></a>
+                        </br>
+                        <a href="signup"><button id="signUpButton" type="button" class="btn btn-lg btn-primary">sign up</button></a>
+                    </div>
+                </div>
             </div>
-            <h2>Landing Page</h2>
 
-            <p>
-                The landing page of our application - anyone can get here, including anonymous users.
-            </p>
+
+
+
+
+
             <div sec:authorize="isAuthenticated()">
                 <p>
                     This is only visible to users who are logged in.
@@ -48,10 +45,9 @@ xmlns="http://www.w3.org/1999/xhtml"
             </div>
         </div>
 
-        <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <script src="js/home.js"></script>
     </body>
 </html>

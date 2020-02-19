@@ -7,13 +7,13 @@ package com.jakeporter.WellbeingTrackerAPI.entities;
 public class UpdatedEntryInfo {
     
     private int entryId;
-    private int value;
+    private float value;
 
     public int getEntryId() {
         return entryId;
     }
 
-    public int getValue() {
+    public float getValue() {
         return value;
     }
 

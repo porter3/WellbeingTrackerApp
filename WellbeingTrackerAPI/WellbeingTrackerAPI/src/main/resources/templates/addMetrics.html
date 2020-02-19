@@ -4,11 +4,16 @@ xmlns="http://www.w3.org/1999/xhtml"
     xmlns:th="http://www.thymeleaf.org"
     xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <script src="https://kit.fontawesome.com/37225b9be6.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" type="text/css">
         <link rel="stylesheet" href="css/addMetrics.css" type="text/css">
         <link rel="stylesheet" href="css/sidebar.css" type="text/css">
         <title>Add Metrics to Track</title>
+
+        <meta name="_csrf" th:content="${_csrf.token}"/>
+        <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     </head>
     <body>
         <div class="wrapper">
@@ -22,7 +27,10 @@ xmlns="http://www.w3.org/1999/xhtml"
                         <a href="content"><button class="sidebarLink btn" >view data / log metrics</button></a>
                     </li>
                     <li class="active">
-                        <a href=""><button class="sidebarLink btn">tracking settings</button></a>
+                        <a href=""><button class="sidebarLink btn">add metrics</button></a>
+                    </li>
+                    <li>
+                        <a href="removemetrics"><button class="sidebarLink btn">remove metrics</button></a>
                     </li>
                     <li>
                         <a href="usersettings"><button class="sidebarLink btn">user settings</button></a>

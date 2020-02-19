@@ -12,18 +12,17 @@ import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidEntryException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidMetricTypeException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidPasswordException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidUsernameException;
-import com.jakeporter.WellbeingTrackerAPI.service.AddServiceImpl;
-import com.jakeporter.WellbeingTrackerAPI.service.DeleteServiceImpl;
-import com.jakeporter.WellbeingTrackerAPI.service.LookupServiceImpl;
-import com.jakeporter.WellbeingTrackerAPI.service.UpdateServiceImpl;
-import com.jakeporter.WellbeingTrackerAPI.service.ValidateServiceImpl;
+import com.jakeporter.WellbeingTrackerAPI.service.AddService;
+import com.jakeporter.WellbeingTrackerAPI.service.DeleteService;
+import com.jakeporter.WellbeingTrackerAPI.service.LookupService;
+import com.jakeporter.WellbeingTrackerAPI.service.UpdateService;
+import com.jakeporter.WellbeingTrackerAPI.service.ValidateService;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList; 
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,23 +43,22 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 @RequestMapping("/api")
 public class APIController {
-    
-    // TODO: CHANGE ALL SERVICE LAYER IMPLEMENTATION REFERENCES TO INTERFACES WHEN THEY'RE CREATED
+        
+    @Autowired
+    AddService addService;
     
     @Autowired
-    AddServiceImpl addService;
+    LookupService lookupService;
     
     @Autowired
-    LookupServiceImpl lookupService;
+    UpdateService updateService;
     
     @Autowired
-    UpdateServiceImpl updateService;
+    DeleteService deleteService;
     
     @Autowired
-    DeleteServiceImpl deleteService;
+    ValidateService validateService;
     
-    @Autowired
-    ValidateServiceImpl validateService;
 
     // Creates a new user account
     @PostMapping("/createuser")
@@ -124,7 +122,7 @@ public class APIController {
         LocalDate convertedDate = LocalDate.parse(holder.getDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
         UpdatedEntryInfo[] updatedEntries = holder.getUpdatedEntries();
         NewEntryInfo[] newEntries = holder.getNewEntries();
-        
+                
         // Holds all the types for entries created/updated in this POST request (used for deletion below)
         List<MetricType> createdAndUpdatedTypes = new ArrayList();
         
@@ -143,7 +141,7 @@ public class APIController {
         
         // check if DayLog has already been created
         log = lookupService.getDayLogByDateAndUser(userId, convertedDate);
-        
+                
         // if there are existing entries:
         if (!onlyNewEntries){
             // EDITING ENTRIES
@@ -201,10 +199,13 @@ public class APIController {
 //                deleteService.deleteMetricEntry(entriesForDate.get(k).getMetricEntryId());
 //            }
 //        }
+
         
-        // if DayLog has no metric entries, delete DayLog
-        if (lookupService.getMetricEntriesByDate(userId, log.getLogDate()).isEmpty()){
-            deleteService.deleteDayLog(log.getDayLogId());
+        List<DayLog> userLogs = lookupService.getDayLogsForUser(userId);
+        for (DayLog dayLog : userLogs){    
+            if (lookupService.getMetricEntriesByDate(userId, dayLog.getLogDate()).isEmpty()){
+                deleteService.deleteDayLog(dayLog.getDayLogId());
+            }
         }
         
         // add any missing DayLogs (dates with no entries) for user

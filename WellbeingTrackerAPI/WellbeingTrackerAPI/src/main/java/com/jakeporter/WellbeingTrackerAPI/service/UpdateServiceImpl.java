@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class UpdateServiceImpl {
+public class UpdateServiceImpl implements UpdateService{
     
     @Autowired
     UserAccountDao userDao;

@@ -1,11 +1,9 @@
 package com.jakeporter.WellbeingTrackerAPI.data;
 
 import com.jakeporter.WellbeingTrackerAPI.entities.MetricEntry;
-import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -51,8 +49,8 @@ public class MetricEntryDaoDBImpl implements MetricEntryDao{
     }
     
     @Override
-    public List<MetricEntry> getAllMetricEntries(){
-        final String SELECT_ALL_METRIC_ENTRIES = "SELECT * FROM metricentry";
+    public List<MetricEntry> getAllMetricEntriesSorted(){
+        final String SELECT_ALL_METRIC_ENTRIES = "SELECT * FROM metricentry INNER JOIN daylog ON metricentry.daylogid = daylog.DayLogId ORDER BY logdate, metricentryid";
         return jdbc.query(SELECT_ALL_METRIC_ENTRIES, new MetricEntryMapper());
     }
 
@@ -78,7 +76,7 @@ public class MetricEntryDaoDBImpl implements MetricEntryDao{
             entry.setMetricEntryId(rs.getInt("metricentryid"));
             entry.setDayLog(logDao.getDayLogById(rs.getInt("daylogid")));
             entry.setMetricType(typeDao.getMetricTypeById(rs.getInt("metrictypeid")));
-            entry.setMetricValue(rs.getInt("metricvalue"));
+            entry.setMetricValue(rs.getFloat("metricvalue"));
             entry.setEntryTime(Time.valueOf(rs.getString("entrytime")));
             return entry;
         }

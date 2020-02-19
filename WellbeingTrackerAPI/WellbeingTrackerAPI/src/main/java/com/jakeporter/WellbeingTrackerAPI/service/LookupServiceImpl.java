@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class LookupServiceImpl {
+public class LookupServiceImpl implements LookupService{
 
     @Autowired
     DayLogDao logDao;
@@ -51,14 +51,14 @@ public class LookupServiceImpl {
     }
     
     public List<MetricEntry> getMetricEntriesForType(int typeId){
-        return entryDao.getAllMetricEntries().stream()
+        return entryDao.getAllMetricEntriesSorted().stream()
                 .filter(entry -> entry.getMetricType().getMetricTypeId() == typeId)
                 .collect(Collectors.toList());
     }
     
     
     public List<MetricEntry> getMetricEntriesForUser(int userId){
-        return entryDao.getAllMetricEntries().stream()
+        return entryDao.getAllMetricEntriesSorted().stream()
                 .filter(entry -> entry.getDayLog().getUser().getUserAccountId() == userId)
                 .collect(Collectors.toList());
     }
@@ -93,5 +93,9 @@ public class LookupServiceImpl {
         return getDayLogsForUser(userId).stream()
                 .filter(log -> log.getLogDate().isEqual(convertedDate))
                 .findFirst().orElse(null);
+    }
+    
+    public UserAccount getUserByUsername(String username){
+        return userDao.getUserByUsername(username);
     }
 }

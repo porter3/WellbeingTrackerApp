@@ -1,17 +1,18 @@
 $(document).ready(function () {
-
     // collapse the sidebar when the button is clicked
     $('#sidebarCollapse').on('click', function() {
         $('#sidebar').toggleClass('active');
     });
-
-    var formattedDate = displayDate();
+    
+    displayTodaysDate();
+    // when back or forward button is clicked, take formatted date, add one day to it, return it
+    moveDateBack();
+    moveDateForward();
 
     getDataDisplayGraph();
-    updateGraph(); // listens for button click
 
-    displayEntryTable(formattedDate);
-    updateEntries(formattedDate);
+    displayEntryTable();
+    updateEntries();
 });
 
 function displayDummyGraph(){
@@ -74,33 +75,71 @@ function displayDummyGraph(){
     });
 }
 
-function displayDate(){
-    // get today's date
-    var selectedDate = new Date();
-
+function displayTodaysDate(){
+    var today = new Date();
+    
     // format today's date
     // padStart pads the string with a certain character until it reaches the desired length
-    var dd = String(selectedDate.getDate()).padStart(2, '0');
-    var mm = String(selectedDate.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = selectedDate.getFullYear();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
 
-    selectedDate = mm + '/' + dd + '/' + yyyy;
-    console.log("selectedDate: ", selectedDate);
-
+    today = mm + '/' + dd + '/' + yyyy;
+    
     //display today's date
-    $("#dateDisplay").text(selectedDate);
-
-    // return a formatted date for making AJAX requests (MM-dd-yyyy)
-    return $("#dateDisplay").text().split("/").join("-");
-
-    // TODO: if user clicks back button, display yesterday's date
+    $("#dateDisplay").text(today);
 }
 
-// AJAX: HAS HARDCODED USER ID
-function getDates(){
+function moveDateBack(){
+    $('#backButton').click(function (event) { 
+        var dateComponents = $("#dateDisplay").text().split("/");
+    
+        console.log("DATE COMPONENT: ", dateComponents);
+        var newDate = new Date(
+            parseInt(dateComponents[2]),
+            parseInt(dateComponents[0] - 1),
+            parseInt(dateComponents[1])
+        );
+        console.log("UNFORMATTED DATE: ", newDate);
+        newDate.setDate(newDate.getDate() - 1);
+        console.log("UNFORMATTED date: ", newDate);
+        var dd = String(newDate.getDate()).padStart(2, '0');
+        var mm = String(newDate.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = newDate.getFullYear();
+        $('#dateDisplay').text(mm + '/' + dd + '/' + yyyy);
+
+        displayEntryTable();
+    });
+}
+
+function moveDateForward(){
+    $('#forwardButton').click(function (event) { 
+        var dateComponents = $("#dateDisplay").text().split("/");
+    
+        console.log("DATE COMPONENT: ", dateComponents);
+        var newDate = new Date(
+            parseInt(dateComponents[2]),
+            parseInt(dateComponents[0] - 1),
+            parseInt(dateComponents[1])
+        );
+        console.log("UNFORMATTED DATE: ", newDate);
+        newDate.setDate(newDate.getDate() + 1);
+        console.log("UNFORMATTED date: ", newDate);
+        var dd = String(newDate.getDate()).padStart(2, '0');
+        var mm = String(newDate.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = newDate.getFullYear();
+        $('#dateDisplay').text(mm + '/' + dd + '/' + yyyy);
+
+        displayEntryTable();
+    });
+}
+
+// AJAX
+function getDates(userId){
+
     return $.ajax({
         type: "GET",
-        url: "http://localhost:8080/api/dates/" + "1",
+        url: "http://localhost:8080/api/dates/" + userId,
         success: function (dates) {
         },
         error: function(xhr){
@@ -109,11 +148,11 @@ function getDates(){
     });
 }
 
-// AJAX: HAS HARDCODED USER ID
-function getMetricTypes(){
+// AJAX
+function getMetricTypes(userId){
     return $.ajax({
         type: "GET",
-        url: "http://localhost:8080/api/metrictypes/" + "1",
+        url: "http://localhost:8080/api/metrictypes/" + userId,
         success: function (data) {
         },
         error: function(xhr){
@@ -122,11 +161,11 @@ function getMetricTypes(){
     });
 }
 
-// AJAX: HAS HARDCODED USER ID
-function getAllMetricEntries(){
+// AJAX
+function getAllMetricEntries(userId){
     return $.ajax({
         type: "GET",
-        url: "http://localhost:8080/api/metricentries/" + "1",
+        url: "http://localhost:8080/api/metricentries/" + userId,
         success: function (parentList) {
         },
         error: function(xhr){
@@ -135,11 +174,11 @@ function getAllMetricEntries(){
     });
 }
 
-// AJAX: HAS HARDCODED USER ID
-function getEntriesForDate(date){
+// AJAX
+function getEntriesForDate(userId, date){
     return $.ajax({
         type: "GET",
-        url: "http://localhost:8080/api/metricentries/" + "1" + "/" + date,
+        url: "http://localhost:8080/api/metricentries/" + userId + "/" + date,
         success: function (entryList) {
         },
         error: function(xhr){
@@ -159,12 +198,20 @@ function displayGraph(labels, dataSets, yAxes){
             datasets: dataSets,
         },
         options: {
+            responsive: true,
             title:{
-                display: true,
-                text: "Metrics"
+                display: false,
+                text: "Metrics",
+            },
+            hover:{
+                mode: 'nearest',
+                intersect: true
             },
             scales:{
-                yAxes
+                yAxes: yAxes,
+            },
+            legend:{
+                position: "left"
             }
         }
     });
@@ -172,12 +219,14 @@ function displayGraph(labels, dataSets, yAxes){
 
 function getDataDisplayGraph(){
 
-    // get the current user's ID  to pass into AJAX calls (will just use a hardcoded one for jakep310 right now)
+    // get the current user's ID  to pass into AJAX calls
+    var userId = $('#userId').text();
     
-    $.when(getDates(), getMetricTypes(), getAllMetricEntries()).done(function(dates, typeList, parentList){
+    $.when(getDates(userId), getMetricTypes(userId), getAllMetricEntries(userId)).done(function(dates, typeList, parentList){
 
         // arrays to hold stuff
         var dateArray = dates[0];
+        console.log("DATE ARRAY: ", dateArray);
         var typeArray = typeList[0];
         var parentArrayForEntries = parentList[0]; // this array's child arrays are sorted by metricType 
         console.log("PARENT ARRAY: ", parentArrayForEntries);
@@ -214,6 +263,7 @@ function getDataDisplayGraph(){
         for (i = 0; i < parentArrayForEntries.length; i++){
             // get the index/typeList in parentList
             var childList = parentArrayForEntries[i];
+            console.log("childlist: ", childList);
 
             var dataPoints = new Array();
 
@@ -244,26 +294,20 @@ function getDataDisplayGraph(){
             console.log("DATAPOINTS: ", dataPoints);
 
             // choose labeling format depending on whether dataset/metricType is a subjective type
-            var label;
-            // type is subjective if scale is not 0
-            if (typeArray[i].scale != 0){
-                label = typeArray[i].metricName + " (1-" + typeArray[i].scale + ")";
-            }
-            else{
-                label = typeArray[i].metricName + " (" + typeArray[i].unit + ")";
-            }
+            var label = typeArray[i].metricName;
 
             // set each dataSet's label
             var dataSet = {
                 label: label,
                 yAxisID: i,
                 data: dataPoints,
-                // change this later to change colors
-                borderColor: [
-                    colors[i]
-                ],
+                backgroundColor: colors[i],
+                borderColor: colors[i],
                 spanGaps: true,
-                fill: false
+                fill: false,
+                pointRadius: 6,
+                pointHoverRadius: 5,
+                lineTension: .25
             };
 
             dataSetList.push(dataSet);
@@ -278,36 +322,40 @@ function getDataDisplayGraph(){
                 type: 'linear',
                 position: 'left',
                 ticks: {
-                    display: true,
+                    display: false,
                     beginAtZero: true
-                }
+                },
+                display: false
             };
             yAxes.push(yAxis);
         }
-        console.log("Y AXES: ", yAxes);
+
+        // format dates for diplaying on graph
+        var dateComponents;
+        for (x = 0; x < dateArray.length; x++){
+            dateComponents = dateArray[x].split("-");
+            dateArray[x] = dateComponents[1] + "/" + dateComponents[2];
+        }
 
         // display graph
         displayGraph(dateArray, dataSetList, yAxes);
     });
 }
 
-// same as getDataDisplayGraph but waits for button click
-function updateGraph(){
-    $('#updateGraphButton').click(function(){
-        getDataDisplayGraph();
-    });
-}
-
 // display entry table
-function displayEntryTable(date){
+function displayEntryTable(){
     // get all the MetricTypes associated with the user's account
     // get all the entries for the date being displayed
 
+    var userId = $('#userId').text();
+    var date = $("#dateDisplay").text().split("/").join("-");
     // after all AJAX calls are made:
-    $.when(getMetricTypes(), getEntriesForDate(date)).done(function(typeList, entryList){
+    $.when(getMetricTypes(userId), getEntriesForDate(userId, date)).done(function(typeList, entryList){
 
         var typeArray = typeList[0];
         var entriesForDateArray = entryList[0];
+
+        console.log("TYPEARRAY: ", typeArray);
 
         var tableBody = $('#entryTableBody');
 
@@ -329,34 +377,40 @@ function displayEntryTable(date){
             }
 
             var metricNameNoWhitespace = metricName.replace(/\s/g,'');
+            var label;
+            var scaleData = "";
+            var nameData = 'data-name="' + typeArray[i].metricName + '"';
+            var typeIdData = 'data-typeId="' + typeArray[i].metricTypeId + '"';
+            console.log("TYPE ID DATA: ", typeIdData);
 
+            // if type is subjective
+            if (typeArray[i].unit === ""){
+                label = "(1 - " + typeArray[i].scale + ")";
+                scaleData = 'data-scale="' + typeArray[i].scale + '"';
+            }
+            else{
+                label = "(" + typeArray[i].unit + ")";
+                scaleData = 'data-scale="0"';
+            }
             // if metricType has an entry
             if (entry != null){
-
-                // DO NOT USE FOR NOW: FUTURE FEATURE
-                // var editButtonHTML = '<td><button id="' + metricNameNoWhitespace + 'EditButton" type="button" class="btn border-dark editButton">edit</button></td>';
-                // var deleteButtonHTML = '<td><button id="' + metricNameNoWhitespace + 'DeleteButton" type="button" class="btn border-dark deleteButton">delete</button></td>';
-
                 tableBody.append(
                     // label
-                    '<tr id="' + entry.metricEntryId + '"><td><label for="'+ metricNameNoWhitespace + '">' + metricName + '</label></td>'
+                    '<tr id="' + entry.metricEntryId + '" ' + scaleData + ' ' + nameData + ' ' + typeIdData + '><td><label for="'+ metricNameNoWhitespace + '">' + metricName + " " + label + '</label></td>'
                     // input
-                    + '<td><input type="number" id="' + metricNameNoWhitespace + '" class="form-control border-dark metricInput" value="' + entry.metricValue + '"</td>'
+                    + '<td><input type="number" min="1" max="' + typeArray[i].scale +  '" id="' + metricNameNoWhitespace + '" class="form-control border-dark metricInput" value="' + entry.metricValue + '"</td>'
                 );
             }
             // if metricType has no entry
             else{
                 tableBody.append(
                     // label
-                    '<tr id="' + metricNameNoWhitespace + 'Row"><td><label for="' + metricNameNoWhitespace + '" class="control-label">' + metricName + '</label></td>'
+                    '<tr id="' + metricNameNoWhitespace + 'Row" ' + scaleData + ' ' + nameData + ' ' + typeIdData + '><td><label for="' + metricNameNoWhitespace + '" class="control-label">' + metricName + " " + label + '</label></td>'
                     // input
-                    + '<td><input id="' + metricNameNoWhitespace + '" name="' + typeArray[i].metricTypeId + '" class="form-control border-dark metricInput" type="number"</td></tr>'
+                    + '<td><input id="' + metricNameNoWhitespace + '" name="' + typeArray[i].metricTypeId + '" class="form-control border-dark metricInput" type="number" min="1" max="' + typeArray[i].scale + '"</td></tr>'
                 );
             }
         }
-
-        // DO NOT USE FOR NOW, FUTURE FEATURE
-        // editEntry(editButtonHTML, deleteButtonHTML);
 
     });
 }
@@ -396,10 +450,10 @@ function editEntry(editButtonHTML, deleteButtonHTML){
     });
 }
 
-// AJAX: HAS HARDCODED USER ID
-function sendEntriesToApi(updatedEntryArray, newEntryArray, date){
-
-    console.log("UPDATED ENTRY ARRAY: ", updatedEntryArray);
+// AJAX
+function sendEntriesToApi(userId, updatedEntryArray, newEntryArray, date){
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
 
     var data = {
             "date": date,
@@ -407,10 +461,14 @@ function sendEntriesToApi(updatedEntryArray, newEntryArray, date){
 			"newEntries": newEntryArray,
 			"notes": ""
     };
-
+    
+    $(document).ajaxSend(function (e, xhr, options) {
+      xhr.setRequestHeader(header, token);
+    });
+    
     $.ajax({
         type: "POST",
-        url: "http://localhost:8080/api/updateLog/" + "1",
+        url: "http://localhost:8080/api/updateLog/" + userId,
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
@@ -421,7 +479,7 @@ function sendEntriesToApi(updatedEntryArray, newEntryArray, date){
             displayEntryTable(date);
         },
         error: function(xhr){
-            alert("Request status: " + xhr.status + "Status text: " + xhr.statusText + xhr.responseText);
+            alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText);
         }
     });
 }
@@ -432,9 +490,8 @@ function sendEntriesToApi(updatedEntryArray, newEntryArray, date){
     Will send them to API in two arrays. Back-end will delete entries
     based on which ones don't exist for the DayLog.
 */
-function updateEntries(date){
+function updateEntries(){
     $('#saveChangesButton').click(function(){
-
         // array to hold previously existing entries
         var updatedEntryArray = new Array();
 
@@ -447,8 +504,34 @@ function updateEntries(date){
             // get the metricEntryId
             var entryId = $(this).attr('id');
 
+            // get the metricTypeId
+            var typeId = $(this).attr('data-typeId');
+
             // get the value of the entry
             var entryValue = $(this).find('input').val();
+
+            // get the scale of the type if it exists
+            var scale = 0;
+            if ($(this).attr('data-scale') != 0){
+                // check for negative inputs (done seperate here because I want a different message)
+                if (entryValue < 0){
+                    alert("You can't log a negative value for " + $(this).attr('data-name') + ". If this was done on purpose, consider seeing your doctor.");
+                    return;
+                }
+                scale = parseInt($(this).attr('data-scale'));
+                // if scale is not 0, check that the metric's value does not exceed it
+                if (entryValue > scale){
+                    // NONESSENTIAL TODO: add error message below row
+                    alert('Values for ' + $(this).attr('data-name') + ' must be between 1 and ' + scale + '.');
+                    return;
+                }
+            }
+
+            // check any non-subjective values for negative inputs
+            if (entryValue < 0){
+                alert("Logging a negative value for " + $(this).attr('data-name') + " doesn't make too much sense.");
+                return;
+            }
 
             // IF ENTRY ALREADY EXISTS
             if (!isNaN(entryId)){
@@ -460,15 +543,15 @@ function updateEntries(date){
             // IF ENTRY HAS A VALUE BUT IS A NEW ENTRY
             else if(isNaN(entryId) && entryValue != false){
                 // create newEntry object, push it
-                var newEntry = {"typeId": index + 1, "value": entryValue};
+                var newEntry = {"typeId": typeId, "value": entryValue};
                 newEntryArray.push(newEntry);
             }
         });
         console.log("UPDATED ENTRY ARRAY: ", updatedEntryArray);
         console.log("NEW ENTRY ARRAY: ", newEntryArray);
 
-        console.log("DATE: ", date);
-
-        sendEntriesToApi(updatedEntryArray, newEntryArray, date);
+        var userId = $('#userId').text();
+        var date = $("#dateDisplay").text().split("/").join("-");
+        sendEntriesToApi(userId, updatedEntryArray, newEntryArray, date);
     });
 }

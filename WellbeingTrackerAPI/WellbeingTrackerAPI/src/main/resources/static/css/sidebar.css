@@ -29,6 +29,10 @@ a, a:hover, a:focus, .sidebarLink, .sidebarLink:hover, .sidebarLink:focus {
     transition: all 0.3s;
 }
 
+.btn-info, .btn-info:hover, .btn-info:active, .btn-info:visited {
+    background-color: #283F3B !important;
+}
+
 #sidebar {
     /* don't forget to add all the previously mentioned styles here too */
     background: #628D80;
