@@ -395,7 +395,6 @@ function displayEntryTable(){
             var scaleData = "";
             var nameData = 'data-name="' + typeArray[i].metricName + '"';
             var typeIdData = 'data-typeId="' + typeArray[i].metricTypeId + '"';
-            console.log("TYPE ID DATA: ", typeIdData);
 
             // if type is subjective
             if (typeArray[i].unit === ""){
@@ -523,6 +522,10 @@ function updateEntries(){
 
             // get the value of the entry
             var entryValue = $(this).find('input').val();
+            console.log("EntryVALUE: ", entryValue); // 0 values go to 0, that works as expected
+
+            // declare boolean isEmpty - this exists because Spring will convert blank entryValues to 0
+            var valueIsEmpty = false;
 
             // get the scale of the type if it exists
             var scale = 0;
@@ -534,7 +537,7 @@ function updateEntries(){
                 }
                 scale = parseInt($(this).attr('data-scale'));
                 // if scale is not 0, check that the metric's value does not exceed it
-                if (entryValue > scale){
+                if (entryValue > scale || (entryValue <= 0 && entryValue != '')){
                     // NONESSENTIAL TODO: add error message below row
                     alert('Values for ' + $(this).attr('data-name') + ' must be between 1 and ' + scale + '.');
                     return;
@@ -547,18 +550,25 @@ function updateEntries(){
                 return;
             }
 
+            // if entryValue is blank, add a boolean to mark it for deletion
+            if (entryValue === ''){
+                valueIsEmpty = true;
+            }
+
+            console.log("type of entryvalue: ", typeof entryValue);
             // IF ENTRY ALREADY EXISTS
             if (!isNaN(entryId)){
 
                 // create the updatedEntry object, push it real good
-                var updatedEntry = {"entryId": entryId, "value": entryValue};
+                var updatedEntry = {"entryId": entryId, "value": entryValue, valueIsEmpty: valueIsEmpty};
                 updatedEntryArray.push(updatedEntry);
             }
             // IF ENTRY HAS A VALUE BUT IS A NEW ENTRY
-            else if(isNaN(entryId) && entryValue != false){
+            else if(isNaN(entryId) && entryValue !== ''){
                 // create newEntry object, push it
                 var newEntry = {"typeId": typeId, "value": entryValue};
                 newEntryArray.push(newEntry);
+                console.log("a new entry is being pushed");
             }
         });
         console.log("UPDATED ENTRY ARRAY: ", updatedEntryArray);

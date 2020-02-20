@@ -81,6 +81,12 @@ public class APIController {
         return new ResponseEntity(populatedTypeList, HttpStatus.CREATED);
     }
     
+    // get all DayLogs for a user
+    @GetMapping("/daylogs/{userId}")
+    public ResponseEntity<List<LocalDate>> getAllDayLogsForUser(@PathVariable int userId){
+        return new ResponseEntity(lookupService.getDayLogsForUser(userId), HttpStatus.OK);
+    }
+    
     // get all log dates for a user (FOR GRAPH VIEW)
     @GetMapping("/dates/{userId}")
     public ResponseEntity<List<LocalDate>> getAllLogDatesForUser(@PathVariable int userId){
@@ -122,7 +128,7 @@ public class APIController {
         LocalDate convertedDate = LocalDate.parse(holder.getDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
         UpdatedEntryInfo[] updatedEntries = holder.getUpdatedEntries();
         NewEntryInfo[] newEntries = holder.getNewEntries();
-                
+
         // Holds all the types for entries created/updated in this POST request (used for deletion below)
         List<MetricType> createdAndUpdatedTypes = new ArrayList();
         
@@ -149,7 +155,7 @@ public class APIController {
                 // get the original entry from DB
                 MetricEntry originalEntry = lookupService.getMetricEntryById(updatedEntries[i].getEntryId());
                 // DELETION
-                if (updatedEntries[i].getValue() == 0){
+                if (updatedEntries[i].isValueIsEmpty()){
                     deleteService.deleteMetricEntry(updatedEntries[i].getEntryId());
                     continue;
                 }
@@ -175,7 +181,8 @@ public class APIController {
             newEntry.setDayLog(log);
             newEntry.setMetricType(lookupService.getMetricTypeById(newEntries[j].getTypeId()));
             newEntry.setMetricValue(newEntries[j].getValue());
-            newEntry.setEntryTime(Time.valueOf(LocalTime.now())); // TODO: change to user's time zone (shouldn't be that hard), ha
+            newEntry.setEntryTime(Time.valueOf(LocalTime.now())); // TODO: change to user's time zone (shouldn't be that hard)
+            validateService.validateMetricEntry(newEntry);
             // newEntry is added to DB, its type is also added to createdAndUpdatedEntries
             createdAndUpdatedTypes.add(addService.addMetricEntry(newEntry).getMetricType());
         }

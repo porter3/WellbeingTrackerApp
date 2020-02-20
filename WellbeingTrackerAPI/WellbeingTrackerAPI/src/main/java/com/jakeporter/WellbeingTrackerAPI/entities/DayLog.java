@@ -7,7 +7,7 @@ import java.util.Objects;
  *
  * @author jake
  */
-public class DayLog {
+public class DayLog implements Comparable<DayLog>{
     private int dayLogId;
     private UserAccount user;
     private LocalDate logDate;
@@ -86,7 +86,11 @@ public class DayLog {
     public String toString() {
         return "DayLog{" + "dayLogId=" + dayLogId + ", user=" + user + ", logDate=" + logDate + ", notes=" + notes + '}';
     }
-    
-    
 
+    @Override
+    public int compareTo(DayLog otherDayLog) {
+        return (this.getLogDate().compareTo(otherDayLog.getLogDate()));
+    }
+    
+    
 }

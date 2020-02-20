@@ -38,6 +38,7 @@ public class LookupServiceImpl implements LookupService{
     public List<DayLog> getDayLogsForUser(int userId){
         List<DayLog> dayLogs = logDao.getAllDayLogs().stream()
                 .filter(log -> log.getUser().getUserAccountId() == userId)
+                .sorted()
                 .collect(Collectors.toList());
         return dayLogs;
     }

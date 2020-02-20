@@ -141,12 +141,12 @@ public class ValidateServiceImpl implements ValidateService{
             throw new InvalidMetricTypeException("Type of entry is not associated with user.");
         }
         // check that entry has a metricValue
-        if (value <= 0){
+        if (value < 0){
             throw new InvalidEntryException("Entry must contain a positive value.");
         }
         // if entry has subjective type, check that its value is between 1 and the scale
         if (checkIfSubjective(entry)){
-            if (!(value > 1 && value <= scale)){
+            if (!(value >= 1) || !(value <= scale)){
                 throw new InvalidEntryException("Entry value must be between 1 and " + scale);
             }
         }
