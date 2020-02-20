@@ -70,13 +70,16 @@ public class DayLogDaoDBImpl implements DayLogDao{
 
     @Override
     public List<DayLog> getAllDayLogs() {
-        final String SELECT_ALl_DAYLOGS = "SELECT * FROM daylog";
-        return jdbc.query(SELECT_ALl_DAYLOGS, new DayLogMapper());
+        final String SELECT_ALL_DAYLOGS = "SELECT * FROM daylog";
+        return jdbc.query(SELECT_ALL_DAYLOGS, new DayLogMapper());
     }
 
     @Override
     public DayLog updateDayLog(DayLog updatedDayLog) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final String UPDATE_DAYLOG = "UPDATE daylog SET useraccountid = ?, logdate = ?, notes = ? WHERE daylogid = ?";
+        jdbc.update(UPDATE_DAYLOG, updatedDayLog.getUser().getUserAccountId(), updatedDayLog.getLogDate(), 
+                updatedDayLog.getNotes(), updatedDayLog.getDayLogId());
+        return getDayLogById(updatedDayLog.getDayLogId());
     }
 
     @Override

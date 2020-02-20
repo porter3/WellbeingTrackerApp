@@ -1,7 +1,9 @@
 package com.jakeporter.WellbeingTrackerAPI.service;
 
+import com.jakeporter.WellbeingTrackerAPI.data.DayLogDao;
 import com.jakeporter.WellbeingTrackerAPI.data.MetricEntryDao;
 import com.jakeporter.WellbeingTrackerAPI.data.UserAccountDao;
+import com.jakeporter.WellbeingTrackerAPI.entities.DayLog;
 import com.jakeporter.WellbeingTrackerAPI.entities.MetricEntry;
 import com.jakeporter.WellbeingTrackerAPI.entities.MetricType;
 import java.sql.SQLException;
@@ -21,6 +23,9 @@ public class UpdateServiceImpl implements UpdateService{
     
     @Autowired
     MetricEntryDao entryDao;
+    
+    @Autowired
+    DayLogDao logDao;
 
     public void populateMetricTypesWithUser(int userId, MetricType... types){
         for (MetricType type: types){
@@ -30,5 +35,9 @@ public class UpdateServiceImpl implements UpdateService{
     
     public MetricEntry updateMetricEntry(MetricEntry entry){
         return entryDao.editMetricEntry(entry);
+    }
+    
+    public DayLog updateDayLog(DayLog log){
+        return logDao.updateDayLog(log);
     }
 }

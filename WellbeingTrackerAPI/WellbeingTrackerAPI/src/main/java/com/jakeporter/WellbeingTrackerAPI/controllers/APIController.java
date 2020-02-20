@@ -83,8 +83,22 @@ public class APIController {
     
     // get all DayLogs for a user
     @GetMapping("/daylogs/{userId}")
-    public ResponseEntity<List<LocalDate>> getAllDayLogsForUser(@PathVariable int userId){
+    public ResponseEntity<List<DayLog>> getAllDayLogsForUser(@PathVariable int userId){
         return new ResponseEntity(lookupService.getDayLogsForUser(userId), HttpStatus.OK);
+    }
+    
+    // get notes for a specific date/dayLog
+    @GetMapping("/notes/{userId}/{date}")
+    public ResponseEntity<List<DayLog>> getNotesForUserAndDate(@PathVariable int userId, @PathVariable String date){
+        LocalDate convertedDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("MM-dd-yyyy"));
+        String notes = "";
+        try{
+            notes = lookupService.getNotesForUserAndDate(userId, convertedDate);
+        }
+        catch(NullPointerException e){
+            // do nothing
+        }
+        return new ResponseEntity(notes, HttpStatus.OK);
     }
     
     // get all log dates for a user (FOR GRAPH VIEW)
@@ -126,6 +140,7 @@ public class APIController {
     @PostMapping("/updateLog/{userId}")
     public ResponseEntity updateLogEntries(@PathVariable int userId, @RequestBody LogHolder holder) throws InvalidEntryException, InvalidMetricTypeException{
         LocalDate convertedDate = LocalDate.parse(holder.getDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
+        String notes = holder.getNotes();
         UpdatedEntryInfo[] updatedEntries = holder.getUpdatedEntries();
         NewEntryInfo[] newEntries = holder.getNewEntries();
 
@@ -134,11 +149,11 @@ public class APIController {
         
         boolean onlyNewEntries = false;
         
-        // if there are no updatedEntries, then there are only new entries
+        // if there are no updatedEntries, then there are only new entries and notes
         if (updatedEntries.length == 0){
             onlyNewEntries = true;
         }
-        if (updatedEntries.length == 0 && newEntries.length == 0){
+        if (updatedEntries.length == 0 && newEntries.length == 0 && notes.isBlank()){
             onlyNewEntries = false;
         }
         
@@ -147,6 +162,10 @@ public class APIController {
         
         // check if DayLog has already been created
         log = lookupService.getDayLogByDateAndUser(userId, convertedDate);
+        if (log != null){
+            log.setNotes(notes);
+            updateService.updateDayLog(log);
+        }
                 
         // if there are existing entries:
         if (!onlyNewEntries){
@@ -166,12 +185,12 @@ public class APIController {
             }
         }
         
-        
         // if log is still null (meaning there are only new entries), create a new one
         if (log == null){
             log = new DayLog();
             log.setLogDate(convertedDate);
             log.setUser(lookupService.getUserAccountById(userId));
+            log.setNotes(notes);
             log = addService.addDayLog(log);
         }
         
@@ -189,8 +208,11 @@ public class APIController {
 
         // If a DayLog has no entries, delete it
         List<DayLog> userLogs = lookupService.getDayLogsForUser(userId);
-        for (DayLog dayLog : userLogs){    
-            if (lookupService.getMetricEntriesByDate(userId, dayLog.getLogDate()).isEmpty()){
+        
+        
+        // logic here dictates that a log won't be deleted if it has notes but no entries
+        for (DayLog dayLog : userLogs){
+            if (lookupService.getMetricEntriesByDate(userId, dayLog.getLogDate()).isEmpty() && (dayLog.getNotes() == null || dayLog.getNotes().isBlank())){
                 deleteService.deleteDayLog(dayLog.getDayLogId());
             }
         }

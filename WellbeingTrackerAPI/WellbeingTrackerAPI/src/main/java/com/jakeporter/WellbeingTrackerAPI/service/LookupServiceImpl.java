@@ -34,7 +34,8 @@ public class LookupServiceImpl implements LookupService{
     @Autowired
     UserAccountDao userDao;
     
-    // need to create a Comparator for DayLog that sorts by logDate if you want these sorted
+    
+    // DayLog implements Comparator, should be sorted in ascending order by logDate
     public List<DayLog> getDayLogsForUser(int userId){
         List<DayLog> dayLogs = logDao.getAllDayLogs().stream()
                 .filter(log -> log.getUser().getUserAccountId() == userId)
@@ -98,5 +99,10 @@ public class LookupServiceImpl implements LookupService{
     
     public UserAccount getUserByUsername(String username){
         return userDao.getUserByUsername(username);
+    }
+
+    @Override
+    public String getNotesForUserAndDate(int userId, LocalDate convertedDate) {
+        return getDayLogByDateAndUser(userId, convertedDate).getNotes();
     }
 }

@@ -12,65 +12,18 @@ $(document).ready(function () {
     getDataDisplayGraph();
 
     displayEntryTable();
-    updateEntries();
+    updateEntriesAndNotes();
 });
 
-function displayDummyGraph(){
-    // get the canvas element. for whatever reason, using the jQuery selector here screws this up.
-    var canvas = document.getElementById('lineGraph');
-    // make a new graph, passing in the canvas element to display it in there
-    var lineGraph = new Chart(canvas, {
-        type: 'line',
-        data: {
-            // x-axis labels (dates in this case)
-            labels:['01/01/2000','01/02/2000','01/04/2000'], 
-            datasets: [
-                // first line
-                {
-                    label: 'Protein(g)',
-                    yAxisID: '0',
-                    data: [200, 170, 186],
-                    // many more color customization options exist. rgb values range from 0-255. a = alpha, opacity on a scale of 0-1
-                    borderColor: [
-                    'rgba(100, 99, 132, 1)'
-                    ]
-                },
-                {
-                    label: 'Mood',
-                    yAxisID: '1',
-                    data: [9, 6, 7],
-                    borderColor: [
-                    'rgba(300, 99, 132, 1)'
-                    ]
-                }
-            ]
+// AJAX
+function getNotes(userId, date){
+    return $.ajax({
+        type: "GET",
+        url: "http://localhost:8080/api/notes/" + userId + "/" + date,
+        success: function (dates) {
         },
-        options: {
-            title:{
-                display: true,
-                text: 'Metrics'
-            },
-            scales: {
-                yAxes: [
-                    {
-                        id: '0',
-                        type: 'linear',
-                        position: 'left',
-                        min: 0,
-                        ticks: {
-                            display: true
-                        }
-                    },
-                    {
-                        id: '1',
-                        type: 'linear',
-                        position: 'left',
-                        ticks: {
-                            display: true
-                        }
-                    }
-                ]
-            }
+        error: function(xhr){
+            alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText);
         }
     });
 }
@@ -86,7 +39,7 @@ function displayTodaysDate(){
 
     today = mm + '/' + dd + '/' + yyyy;
     
-    //display today's date
+    // display today's date
     $("#dateDisplay").text(today);
 }
 
@@ -237,8 +190,11 @@ function getDataDisplayGraph(){
     
     $.when(getDates(userId), getMetricTypes(userId), getAllMetricEntries(userId)).done(function(dates, typeList, parentList){
 
+        console.log("DATES: ", dates);
+
         // arrays to hold stuff
-        var dateArray = dates[0];
+        var dateArray = dates[0]
+
         console.log("DATE ARRAY: ", dateArray);
         var typeArray = typeList[0];
         var parentArrayForEntries = parentList[0]; // this array's child arrays are sorted by metricType 
@@ -303,9 +259,6 @@ function getDataDisplayGraph(){
                     }
                 }
 
-            console.log("DATES: ", dateArray);
-            console.log("DATAPOINTS: ", dataPoints);
-
             // choose labeling format depending on whether dataset/metricType is a subjective type
             var label = typeArray[i].metricName;
 
@@ -325,7 +278,6 @@ function getDataDisplayGraph(){
 
             dataSetList.push(dataSet);
         }
-        console.log("Here's the array of datasets: ", dataSetList);
 
         // Y-AXES
         var yAxes = new Array();
@@ -364,17 +316,18 @@ function displayEntryTable(){
     console.log("USERID: ", userId);
     var date = $("#dateDisplay").text().split("/").join("-");
     // after all AJAX calls are made:
-    $.when(getMetricTypes(userId), getEntriesForDate(userId, date)).done(function(typeList, entryList){
+    $.when(getMetricTypes(userId), getEntriesForDate(userId, date), getNotes(userId, date)).done(function(typeList, entryList, notes){
 
         var typeArray = typeList[0];
         var entriesForDateArray = entryList[0];
 
-        console.log("TYPEARRAY: ", typeArray);
-
         var tableBody = $('#entryTableBody');
-
         // clear entry table
         tableBody.empty();
+
+        // display today's notes
+        $('#notesArea').val(notes[0]);
+        console.log("NOTES: ", notes[0]);
 
         // for all the metricTypes in typeArray, append a row to the table body
         for (i = 0; i < typeArray.length; i++){
@@ -464,7 +417,7 @@ function editEntry(editButtonHTML, deleteButtonHTML){
 }
 
 // AJAX
-function sendEntriesToApi(userId, updatedEntryArray, newEntryArray, date){
+function sendEntriesToApi(userId, updatedEntryArray, newEntryArray, date, notes){
     var token = $("meta[name='_csrf']").attr("content");
     var header = $("meta[name='_csrf_header']").attr("content");
 
@@ -472,11 +425,12 @@ function sendEntriesToApi(userId, updatedEntryArray, newEntryArray, date){
             "date": date,
 			"updatedEntries": updatedEntryArray,
 			"newEntries": newEntryArray,
-			"notes": ""
+			"notes": notes
     };
+    console.log("DATA: ", data);
     
     $(document).ajaxSend(function (e, xhr, options) {
-      xhr.setRequestHeader(header, token);
+        xhr.setRequestHeader(header, token);
     });
     
     $.ajax({
@@ -503,7 +457,7 @@ function sendEntriesToApi(userId, updatedEntryArray, newEntryArray, date){
     Will send them to API in two arrays. Back-end will delete entries
     based on which ones don't exist for the DayLog.
 */
-function updateEntries(){
+function updateEntriesAndNotes(){
     $('#saveChangesButton').click(function(){
         // array to hold previously existing entries
         var updatedEntryArray = new Array();
@@ -574,9 +528,10 @@ function updateEntries(){
         console.log("UPDATED ENTRY ARRAY: ", updatedEntryArray);
         console.log("NEW ENTRY ARRAY: ", newEntryArray);
 
+        var notes = $('#notesArea').val();
         var userId = $('#userId').text();
         var date = $("#dateDisplay").text().split("/").join("-");
-        sendEntriesToApi(userId, updatedEntryArray, newEntryArray, date);
+        sendEntriesToApi(userId, updatedEntryArray, newEntryArray, date, notes);
     });
 }
 

@@ -24,4 +24,5 @@ public interface LookupService {
     public UserAccount getUserAccountById(int userId);
     public DayLog getDayLogByDateAndUser(int userId, LocalDate convertedDate);
     public UserAccount getUserByUsername(String username);
+    public String getNotesForUserAndDate(int userId, LocalDate convertedDate);
 }
