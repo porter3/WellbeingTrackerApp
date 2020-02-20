@@ -29,13 +29,13 @@ xmlns="http://www.w3.org/1999/xhtml"
                     <li class="active">
                         <a href=""><button class="sidebarLink btn">remove metrics</button></a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a href="usersettings"><button class="sidebarLink btn">user settings</button></a>
-                    </li>
+                    </li> -->
                     <li>
                         <div sec:authorize="isAuthenticated()">
                             <form method="POST" action="/logout">
-                                <!-- <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/> -->
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                                 <a><button class="sidebarLink btn" id="logOutButton" type="submit">log out</button></a>
                             </form>
                         </div>
@@ -62,7 +62,7 @@ xmlns="http://www.w3.org/1999/xhtml"
                     <div class="col-md-4 offset-md-4">
                         <div id="metricTypeDiv" class="row">
                             <div class="col-md-12">
-                                <h5>currently tracked metrics</h5>
+                                <h5>currently tracked:</h5>
                                 <table id="metricTypeTable">
                                     <div th:each="type : ${typeList}">
                                     <tr class="typeElement">

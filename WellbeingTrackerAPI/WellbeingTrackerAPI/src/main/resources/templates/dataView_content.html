@@ -37,9 +37,9 @@ xmlns="http://www.w3.org/1999/xhtml"
                     <li>
                         <a href="removemetrics"><button class="sidebarLink btn">remove metrics</button></a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a href="usersettings"><button class="sidebarLink btn">user settings</button></a>
-                    </li>
+                    </li> -->
                     <li>
                         <div sec:authorize="isAuthenticated()">
                             <form method="POST" action="/logout">
@@ -99,7 +99,8 @@ xmlns="http://www.w3.org/1999/xhtml"
                                 <span>
                                     logged in as <span th:text="${#authentication.name}"></span>
                                 </span>
-                                <textarea id="notesArea" rows="6" cols="50">
+                                <label for="notes">notes</label>
+                                <textarea class="form-control dark-border-focus" id="notesArea" rows="6">
 
                                 </textarea>
                             </div>

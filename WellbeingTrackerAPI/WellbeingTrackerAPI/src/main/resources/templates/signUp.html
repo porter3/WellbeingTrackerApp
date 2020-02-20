@@ -15,7 +15,10 @@ xmlns="http://www.w3.org/1999/xhtml"
     </head>
     <body>
         <div class="container">
-            <div class="row">
+            <div class="text-center">
+                <h3>sign up</h3>
+            </div>
+            <div id="formRow" class="row">
                 <div class="col-md-6">
                     <form method="POST" action="adduser">
                         <div class="form-group">
@@ -102,12 +105,12 @@ xmlns="http://www.w3.org/1999/xhtml"
                         <button id="submitButton" type="submit" class="btn btn-outline-dark">sign up</button>
                     </form>
                 </div>
+                <div class="col-md-4 offset-md-2 errors">
+                    <p class="alert-danger rounded"
+                    th:each="violation : ${violations}"
+                    th:text="${violation}"></p>
+                </div>
             </div>
-
-
-
-
-
 
             
         </div>

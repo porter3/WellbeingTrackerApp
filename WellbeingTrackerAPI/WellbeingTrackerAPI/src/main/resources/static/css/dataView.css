@@ -49,3 +49,7 @@ background-color: #fafafa;
 color: #333C3C;
 border-radius: 60%
 }
+.form-control:focus {
+    border: 1px solid #333C3C;
+    box-shadow: 0 0 0 0.2rem #333C3C;
+}

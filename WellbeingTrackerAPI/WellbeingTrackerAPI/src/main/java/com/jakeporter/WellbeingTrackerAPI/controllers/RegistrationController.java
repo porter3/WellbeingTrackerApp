@@ -51,12 +51,10 @@ public class RegistrationController {
         System.out.println("ADDUSER IS EXECUTING");
         // populates UserAccount object from form
         UserAccount user = addService.populateNewUserFromForm(request);
+        violations.clear();
         // validate user in case client-side doesn't exist/work
         validateService.validateNewAccountSettings(violations, user, request.getParameter("confirmPassword"));
         if (!violations.isEmpty()){
-            for (String violation: violations){ // test statement
-                System.out.println(violation);
-            }
             return "redirect:/signup";
         }
         // encrypt user's password

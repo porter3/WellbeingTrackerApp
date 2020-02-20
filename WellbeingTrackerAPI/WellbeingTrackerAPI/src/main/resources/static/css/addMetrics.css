@@ -1,5 +1,5 @@
 #header{
-    margin: 40px 0px;
+    margin: 20px 0px;
 }
 
 .subtypeHeader{
@@ -9,6 +9,10 @@
 .item:hover{
     background-color: black;
     color: white;
+}
+
+#content{
+    margin-top: 40px;
 }
 
 #addButtonRow{

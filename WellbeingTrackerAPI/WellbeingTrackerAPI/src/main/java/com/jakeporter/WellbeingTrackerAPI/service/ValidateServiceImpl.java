@@ -33,7 +33,7 @@ public class ValidateServiceImpl implements ValidateService{
     public void validateNewAccountSettings(Set<String> violations, UserAccount user, String passwordConfirmationEntry){
         // check for first name
         if (user.getFirstName().isBlank()){
-            violations.add("You must enter your first name.");
+            violations.add("you must enter your first name.");
         }
         validateUsername(violations, user.getUsername());
         validatePassword(violations, user.getPassword(), passwordConfirmationEntry);
@@ -43,11 +43,11 @@ public class ValidateServiceImpl implements ValidateService{
     public void validateUsername(Set<String> violations, String username){
         // check for existence
         if (username.isBlank()){
-            violations.add("You must enter a username.");
+            violations.add("you must enter a username.");
         }
         // check for a length over 15
         if (username.length() > 15){
-            violations.add("Username cannot be over 15 characters.");
+            violations.add("username cannot be over 15 characters.");
         }
         validateUsernameDoesNotExist(violations, username);
     }
@@ -56,7 +56,7 @@ public class ValidateServiceImpl implements ValidateService{
         Set<String> usernames = userDao.getAllUserAccounts()
                 .stream().map(UserAccount::getUsername).collect(Collectors.toSet());
         if (usernames.contains(username)){
-            violations.add("Username already exists.");
+            violations.add("username already exists.");
         }
     }
     
@@ -67,19 +67,19 @@ public class ValidateServiceImpl implements ValidateService{
         
         // check if user entered password
         if(password.isBlank()){
-            violations.add("You must enter a password.");
+            violations.add("you must enter a password.");
         }
         
         // check that passwordConfirmation matches password
         System.out.println("PASSWORD: " + password);
         System.out.println("PASSWORD CONFIRMATION: " + passwordConfirmationEntry);
         if(!password.equals(passwordConfirmationEntry)){
-            violations.add("Passwords do not match.");
+            violations.add("passwords do not match.");
         }
         
         // TODO: split this up so regex only checks for uppercase/lowercase/number inclusion, not casing
         if (!Pattern.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,50}$", password)){
-            violations.add("Password must be between 8-50 characters, as well as "
+            violations.add("password must be between 8-50 characters, as well as "
                     + "contain at least 1 uppercase letter, 1 lowercase letter, and 1 number.");
         }
     }
@@ -92,7 +92,7 @@ public class ValidateServiceImpl implements ValidateService{
 //        }
         // check if user entered email
         if (email.isBlank()){
-            violations.add("You must enter an email address.");
+            violations.add("you must enter an email address.");
         }
         
         validateEmailDoesNotExist(violations, email);
@@ -102,7 +102,7 @@ public class ValidateServiceImpl implements ValidateService{
         Set<String> emails = userDao.getAllUserAccounts()
                 .stream().map(UserAccount::getEmail).collect(Collectors.toSet());
         if (emails.contains(email)){
-            violations.add("Email is already registered.");
+            violations.add("email is already registered.");
         }
     }
     
