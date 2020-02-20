@@ -53,55 +53,54 @@ xmlns="http://www.w3.org/1999/xhtml"
             </nav>
 
             <div id="content" class="container">
-                <!-- COLLAPSE BUTTON -->
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                    <div class="container-fluid">
-                        <button type="button" id="sidebarCollapse" class="btn btn-info">
-                            <span>
-                                <i class="fas fa-bars"></i>
-                            </span>
-                        </button>
+                <div class="row">
+                    <div class="col-md-1">
+                        <!-- COLLAPSE BUTTON -->
+                        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                            <div class="container-fluid">
+                                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                                    <span>
+                                        <i class="fas fa-bars"></i>
+                                    </span>
+                                </button>
+                            </div>
+                        </nav>
                     </div>
-                </nav>
 
-                <!-- GRAPH AND ENTRY ROW -->
-                <div class="row">
-                    <div>
-                        Logged in as <span th:text="${#authentication.name}"></span>
-                    </div>
-                    <!-- GRAPH -->
-                    <div id="graph col">
-                        <canvas id="lineGraph" width="1100" height="450"></canvas>
-                    </div>
-                    <!-- UPDATE GRAPH BUTTON -->
-                    <div class="col">
+                    <div class="col-md-10">
+                        <!-- GRAPH AND ENTRY ROW -->
                         <div class="row">
-                            <div id="dateDisplay"></div>
+                            <!-- GRAPH -->
+                            <div id="graph col">
+                                <canvas id="lineGraph" width="1000" height="450"></canvas>
+                            </div>
                         </div>
+                        <!-- ENTRY FORM -->
                         <div class="row">
-                            <a href="#" id="backButton" class="selector">&#8249;</a>
-                            <a href="#" id="forwardButton" class="selector">&#8250;</a>
+                            <div class="col-md-5">
+                                <table class="table table-striped">
+                                    <tbody id="entryTableBody">
+                                        <!-- entry rows appended here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- SAVE CHANGES BUTTON -->
+                            <div class="col-md-2">
+                                <div class="row">
+                                    <div id="dateDisplay"></div>
+                                </div>
+                                <div class="row">
+                                    <a href="#" id="backButton" class="selector">&#8249;</a>
+                                    <a href="#" id="forwardButton" class="selector">&#8250;</a>
+                                </div>
+                                <button id="saveChangesButton" class="btn border-dark btn-lg">save changes</button>
+                            </div>
+                            <div class="col-md-3 offset-md-2 text-right">
+                                <span class="pull-right">
+                                    logged in as <span th:text="${#authentication.name}"></span>
+                                </span>
+                            </div>
                         </div>
-                        <!-- <div sec:authorize="hasRole('ROLE_USER')">
-                            <p>User status: USER</p>
-                        </div>
-                        <div sec:authorize="hasRole('ROLE_ADMIN')">
-                            <p>User status: ADMIN</p>
-                        </div> -->
-                    </div>
-                </div>
-                <!-- ENTRY FORM -->
-                <div class="row">
-                    <div class="col-md-5">
-                        <table class="table table-striped">
-                            <tbody id="entryTableBody">
-                                <!-- entry rows appended here -->
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- SAVE CHANGES BUTTON -->
-                    <div class="col">
-                        <button id="saveChangesButton" class="btn border-dark btn-lg">save changes</button>
                     </div>
                 </div>
             </div>

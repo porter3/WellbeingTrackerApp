@@ -30,9 +30,9 @@ public class ValidateServiceImpl implements ValidateService{
     @Autowired
     LookupService lookupService;
 
-    public void validateNewAccountSettings(Set<String> violations, UserAccount user){
+    public void validateNewAccountSettings(Set<String> violations, UserAccount user, String passwordConfirmationEntry){
         validateUsername(violations, user.getUsername());
-        validatePassword(violations, user.getPassword());
+        validatePassword(violations, user.getPassword(), passwordConfirmationEntry);
         validateEmail(violations, user.getPassword());
     }
     
@@ -52,7 +52,7 @@ public class ValidateServiceImpl implements ValidateService{
         }
     }
     
-    public void validatePassword(Set<String> violations, String password){
+    public void validatePassword(Set<String> violations, String password, String passwordConfirmationEntry){
         /* ^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,50}$ matches strings with at least 8 characters, 
         no more than 50 characters, and at least one lowercase letter, uppercase letter, and
         number each */

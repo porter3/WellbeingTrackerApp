@@ -1,7 +1,20 @@
+h1{
+    margin: 40px 0px 70px;
+}
+
+h5{
+    margin-bottom: 30px
+}
+
 .typeElement{
     margin-bottom: 20px;
 }
 
 .deleteButton{
-    margin-left: 20px;
+    margin-left: 60px;
+}
+
+.deleteButton:hover{
+    background-color: black;
+    color: white;
 }

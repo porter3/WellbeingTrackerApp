@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import static java.time.temporal.ChronoUnit.DAYS;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -84,5 +85,17 @@ public class AddServiceImpl implements AddService{
                     }
                 }
             }
+    }
+
+    @Override
+    public UserAccount populateNewUserFromForm(HttpServletRequest request) {
+        UserAccount user = new UserAccount();
+        user.setUsername(request.getParameter("username"));
+        user.setPassword(request.getParameter("password"));
+        user.setFirstName(request.getParameter("firstName"));
+        user.setLastName(request.getParameter("lastName"));
+        user.setEmail(request.getParameter("email"));
+        user.setTimeZone(request.getParameter("timeZone"));
+        return user;
     }
 }

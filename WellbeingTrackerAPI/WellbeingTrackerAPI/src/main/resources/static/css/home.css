@@ -10,10 +10,10 @@
 
 body {
     background: #fafafa;
+    font-family: 'Source Code Pro', monospace;
 }
 
 h1 {
-    font-family: 'Source Code Pro', monospace;
     margin-bottom: 30px;
 }
 

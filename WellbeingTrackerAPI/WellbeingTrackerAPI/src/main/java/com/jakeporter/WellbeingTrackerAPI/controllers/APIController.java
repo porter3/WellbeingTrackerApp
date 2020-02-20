@@ -179,28 +179,8 @@ public class APIController {
             // newEntry is added to DB, its type is also added to createdAndUpdatedEntries
             createdAndUpdatedTypes.add(addService.addMetricEntry(newEntry).getMetricType());
         }
-        
-        // DELETE ANY REMOVED ENTRIES
-        /* 
-        Compare the types of existing entries for the current date in the database
-        against the types of the entries just passed in. If the type
-        of an existing entry (typesForTheDatesEntries) does NOT
-        have an entry in the new POST request (createdAndUpdatedTypes),
-        delete it from the database.
-        */
-//        List<MetricEntry> entriesForDate = lookupService.getMetricEntriesByDate(userId, convertedDate);
-//        List<MetricType> typesForTheDatesEntries = entriesForDate.stream()
-//                .map(MetricEntry::getMetricType)
-//                .collect(Collectors.toList());
-//        for (int k = 0; k < typesForTheDatesEntries.size(); k++){
-//            // if the POST request types do not contain a preexisting type
-//            if (!createdAndUpdatedTypes.contains(typesForTheDatesEntries.get(k))){
-//                // delete the entry associated with that type and date
-//                deleteService.deleteMetricEntry(entriesForDate.get(k).getMetricEntryId());
-//            }
-//        }
 
-        
+        // If a DayLog has no entries, delete it
         List<DayLog> userLogs = lookupService.getDayLogsForUser(userId);
         for (DayLog dayLog : userLogs){    
             if (lookupService.getMetricEntriesByDate(userId, dayLog.getLogDate()).isEmpty()){
@@ -208,7 +188,10 @@ public class APIController {
             }
         }
         
-        // add any missing DayLogs (dates with no entries) for user
+        /*
+        Add any missing DayLogs (dates with no entries) for user to fill in potential gaps.
+        Does not contradict previous code block.
+        */
         addService.fillDayLogGaps(userId);
         
         return new ResponseEntity(HttpStatus.OK);

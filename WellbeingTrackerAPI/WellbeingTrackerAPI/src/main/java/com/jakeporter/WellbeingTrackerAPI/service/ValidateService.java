@@ -16,11 +16,11 @@ import java.util.Set;
  */
 public interface ValidateService {
 
-    public void validateNewAccountSettings(Set<String> violations, UserAccount user) throws InvalidUsernameException, InvalidPasswordException, InvalidEmailException;
+    public void validateNewAccountSettings(Set<String> violations, UserAccount user, String passwordConfirmationEntry);
     public void validateNewAccountSettings(UserAccount user) throws InvalidUsernameException, InvalidPasswordException, InvalidEmailException;
     public void validateUsername(Set<String> violations, String username);
     public void validateUsername(String username) throws InvalidUsernameException;
-    public void validatePassword(Set<String> violations, String password);
+    public void validatePassword(Set<String> violations, String password, String passwordConfirmationEntry);
     public void validatePassword(String password) throws InvalidPasswordException;
     public void validateEmail(Set<String> violations, String email);
     public void validateEmail(String email) throws InvalidEmailException;

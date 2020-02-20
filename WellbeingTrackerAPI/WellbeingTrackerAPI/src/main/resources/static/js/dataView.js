@@ -1,7 +1,7 @@
 $(document).ready(function () {
-    // collapse the sideline when the button is clicked
-    $('#sidelineCollapse').on('click', function() {
-        $('#sideline').toggleClass('active');
+    // collapse the sideBar when the button is clicked
+    $('#sidebarCollapse').on('click', function() {
+        $('#sidebar').toggleClass('active');
     });
     
     displayTodaysDate();
@@ -221,7 +221,12 @@ function displayGraph(labels, dataSets, yAxes){
             },
             legend:{
                 position: "left"
-            }
+            },
+            layout: {
+                padding: {
+                  top: 12
+                }
+              }
         }});
 }
 
@@ -407,7 +412,7 @@ function displayEntryTable(){
                     // label
                     '<tr id="' + entry.metricEntryId + '" ' + scaleData + ' ' + nameData + ' ' + typeIdData + '><td><label for="'+ metricNameNoWhitespace + '">' + metricName + " " + label + '</label></td>'
                     // input
-                    + '<td><input type="number" min="1" max="' + typeArray[i].scale +  '" id="' + metricNameNoWhitespace + '" class="form-control border-dark metricInput" value="' + entry.metricValue + '"</td>'
+                    + '<td><input onfocusout="validateEntryOnCursorLeave()" type="number" min="1" max="' + typeArray[i].scale +  '" id="' + metricNameNoWhitespace + '" class="form-control border-dark metricInput" value="' + entry.metricValue + '"</td>'
                 );
             }
             // if metricType has no entry
@@ -416,7 +421,7 @@ function displayEntryTable(){
                     // label
                     '<tr id="' + metricNameNoWhitespace + 'Row" ' + scaleData + ' ' + nameData + ' ' + typeIdData + '><td><label for="' + metricNameNoWhitespace + '" class="control-label">' + metricName + " " + label + '</label></td>'
                     // input
-                    + '<td><input id="' + metricNameNoWhitespace + '" name="' + typeArray[i].metricTypeId + '" class="form-control border-dark metricInput" type="number" min="1" max="' + typeArray[i].scale + '"</td></tr>'
+                    + '<td><input onfocusout="validateEntryOnCursorLeave()" id="' + metricNameNoWhitespace + '" name="' + typeArray[i].metricTypeId + '" class="form-control border-dark metricInput" type="number" min="1" max="' + typeArray[i].scale + '"</td></tr>'
                 );
             }
         }
@@ -524,7 +529,7 @@ function updateEntries(){
             if ($(this).attr('data-scale') != 0){
                 // check for negative inputs (done seperate here because I want a different message)
                 if (entryValue < 0){
-                    alert("You can't log a negative value for " + $(this).attr('data-name') + ". If this was done on purpose, consider seeing your doctor.");
+                    alert("You can't log a negative value for " + $(this).attr('data-name') + ". Hopefully that wasn't done on purpose.");
                     return;
                 }
                 scale = parseInt($(this).attr('data-scale'));
@@ -563,4 +568,7 @@ function updateEntries(){
         var date = $("#dateDisplay").text().split("/").join("-");
         sendEntriesToApi(userId, updatedEntryArray, newEntryArray, date);
     });
+}
+
+function validateEntryOnCursorLeave(){
 }

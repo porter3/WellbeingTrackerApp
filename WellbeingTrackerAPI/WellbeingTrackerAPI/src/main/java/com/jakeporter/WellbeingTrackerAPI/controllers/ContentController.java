@@ -88,28 +88,4 @@ public class ContentController {
         return "userSettings";
     }
     
-    @GetMapping("/signup")
-    public String displaySignUp(){
-        return "signUp";
-    }
-    
-    @PostMapping("/adduser")
-    public String addUser(UserAccount user, HttpServletRequest request, Model model){
-        // validate user. User should be validated client-side first, should theoretically never have to throw exceptions here.
-        try{
-            validateService.validateNewAccountSettings(user);
-        }
-        catch(InvalidUsernameException | InvalidPasswordException | InvalidEmailException e){
-            violations.add(e.getMessage());
-        }
-        if (!violations.isEmpty()){
-            model.addAttribute("violations", violations);
-            return "redirect:/signUp";
-        }
-        addService.createNewAccount(user);
-        
-        // log user in
-        
-        return "redirect:/content";
-    }
 }

@@ -59,23 +59,19 @@ xmlns="http://www.w3.org/1999/xhtml"
                     <h1>remove metrics</h1>
                 </div>
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-4 offset-md-4">
                         <div id="metricTypeDiv" class="row">
-                            <h5>currently tracked metrics</h5>
-                            <table id="metricTypeTable">
-                                <div th:each="type : ${typeList}">
-                                <tr class="typeElement">
-                                    <td th:text="${type.metricName}"></td>
-                                    <td><a href="#" th:href="@{/deleteconfirmation(id=${type.metricTypeId})}"><button type="button" class="btn border-dark deleteButton" th:id="${type.metricTypeId}" th:text="delete"></button></a></td>
-                                </tr>
-                                </div>
-                            </table>
-                        </div>
-                    </div>
-                    <!-- METRIC DISPLAY AREA -->
-                    <div class="col-md-9 jumbotron">
-                        <div id="metricDisplayArea" class="row">
-
+                            <div class="col-md-12">
+                                <h5>currently tracked metrics</h5>
+                                <table id="metricTypeTable">
+                                    <div th:each="type : ${typeList}">
+                                    <tr class="typeElement">
+                                        <td th:text="${type.metricName}"></td>
+                                        <td><a href="#" th:href="@{/deleteconfirmation(id=${type.metricTypeId})}"><button type="button" class="btn border-dark deleteButton" th:id="${type.metricTypeId}" th:text="delete"></button></a></td>
+                                    </tr>
+                                    </div>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

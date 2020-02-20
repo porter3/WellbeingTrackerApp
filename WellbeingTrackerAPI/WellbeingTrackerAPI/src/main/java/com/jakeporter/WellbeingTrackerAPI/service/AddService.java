@@ -5,6 +5,7 @@ import com.jakeporter.WellbeingTrackerAPI.entities.MetricEntry;
 import com.jakeporter.WellbeingTrackerAPI.entities.MetricType;
 import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -18,4 +19,5 @@ public interface AddService {
     public DayLog addDayLog(DayLog log);
     public MetricEntry addMetricEntry(MetricEntry entry);
     public void fillDayLogGaps(int userId);
+    public UserAccount populateNewUserFromForm(HttpServletRequest request);
 }

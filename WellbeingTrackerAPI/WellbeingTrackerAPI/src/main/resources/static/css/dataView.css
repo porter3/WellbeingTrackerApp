@@ -2,6 +2,10 @@ label{
     margin-top: 8px;
 }
 
+#content{
+    margin-top: 40px;
+}
+
 .metricInput{
     width: 100px !important;
 }
@@ -15,13 +19,14 @@ label{
 }
 
 #saveChangesButton{
-    margin-top: 80px;
+    margin-top: 20px;
 }
 
 #saveChangesButton:hover{
     background-color: black;
     color: white;
 }
+
 
 /* back and forward buttons */
 
@@ -34,7 +39,13 @@ color: #fff;
 border-radius: 50%;
 }
 
+.selector:visited{
+    background-color: #333C3C;
+    color: #fff;
+}
+
 .selector:hover {
 background-color: #fafafa;
 color: #333C3C;
+border-radius: 60%
 }

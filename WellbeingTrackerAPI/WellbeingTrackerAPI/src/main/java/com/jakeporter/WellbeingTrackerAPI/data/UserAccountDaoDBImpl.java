@@ -52,6 +52,7 @@ public class UserAccountDaoDBImpl implements UserAccountDao{
     @Override
     @Transactional
     public UserAccount addUserAccount(UserAccount user) {
+        System.out.println("USER IS BEING INSERTED");
         final String INSERT_USER = "INSERT INTO useraccount"
                 + "(username, userpassword, firstname, lastname, email, creationtimestamp, timezone)"
                 + " VALUES(?,?,?,?,?,?,?)";
