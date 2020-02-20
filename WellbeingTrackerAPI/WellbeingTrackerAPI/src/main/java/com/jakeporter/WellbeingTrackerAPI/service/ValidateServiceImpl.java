@@ -31,12 +31,20 @@ public class ValidateServiceImpl implements ValidateService{
     LookupService lookupService;
 
     public void validateNewAccountSettings(Set<String> violations, UserAccount user, String passwordConfirmationEntry){
+        // check for first name
+        if (user.getFirstName().isBlank()){
+            violations.add("You must enter your first name.");
+        }
         validateUsername(violations, user.getUsername());
         validatePassword(violations, user.getPassword(), passwordConfirmationEntry);
         validateEmail(violations, user.getPassword());
     }
     
     public void validateUsername(Set<String> violations, String username){
+        // check for existence
+        if (username.isBlank()){
+            violations.add("You must enter a username.");
+        }
         // check for a length over 15
         if (username.length() > 15){
             violations.add("Username cannot be over 15 characters.");
@@ -57,6 +65,18 @@ public class ValidateServiceImpl implements ValidateService{
         no more than 50 characters, and at least one lowercase letter, uppercase letter, and
         number each */
         
+        // check if user entered password
+        if(password.isBlank()){
+            violations.add("You must enter a password.");
+        }
+        
+        // check that passwordConfirmation matches password
+        System.out.println("PASSWORD: " + password);
+        System.out.println("PASSWORD CONFIRMATION: " + passwordConfirmationEntry);
+        if(!password.equals(passwordConfirmationEntry)){
+            violations.add("Passwords do not match.");
+        }
+        
         // TODO: split this up so regex only checks for uppercase/lowercase/number inclusion, not casing
         if (!Pattern.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,50}$", password)){
             violations.add("Password must be between 8-50 characters, as well as "
@@ -70,6 +90,11 @@ public class ValidateServiceImpl implements ValidateService{
 //        if (!Pattern.matches("(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])", email)){
 //            throw new InvalidEmailException("Email address is invalid.");
 //        }
+        // check if user entered email
+        if (email.isBlank()){
+            violations.add("You must enter an email address.");
+        }
+        
         validateEmailDoesNotExist(violations, email);
     }
     

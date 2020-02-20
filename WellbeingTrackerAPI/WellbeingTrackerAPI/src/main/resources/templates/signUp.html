@@ -17,7 +17,7 @@ xmlns="http://www.w3.org/1999/xhtml"
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <form method="POST" action="adduser" id="userForm">
+                    <form method="POST" action="adduser">
                         <div class="form-group">
                             <label for="email">email</label>
                             <input type="email" class="form-control" id="email" name="email" placeholder="email">
@@ -96,6 +96,9 @@ xmlns="http://www.w3.org/1999/xhtml"
                                 <option value="+14:00">(GMT +14:00) Line Islands, Tokelau</option>
                             </select>
                         </div>
+                        <input type="hidden"                        
+                            th:name="${_csrf.parameterName}"
+                            th:value="${_csrf.token}"/>
                         <button id="submitButton" type="submit" class="btn btn-outline-dark">sign up</button>
                     </form>
                 </div>
