@@ -3,7 +3,7 @@ label{
 }
 
 #content{
-    margin-top: 40px;
+    margin-top: 15px;
 }
 
 .metricInput{
@@ -16,10 +16,16 @@ label{
 
 #dateDisplay{
     font-size: x-large;
+    margin-left: 30px;
+}
+
+#dateButtons{
+    margin-left: 40px;
 }
 
 #saveChangesButton{
     margin-top: 20px;
+    margin-left: 26px;
 }
 
 #saveChangesButton:hover{
