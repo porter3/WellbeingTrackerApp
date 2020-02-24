@@ -3,15 +3,17 @@ $(document).ready(function () {
     $('#sidebarCollapse').on('click', function() {
         $('#sidebar').toggleClass('active');
     });
+
+    var userId = $('#userId').text();
     
     displayTodaysDate();
-    // when back or forward button is clicked, take formatted date, add one day to it, return it
-    moveDateBack();
-    moveDateForward();
+    
+    moveDateBack(userId);
+    moveDateForward(userId);
 
     getDataDisplayGraph();
 
-    displayEntryTable();
+    displayEntryTable(userId);
     updateEntriesAndNotes();
 });
 
@@ -43,7 +45,7 @@ function displayTodaysDate(){
     $("#dateDisplay").text(today);
 }
 
-function moveDateBack(){
+function moveDateBack(userId){
     $('#backButton').click(function (event) { 
         var dateComponents = $("#dateDisplay").text().split("/");
     
@@ -61,11 +63,11 @@ function moveDateBack(){
         var yyyy = newDate.getFullYear();
         $('#dateDisplay').text(mm + '/' + dd + '/' + yyyy);
 
-        displayEntryTable();
+        displayEntryTable(userId);
     });
 }
 
-function moveDateForward(){
+function moveDateForward(userId){
     $('#forwardButton').click(function (event) { 
         var dateComponents = $("#dateDisplay").text().split("/");
     
@@ -83,7 +85,7 @@ function moveDateForward(){
         var yyyy = newDate.getFullYear();
         $('#dateDisplay').text(mm + '/' + dd + '/' + yyyy);
 
-        displayEntryTable();
+        displayEntryTable(userId);
     });
 }
 
@@ -106,7 +108,10 @@ function getMetricTypes(userId){
     return $.ajax({
         type: "GET",
         url: "http://localhost:8080/api/metrictypes/" + userId,
+        startTime: performance.now(),
         success: function (data) {
+            var timeToComplete = performance.now() - this.startTime;
+            console.log(' getMetricTypes() took ', (timeToComplete / 1000).toFixed(3), ' seconds to complete');
         },
         error: function(xhr){
             alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText);
@@ -119,7 +124,12 @@ function getAllMetricEntries(userId){
     return $.ajax({
         type: "GET",
         url: "http://localhost:8080/api/metricentries/" + userId,
+        startTime: performance.now(),
         success: function (parentList) {
+            var timeToComplete =  performance.now() - this.startTime;
+            var seconds = timeToComplete / 1000;
+            seconds = seconds.toFixed(3); // rounding to 3 decimal places
+            console.log('getAllMetricEntries() took ', seconds, 'seconds to complete');
         },
         error: function(xhr){
             alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText);
@@ -262,6 +272,13 @@ function getDataDisplayGraph(){
             // choose labeling format depending on whether dataset/metricType is a subjective type
             var label = typeArray[i].metricName;
 
+            // TODO: make subjective metrics all one color shade
+
+            // var isSubjective = false;
+            // if (childList[0].metricType.scale != 0){
+            //     alert('Types scale is ', childList[0].metricType.scale);
+            // }
+
             // set each dataSet's label
             var dataSet = {
                 label: label,
@@ -308,11 +325,10 @@ function getDataDisplayGraph(){
 }
 
 // display entry table
-function displayEntryTable(){
+function displayEntryTable(userId){
     // get all the MetricTypes associated with the user's account
     // get all the entries for the date being displayed
 
-    var userId = $('#userId').text();
     console.log("USERID: ", userId);
     var date = $("#dateDisplay").text().split("/").join("-");
     // after all AJAX calls are made:
@@ -327,7 +343,6 @@ function displayEntryTable(){
 
         // display today's notes
         $('#notesArea').val(notes[0]);
-        console.log("NOTES: ", notes[0]);
 
         // for all the metricTypes in typeArray, append a row to the table body
         for (i = 0; i < typeArray.length; i++){
@@ -339,7 +354,6 @@ function displayEntryTable(){
                 // if the current metricType has an entry, assign it to entry
                 if (typeArray[i].metricTypeId == entriesForDateArray[j].metricType.metricTypeId){
                     entry = entriesForDateArray[j];
-                    console.log("COMPLETED ENTRY: ", entry);
                 }
             }
 
