@@ -8,13 +8,17 @@ $(document).ready(function () {
     
     displayTodaysDate();
     
-    moveDateBack(userId);
-    moveDateForward(userId);
+    $.when(getMetricTypes(userId)).done(function(typeArray){
+        console.log("this is the list of types in the main function: ", typeArray);
+        moveDateBack(userId, typeArray);
+        moveDateForward(userId, typeArray);
 
-    getDataDisplayGraph();
+        getDataDisplayGraph(typeArray);
 
-    displayEntryTable(userId);
-    updateEntriesAndNotes();
+        displayEntryTable(userId, typeArray);
+        updateEntriesAndNotes(userId, typeArray);
+
+    });
 });
 
 // AJAX
@@ -45,7 +49,7 @@ function displayTodaysDate(){
     $("#dateDisplay").text(today);
 }
 
-function moveDateBack(userId){
+function moveDateBack(userId, typeArray){
     $('#backButton').click(function (event) { 
         var dateComponents = $("#dateDisplay").text().split("/");
     
@@ -63,11 +67,11 @@ function moveDateBack(userId){
         var yyyy = newDate.getFullYear();
         $('#dateDisplay').text(mm + '/' + dd + '/' + yyyy);
 
-        displayEntryTable(userId);
+        displayEntryTable(userId, typeArray);
     });
 }
 
-function moveDateForward(userId){
+function moveDateForward(userId, typeArray){
     $('#forwardButton').click(function (event) { 
         var dateComponents = $("#dateDisplay").text().split("/");
     
@@ -85,7 +89,7 @@ function moveDateForward(userId){
         var yyyy = newDate.getFullYear();
         $('#dateDisplay').text(mm + '/' + dd + '/' + yyyy);
 
-        displayEntryTable(userId);
+        displayEntryTable(userId, typeArray);
     });
 }
 
@@ -193,30 +197,29 @@ function displayGraph(labels, dataSets, yAxes){
         }});
 }
 
-function getDataDisplayGraph(){
+function getDataDisplayGraph(typeArray){
 
     // get the current user's ID  to pass into AJAX calls
     var userId = $('#userId').text();
     
-    $.when(getDates(userId), getMetricTypes(userId), getAllMetricEntries(userId)).done(function(dates, typeList, parentList){
-
-        console.log("DATES: ", dates);
+    $.when(getDates(userId), getAllMetricEntries(userId)).done(function(dates, parentList){
 
         // arrays to hold stuff
         var dateArray = dates[0]
-
-        console.log("DATE ARRAY: ", dateArray);
-        var typeArray = typeList[0];
         var parentArrayForEntries = parentList[0]; // this array's child arrays are sorted by metricType 
-        console.log("PARENT ARRAY: ", parentArrayForEntries);
 
-        // list of colors to make the lines (20 right now)
-        var colors = [
+        var subjectiveColors = [
+            '#FFEB3B',
+            '#FBC02D',
+            '#FFCA28',
+            '#FF8F00',
+            '#FFEE58',
+            '#FFF59D'
+        ];
+        var quantitativeColors = [
             "#e6194B", // red
             "#3cb44b", // green
-            "#ffe119", // yellow
             "#4363d8", // blue
-            "#f58231", // orange
             "#911eb4", // purple
             "#42d4f4", // cyan
             "#f032e6", // magenta
@@ -236,6 +239,10 @@ function getDataDisplayGraph(){
 
         // DATASETS
         var dataSetList = new Array();
+
+        // counters for determining which color to assign
+        var quantitativeColorCounter = 0;
+        var subjectiveColorCounter = 0;
 
         // Iterating over MetricTypes
         // for each MetricType, create a new dataSet
@@ -272,20 +279,13 @@ function getDataDisplayGraph(){
             // choose labeling format depending on whether dataset/metricType is a subjective type
             var label = typeArray[i].metricName;
 
-            // TODO: make subjective metrics all one color shade
-
-            // var isSubjective = false;
-            // if (childList[0].metricType.scale != 0){
-            //     alert('Types scale is ', childList[0].metricType.scale);
-            // }
-
             // set each dataSet's label
             var dataSet = {
                 label: label,
                 yAxisID: i,
                 data: dataPoints,
-                backgroundColor: colors[i],
-                borderColor: colors[i],
+                backgroundColor: quantitativeColors[quantitativeColorCounter],
+                borderColor: quantitativeColors[quantitativeColorCounter],
                 spanGaps: true,
                 fill: false,
                 pointRadius: 6,
@@ -293,6 +293,15 @@ function getDataDisplayGraph(){
                 lineTension: .25
             };
 
+            // subjective entries are a shade of orange/yellow
+            if (childList[0].metricType.scale != 0){
+                dataSet.backgroundColor = subjectiveColors[subjectiveColorCounter];
+                dataSet.borderColor = subjectiveColors[subjectiveColorCounter];
+                subjectiveColorCounter++;
+            }
+            else{
+                quantitativeColorCounter++;
+            }
             dataSetList.push(dataSet);
         }
 
@@ -325,16 +334,16 @@ function getDataDisplayGraph(){
 }
 
 // display entry table
-function displayEntryTable(userId){
+function displayEntryTable(userId, typeArray){
     // get all the MetricTypes associated with the user's account
     // get all the entries for the date being displayed
 
-    console.log("USERID: ", userId);
+    console.log("displayEntryTable() USERID: ", userId);
+    console.log('displayEntryTable(): typearray: ', typeArray);
     var date = $("#dateDisplay").text().split("/").join("-");
     // after all AJAX calls are made:
-    $.when(getMetricTypes(userId), getEntriesForDate(userId, date), getNotes(userId, date)).done(function(typeList, entryList, notes){
+    $.when(getEntriesForDate(userId, date), getNotes(userId, date)).done(function(entryList, notes){
 
-        var typeArray = typeList[0];
         var entriesForDateArray = entryList[0];
 
         var tableBody = $('#entryTableBody');
@@ -431,7 +440,7 @@ function editEntry(editButtonHTML, deleteButtonHTML){
 }
 
 // AJAX
-function sendEntriesToApi(userId, updatedEntryArray, newEntryArray, date, notes){
+function sendEntriesToApi(userId, updatedEntryArray, newEntryArray, date, notes, typeArray){
     var token = $("meta[name='_csrf']").attr("content");
     var header = $("meta[name='_csrf_header']").attr("content");
 
@@ -456,8 +465,8 @@ function sendEntriesToApi(userId, updatedEntryArray, newEntryArray, date, notes)
         },
         data: JSON.stringify(data),
         success: function (response) {
-            getDataDisplayGraph();
-            displayEntryTable(date);
+            getDataDisplayGraph(typeArray);
+            displayEntryTable(userId, typeArray);
         },
         error: function(xhr){
             alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText);
@@ -471,7 +480,7 @@ function sendEntriesToApi(userId, updatedEntryArray, newEntryArray, date, notes)
     Will send them to API in two arrays. Back-end will delete entries
     based on which ones don't exist for the DayLog.
 */
-function updateEntriesAndNotes(){
+function updateEntriesAndNotes(userId, typeArray){
     $('#saveChangesButton').click(function(){
         // array to hold previously existing entries
         var updatedEntryArray = new Array();
@@ -543,9 +552,8 @@ function updateEntriesAndNotes(){
         console.log("NEW ENTRY ARRAY: ", newEntryArray);
 
         var notes = $('#notesArea').val();
-        var userId = $('#userId').text();
         var date = $("#dateDisplay").text().split("/").join("-");
-        sendEntriesToApi(userId, updatedEntryArray, newEntryArray, date, notes);
+        sendEntriesToApi(userId, updatedEntryArray, newEntryArray, date, notes, typeArray);
     });
 }
 

@@ -143,9 +143,6 @@ public class APIController {
         String notes = holder.getNotes();
         UpdatedEntryInfo[] updatedEntries = holder.getUpdatedEntries();
         NewEntryInfo[] newEntries = holder.getNewEntries();
-
-        // Holds all the types for entries created/updated in this POST request (used for deletion below)
-        List<MetricType> createdAndUpdatedTypes = new ArrayList();
         
         boolean onlyNewEntries = false;
         
@@ -181,7 +178,6 @@ public class APIController {
                 originalEntry.setMetricValue(updatedEntries[i].getValue());
                 validateService.validateMetricEntry(originalEntry);
                 MetricEntry updatedEntry = updateService.updateMetricEntry(originalEntry);
-                createdAndUpdatedTypes.add(updatedEntry.getMetricType());
             }
         }
         
@@ -202,8 +198,8 @@ public class APIController {
             newEntry.setMetricValue(newEntries[j].getValue());
             newEntry.setEntryTime(Time.valueOf(LocalTime.now())); // TODO: change to user's time zone (shouldn't be that hard)
             validateService.validateMetricEntry(newEntry);
-            // newEntry is added to DB, its type is also added to createdAndUpdatedEntries
-            createdAndUpdatedTypes.add(addService.addMetricEntry(newEntry).getMetricType());
+            // newEntry is added to DB
+            addService.addMetricEntry(newEntry);
         }
 
         // If a DayLog has no entries, delete it
