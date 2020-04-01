@@ -3,9 +3,8 @@ USE WellbeingTrackerPresentation;
 INSERT INTO useraccount(username, userpassword, firstname, lastname, email, creationtimestamp, timezone) VALUES
 ('jakep310', '$2a$10$7CjTHzwJJRjecs57ITJEDeuPPyy.mduJiDMP/sfael7JUnhsX7w/y', 'Jake', 'Porter', 'jakeporter310@gmail.com', '2019-02-04 11:32:00', 'EST');
 
-INSERT INTO useraccount(username, userpassword, firstname, lastname, email, creationtimestamp, timezone) VALUES
-('billsusername', '$2a$10$7CjTHzwJJRjecs57ITJEDeuPPyy.mduJiDMP/sfael7JUnhsX7w/y', 'Bill', 'Smith', 'bill@gmail.com', '2019-02-18 11:32:00', 'EST');
-
+DELETE FROM user_role WHERE useraccountid = 4;
+DELETE FROM useraccount WHERE useraccountid = 4;
 SELECT * FROM useraccount;
 
 INSERT INTO metrictype(useraccountid, metricname, scale, unit) VALUES
@@ -23,7 +22,9 @@ INSERT INTO daylog(useraccountid, logdate, notes) VALUES
 (1, '2020-02-12', ''),
 (1, '2020-02-13', 'this is today!');
 
-SELECT * FROM daylog WHERE useraccountid = 1;
+SELECT * FROM daylog WHERE useraccountid = 1 ORDER BY logdate;
+
+UPDATE daylog set notes = 'check dem notesssssssssssss' WHERE daylogid = 216;
 
 INSERT INTO metricentry(daylogid, metrictypeid, metricvalue, entrytime) VALUES
 (1, 1, 8, '10:20:12.0000000'),
@@ -47,6 +48,8 @@ INSERT INTO User_Role(UserAccountId, RoleId) VALUES
 
 INSERT INTO User_Role(UserAccountId, RoleId) VALUES
 (2, 2);
+
+SELECT * FROM User_role;
 
 SET SQL_SAFE_UPDATES=0;
 

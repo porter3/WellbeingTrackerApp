@@ -1,7 +1,7 @@
-DROP DATABASE IF EXISTS wellbeingtrackertest;
+DROP DATABASE IF EXISTS wellbeingtrackerpersonal;
 
-CREATE DATABASE WellbeingTrackertest;
-USE WellbeingTrackertest;
+CREATE DATABASE wellbeingtrackerpersonal;
+USE wellbeingtrackerpersonal;
 
 CREATE TABLE UserAccount(
 	UserAccountId INT PRIMARY KEY AUTO_INCREMENT,
@@ -41,7 +41,6 @@ CREATE TABLE DayLog(
 	-- STRECH: Composite key of DayLogId and UserId (should begin incrementing at 1 for a new user)
 );
 
--- Shouldn't need an isSubjective column. Can determine that by checking if scale/unit is null.
 CREATE TABLE MetricType(
 	MetricTypeId INT PRIMARY KEY AUTO_INCREMENT,
     UserAccountId INT NOT NULL,
