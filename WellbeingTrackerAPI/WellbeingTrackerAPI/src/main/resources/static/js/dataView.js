@@ -199,6 +199,8 @@ function displayGraph(labels, dataSets, yAxes){
 
 function getDataDisplayGraph(typeArray){
 
+    console.log(typeArray);
+
     // get the current user's ID  to pass into AJAX calls
     var userId = $('#userId').text();
     
@@ -294,7 +296,7 @@ function getDataDisplayGraph(typeArray){
             };
 
             // subjective entries are a shade of orange/yellow
-            if (childList[0].metricType.scale != 0){
+            if (typeArray[i].scale != 0){
                 dataSet.backgroundColor = subjectiveColors[subjectiveColorCounter];
                 dataSet.borderColor = subjectiveColors[subjectiveColorCounter];
                 subjectiveColorCounter++;
