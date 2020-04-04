@@ -204,9 +204,6 @@ function displayMetricTypes(allPredefinedTypes){
 
     $.when(getMetricTypes(userId)).done(function(metricTypesForUser){
 
-        console.log("PREDEFINED TYPES: ", allPredefinedTypes);
-        console.log("METRIC TYPES FOR USER: ", metricTypesForUser);
-
         var metricDisplayArea = $('#metricDisplayArea');
         var typesUserDoesntHave = new Array();
         var typesToAddForUser = new Array();
