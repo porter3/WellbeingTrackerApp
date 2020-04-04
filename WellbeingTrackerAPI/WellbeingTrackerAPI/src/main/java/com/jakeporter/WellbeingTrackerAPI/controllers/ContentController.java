@@ -10,7 +10,6 @@ import com.jakeporter.WellbeingTrackerAPI.service.LookupService;
 import com.jakeporter.WellbeingTrackerAPI.service.ValidateService;
 import java.util.HashSet;
 import java.util.Set;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  *
@@ -46,13 +46,14 @@ public class ContentController {
 
     @GetMapping("/content")
     public String displayContentPage(Model model, @AuthenticationPrincipal UserDetails currentUser) {
-        UserAccount user = lookupService.getUserByUsername(currentUser.getUsername()); // CHANGE TO SERVICE METHOD
+        UserAccount user = lookupService.getUserByUsername(currentUser.getUsername());
         model.addAttribute("currentUser", user);
         
         return "dataView_content";
     }
     
-    @GetMapping("/addmetrics")
+    // used the longer @RequestMapping annotation just to compare to the shortcut versions
+    @RequestMapping(value = "/addmetrics", method = RequestMethod.GET)
     public String displayAddMetrics(Model model, @AuthenticationPrincipal UserDetails currentUser){
         UserAccount user = lookupService.getUserByUsername(currentUser.getUsername()); // CHANGE TO SERVICE METHOD
         model.addAttribute("currentUser", user);
@@ -61,9 +62,9 @@ public class ContentController {
     }
     
     @GetMapping("/removemetrics")
-    public String displayRemoveMetrics(Model model){
-        // HARDCODED USER ID
-        model.addAttribute("typeList", lookupService.getMetricTypesForUser(1));
+    public String displayRemoveMetrics(Model model, @AuthenticationPrincipal UserDetails currentUser){
+        UserAccount user = lookupService.getUserByUsername(currentUser.getUsername());
+        model.addAttribute("typeList", lookupService.getMetricTypesForUser(user.getUserAccountId()));
         return "removeMetrics";
     }
     
