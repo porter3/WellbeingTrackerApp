@@ -8,6 +8,6 @@ create an account, add/remove metric types to track, and log metric entries for 
 
 Main page UI makes AJAX calls to a Java/Spring Boot REST API to get/post data.
 
-Still a work in progress. Future goals include deployment, further refactoring, API performance improvements, 
+Still a work in progress. Future goals include further refactoring, recommendation engine, deployment, API performance improvements, 
 progressive web app conversion, CSS changes to improve UI responsiveness, input validation 
 prior to sending data, reading user nutrition data from an external API.
