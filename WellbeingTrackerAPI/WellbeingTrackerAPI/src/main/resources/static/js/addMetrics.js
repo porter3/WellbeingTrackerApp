@@ -1,9 +1,11 @@
-$(document).ready(function () {
-    $('#sidebarCollapse').on('click', function() {
+$(document).ready(() => {
+    $('#sidebarCollapse').on('click', () => {
         $('#sidebar').toggleClass('active');
     });
 
-    var predefinedSleepTypes = [
+    const userId = $('#userId').text();
+
+    const predefinedSleepTypes = [
         {
             metricName: "sleep time",
             scale: 0,
@@ -15,7 +17,7 @@ $(document).ready(function () {
             unit: "",
         }
     ];
-    var predefinedNutritionTypes = [
+    const predefinedNutritionTypes = [
         {
             metricName: "calories",
             scale: 0,
@@ -57,7 +59,7 @@ $(document).ready(function () {
             unit: "g",
         }
     ];
-    var predefinedExerciseTypes = [
+    const predefinedExerciseTypes = [
         {
             metricName: "total exercise",
             scale: 0,
@@ -74,7 +76,7 @@ $(document).ready(function () {
             unit: "min",
         }
     ];
-    var predefinedMentalTypes = [
+    const predefinedMentalTypes = [
         {
             metricName: "social time",
             scale: 0,
@@ -121,7 +123,7 @@ $(document).ready(function () {
             unit: "min"
         }
     ];
-    var predefinedSubjectiveTypes = [
+    const predefinedSubjectiveTypes = [
         {
             metricName: "mood",
             scale: 10,
@@ -143,7 +145,7 @@ $(document).ready(function () {
             unit: ""
         }
     ];
-    var allPredefinedTypes = [
+    const allPredefinedTypes = [
         {name: "sleep", types: predefinedSleepTypes},
         {name: "nutrition", types: predefinedNutritionTypes}, 
         {name: "exercise", types: predefinedExerciseTypes}, 
@@ -151,12 +153,11 @@ $(document).ready(function () {
         {name: "", types: predefinedSubjectiveTypes}
     ];
 
-    displayMetricTypes(allPredefinedTypes);
+    displayMetricTypes(userId, allPredefinedTypes);
 });
 
 // AJAX
 function getMetricTypes(userId){
-    console.log("USER ID: ", userId);
     return $.ajax({
         type: "GET",
         url: "http://localhost:8080/api/metrictypes/" + userId,
@@ -172,12 +173,11 @@ function getMetricTypes(userId){
 // AJAX
 function sendAddedMetricTypesToApi(userId, metricTypeArray){
 
-    $('#addMetricsButton').click(function (event) { 
-        event.preventDefault();
-        var token = $("meta[name='_csrf']").attr("content");
-        var header = $("meta[name='_csrf_header']").attr("content");
+    $('#addMetricsButton').click(() => { 
+        const token = $("meta[name='_csrf']").attr("content");
+        const header = $("meta[name='_csrf_header']").attr("content");
 
-        $(document).ajaxSend(function (e, xhr, options) {
+        $(document).ajaxSend((e, xhr) => {
             xhr.setRequestHeader(header, token);
         });
         
@@ -189,25 +189,24 @@ function sendAddedMetricTypesToApi(userId, metricTypeArray){
                 'Content-Type': 'application/json'
             },
             data: JSON.stringify(metricTypeArray),
-            success: function (response) {
+            success: () => {
                 window.location.replace("content");
             },
-            error: function(xhr){
+            error: (xhr) => {
                 alert("Request status: " + xhr.status + "Status text: " + xhr.statusText + xhr.responseText);
             }
         });
     });
 }
 
-function displayMetricTypes(allPredefinedTypes){
-    var userId = $('#userId').text();
+function displayMetricTypes(userId, allPredefinedTypes){
 
-    $.when(getMetricTypes(userId)).done(function(metricTypesForUser){
+    $.when(getMetricTypes(userId)).done((metricTypesForUser) => {
 
-        var metricDisplayArea = $('#metricDisplayArea');
-        var typesUserDoesntHave = new Array();
-        var typesToAddForUser = new Array();
-        var html = '';
+        const metricDisplayArea = $('#metricDisplayArea');
+        let typesUserDoesntHave = new Array();
+        let typesToAddForUser = new Array();
+        let html = '';
 
             // iterate over all of the type-arrays in allPredefinedTypes
             for (i = 0; i < allPredefinedTypes.length; i++){
@@ -225,16 +224,19 @@ function displayMetricTypes(allPredefinedTypes){
                 // 'print' the subTypeHeader to the HTML
                 html += '<h5 class="subtypeHeader">' + allPredefinedTypes[i].name + '</h5>';
 
+                let predefinedTypeName;
+                let predefinedTypeScale;
+                let predefinedTypeUnit;
+                let userHasType;
                 // iterate over all the predefined types in a type-array
                 for (j = 0; j < allPredefinedTypes[i].types.length; j++){
-                    var predefinedTypeName = allPredefinedTypes[i].types[j].metricName;
-                    var predefinedTypeScale = allPredefinedTypes[i].types[j].scale;
-                    var predefinedTypeUnit = allPredefinedTypes[i].types[j].unit;
+                    predefinedTypeName = allPredefinedTypes[i].types[j].metricName;
+                    predefinedTypeScale = allPredefinedTypes[i].types[j].scale;
+                    predefinedTypeUnit = allPredefinedTypes[i].types[j].unit;
 
-                    // iterate over each type a user has
-                    var userHasType = false;
+                    // iterate over each type a user has. Assume initially they don't have it.
+                    userHasType = false;
                     for (k = 0; k < metricTypesForUser.length; k++){
-
                         if (predefinedTypeName === metricTypesForUser[k].metricName){
                             userHasType = true;
                         }
@@ -249,28 +251,21 @@ function displayMetricTypes(allPredefinedTypes){
                         }
                         // add each type that user doesn't have to an array
                         typesUserDoesntHave.push(allPredefinedTypes[i].types[j]);
-                    }
-                    else{
-                        console.log("USER HAS THIS TYPE: ", metricTypesForUser[k-1].metricName);
-                    }                    
+                    }                  
                 }
             }
-            console.log("TYPES USER DOESN'T HAVE: ", typesUserDoesntHave);
             metricDisplayArea.append(html);
 
 
             // add items to metricAddingArea, return them as types in an array
-            $('a.type').click(function (element) { 
-                element.preventDefault();
-                
+            $('a.type').click(function() { 
+
                 $('#metricAddingArea').append('<p id="' + $(this).attr('id') + '">' + $(this).text() + '</p>');
 
                 // add the element in typesUserDoesntHave with the name of the element selected
                 for (l = 0; l < typesUserDoesntHave.length; l++){
-
                     if ($(this).attr('id') === typesUserDoesntHave[l].metricName){
                         typesToAddForUser.push(typesUserDoesntHave[l]);
-                        console.log("types to add for user: ", typesToAddForUser);
 
                         typesToAddForUser.forEach(function(incompleteType){
                             incompleteType.metricTypeId = 0;
@@ -285,7 +280,6 @@ function displayMetricTypes(allPredefinedTypes){
                             timeZone: ""
                             };
                         });
-                        console.log('COMPLETE TYPES TO ADD: ', typesToAddForUser);
                     }
                 }
                 $(this).remove();
