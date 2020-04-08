@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(document).ready(() => {
     // function usernameAlert(){
     //     $('#username').addEventListener('onchange', function(){
     //         $.when(validateUsername()).done(function(isTaken){
@@ -13,8 +13,8 @@ $(document).ready(function () {
 
 function validateUsername(){
 
-    var username = $('#username').val();
-    var submitButton = $('#signUpButton');
+    const username = $('#username').val();
+    const submitButton = $('#signUpButton');
     console.log("username: ", username);
 
     $.ajax({
@@ -24,12 +24,12 @@ function validateUsername(){
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        success: function (isTaken) {
+        success: (isTaken) => {
             if (!isTaken){
                 alert('all good');
             }
         },
-        error: function(){
+        error: () => {
             alert('username lookup failed');
         }
     });
