@@ -51,6 +51,14 @@ public class ContentController {
         
         return "dataView_content";
     }
+
+    @GetMapping("/reactContent")
+    public String displayContentPageReact(Model model, @AuthenticationPrincipal UserDetails currentUser){
+        UserAccount user = lookupService.getUserByUsername(currentUser.getUsername());
+        model.addAttribute("currentUser", user);
+        
+        return "enter_ViewData";
+    }
     
     // used the longer @RequestMapping annotation just to compare to the shortcut versions
     @RequestMapping(value = "/addmetrics", method = RequestMethod.GET)
