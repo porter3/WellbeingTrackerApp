@@ -32,7 +32,7 @@ public class ValidateServiceImpl implements ValidateService{
 
     public void validateNewAccountSettings(Set<String> violations, UserAccount user, String passwordConfirmationEntry){
         // check for first name
-        if (user.getFirstName().isBlank()){
+        if (user.getFirstName().trim().isEmpty()){
             violations.add("you must enter your first name.");
         }
         validateUsername(violations, user.getUsername());
@@ -42,7 +42,7 @@ public class ValidateServiceImpl implements ValidateService{
     
     public void validateUsername(Set<String> violations, String username){
         // check for existence
-        if (username.isBlank()){
+        if (username.trim().isEmpty()){
             violations.add("you must enter a username.");
         }
         // check for a length over 15
@@ -66,7 +66,7 @@ public class ValidateServiceImpl implements ValidateService{
         number each */
         
         // check if user entered password
-        if(password.isBlank()){
+        if(password.trim().isEmpty()){
             violations.add("you must enter a password.");
         }
         
@@ -91,7 +91,7 @@ public class ValidateServiceImpl implements ValidateService{
 //            throw new InvalidEmailException("Email address is invalid.");
 //        }
         // check if user entered email
-        if (email.isBlank()){
+        if (email.trim().isEmpty()){
             violations.add("you must enter an email address.");
         }
         
