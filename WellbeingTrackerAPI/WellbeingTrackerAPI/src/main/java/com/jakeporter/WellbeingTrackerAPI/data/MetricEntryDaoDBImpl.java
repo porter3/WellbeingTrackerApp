@@ -18,7 +18,6 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-@Profile("database")
 public class MetricEntryDaoDBImpl implements MetricEntryDao{
     
     @Autowired

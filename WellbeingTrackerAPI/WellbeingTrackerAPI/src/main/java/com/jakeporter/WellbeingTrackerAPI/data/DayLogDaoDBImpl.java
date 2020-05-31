@@ -21,7 +21,6 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-@Profile("database")
 public class DayLogDaoDBImpl implements DayLogDao{
     
     @Autowired
