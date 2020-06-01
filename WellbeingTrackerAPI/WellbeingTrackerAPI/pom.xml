@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.4.RELEASE</version>
+		<version>2.3.0.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.jakeporter</groupId>
@@ -14,11 +14,57 @@
 	<name>WellbeingTrackerAPI</name>
 	<description>Demo project for Spring Boot</description>
 
-	<properties>
-		<java.version>11</java.version>
-	</properties>
+	<packaging>war</packaging>
+
+	<profiles>
+		<profile>
+			<id>local</id>
+<!--			<properties>-->
+<!--				<java.version>11</java.version>-->
+<!--				<spring.profiles.active>database</spring.profiles.active>-->
+<!--			</properties>-->
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+					</plugin>
+<!--					<plugin>-->
+<!--						<groupId>org.apache.maven.plugins</groupId>-->
+<!--						<artifactId>maven-jar-plugin</artifactId>-->
+<!--						<configuration>-->
+<!--							<archive>-->
+<!--								<manifest>-->
+<!--									<addClasspath>true</addClasspath>-->
+<!--									<mainClass>com.jakeporter.WellbeingTrackerAPI.WellBeingTrackerApiApplication</mainClass>-->
+<!--								</manifest>-->
+<!--							</archive>-->
+<!--						</configuration>-->
+<!--					</plugin>-->
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>production</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
@@ -69,25 +115,6 @@
 		</dependency>
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-				  <archive>
-					<manifest>
-					  <addClasspath>true</addClasspath>
-					  <mainClass>com.jakeporter.WellbeingTrackerAPI.WellBeingTrackerApiApplication</mainClass>
-					</manifest>
-				  </archive>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+
 
 </project>
