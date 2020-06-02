@@ -1,15 +1,23 @@
 package com.jakeporter.WellbeingTrackerAPI.security;
 
+import com.sun.tools.javac.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -20,9 +28,22 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity // enables Spring Security's web security support and provides Spring MVC integration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
+    // Get rid of explicit constructor and use factory method once switched to Java 11
+    private Set<String> allowedHttpMethods;
+
+    public WebSecurityConfig() {
+        String[] httpMethods = {"DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "CONNECT"};
+        this.allowedHttpMethods = Arrays.stream(httpMethods).collect(Collectors.toSet());
+    }
+
     @Autowired
     UserDetailsService userDetails;
-    
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.httpFirewall(getHttpFirewall());
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http    
@@ -51,6 +72,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    private StrictHttpFirewall getHttpFirewall() {
+        StrictHttpFirewall firewall = new StrictHttpFirewall();
+        firewall.setAllowedHttpMethods(allowedHttpMethods);
+        return firewall;
     }
     
 }
