@@ -71,8 +71,6 @@ public class ValidateServiceImpl implements ValidateService{
         }
         
         // check that passwordConfirmation matches password
-        System.out.println("PASSWORD: " + password);
-        System.out.println("PASSWORD CONFIRMATION: " + passwordConfirmationEntry);
         if(!password.equals(passwordConfirmationEntry)){
             violations.add("passwords do not match.");
         }
