@@ -19,28 +19,12 @@
 	<profiles>
 		<profile>
 			<id>local</id>
-<!--			<properties>-->
-<!--				<java.version>11</java.version>-->
-<!--				<spring.profiles.active>database</spring.profiles.active>-->
-<!--			</properties>-->
 			<build>
 				<plugins>
 					<plugin>
 						<groupId>org.springframework.boot</groupId>
 						<artifactId>spring-boot-maven-plugin</artifactId>
 					</plugin>
-<!--					<plugin>-->
-<!--						<groupId>org.apache.maven.plugins</groupId>-->
-<!--						<artifactId>maven-jar-plugin</artifactId>-->
-<!--						<configuration>-->
-<!--							<archive>-->
-<!--								<manifest>-->
-<!--									<addClasspath>true</addClasspath>-->
-<!--									<mainClass>com.jakeporter.WellbeingTrackerAPI.WellBeingTrackerApiApplication</mainClass>-->
-<!--								</manifest>-->
-<!--							</archive>-->
-<!--						</configuration>-->
-<!--					</plugin>-->
 				</plugins>
 			</build>
 		</profile>
