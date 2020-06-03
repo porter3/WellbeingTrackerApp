@@ -5,20 +5,18 @@ $(document).ready(function () {
 
     // URL variables - only change localBuild
     const localBuild = false;
-    const server = localBuild ? 'localhost' : 'wbt-war-rdsConnected-env.eba-fwuvtiv7.us-east-1.elasticbeanstalk';
-    const port = localBuild ? 8080 : 5000;
-    const apiUrl = 'http://' + server + ':' + port + '/api';
-
+    const server = localBuild ? 'localhost:8080' : 'wbt-war-rdsConnected-env.eba-fwuvtiv7.us-east-1.elasticbeanstalk.com';
+    const apiUrl = 'http://' + server + '/api';
     const userId = $('#userId').text();
     
     displayTodaysDate();
     
-    $.when(getMetricTypes(userId)).done((typeArray) => {
-        moveDateBack(userId, typeArray);
-        moveDateForward(userId, typeArray);
-        getDataDisplayGraph(typeArray);
-        displayEntryTable(userId, typeArray);
-        updateEntriesAndNotes(userId, typeArray);
+    $.when(getMetricTypes(apiUrl, userId)).done((typeArray) => {
+        moveDateBack(apiUrl, userId, typeArray);
+        moveDateForward(apiUrl, userId, typeArray);
+        getDataDisplayGraph(apiUrl, typeArray);
+        displayEntryTable(apiUrl, userId, typeArray);
+        updateEntriesAndNotes(apiUrl, userId, typeArray);
     });
 });
 
@@ -36,7 +34,7 @@ function displayTodaysDate(){
     $("#dateDisplay").text(today);
 }
 
-function moveDate(userId, typeArray, dateChangeDirection){
+function moveDate(apiUrl, userId, typeArray, dateChangeDirection){
     const dateComponents = $("#dateDisplay").text().split("/");
     
         let newDate = new Date(
@@ -59,23 +57,23 @@ function moveDate(userId, typeArray, dateChangeDirection){
         const yyyy = newDate.getFullYear();
         $('#dateDisplay').text(mm + '/' + dd + '/' + yyyy);
 
-        displayEntryTable(userId, typeArray);
+        displayEntryTable(apiUrl, userId, typeArray);
 }
 
-function moveDateBack(userId, typeArray){
+function moveDateBack(apiUrl, userId, typeArray){
     $('#backButton').click(() => { 
-        moveDate(userId, typeArray, 'back');
+        moveDate(apiUrl, userId, typeArray, 'back');
     });
 }
 
-function moveDateForward(userId, typeArray){
+function moveDateForward(apiUrl, userId, typeArray){
     $('#forwardButton').click(() => { 
-        moveDate(userId, typeArray, 'forward');
+        moveDate(apiUrl, userId, typeArray, 'forward');
     });
 }
 
 // AJAX
-function getNotes(userId, date){
+function getNotes(apiUrl, userId, date){
     return $.ajax({
         type: "GET",
         url: apiUrl + '/notes/' + userId + '/' + date,
@@ -87,10 +85,10 @@ function getNotes(userId, date){
 }
 
 // AJAX
-function getDates(userId){
+function getDates(apiUrl, userId){
     return $.ajax({
         type: "GET",
-        url:apiUrl + '/dates/' + userId,
+        url: apiUrl + '/dates/' + userId,
         success: () => {},
         error: (xhr) => {
             alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText + ' - DATES NOT RETRIEVED');
@@ -99,12 +97,13 @@ function getDates(userId){
 }
 
 // AJAX
-function getMetricTypes(userId){
+function getMetricTypes(apiUrl, userId){
+    console.log('getMetricTypes is running');
     return $.ajax({
         type: "GET",
         url: apiUrl + '/metrictypes/' + userId,
         startTime: performance.now(),
-        success: () => {},
+        success: (response) => { console.log('success? : ' , response) },
         error: (xhr) => {
             alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText +" - TYPES NOT RETRIEVED");
         }
@@ -112,7 +111,7 @@ function getMetricTypes(userId){
 }
 
 // AJAX
-function getAllMetricEntries(userId){
+function getAllMetricEntries(apiUrl, userId){
     return $.ajax({
         type: "GET",
         url: apiUrl + '/metricentries/' + userId,
@@ -123,19 +122,19 @@ function getAllMetricEntries(userId){
             console.log('getAllMetricEntries() took ', (timeToComplete / 1000).toFixed(3), ' seconds to complete');
         },
         error: (xhr) => {
-            alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText);
+            alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText + ' - METRIC ENTRIES NOT RETRIEVED');
         }
     });
 }
 
 // AJAX
-function getEntriesForDate(userId, date){
+function getEntriesForDate(apiUrl, userId, date){
     return $.ajax({
         type: "GET",
         url: apiUrl + '/metricentries/' + userId + '/' + date,
         success: () => {},
         error: (xhr) => {
-            alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText);
+            alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText + ' - ENTRIES FOR DATE NOT RETRIEVED');
         }
     });
 }
@@ -177,12 +176,12 @@ function displayGraph(labels, dataSets, yAxes){
         }});
 }
 
-function getDataDisplayGraph(typeArray){
+function getDataDisplayGraph(apiUrl, typeArray){
 
     // get the current user's ID  to pass into AJAX calls
     const userId = $('#userId').text();
     
-    $.when(getDates(userId), getAllMetricEntries(userId)).done((dates, parentList) => {
+    $.when(getDates(apiUrl, userId), getAllMetricEntries(apiUrl, userId)).done((dates, parentList) => {
 
         const dateArray = dates[0];
         const parentArrayForEntries = parentList[0]; // this array's child arrays are sorted by metricType 
@@ -308,10 +307,10 @@ function getDataDisplayGraph(typeArray){
     });
 }
 
-function displayEntryTable(userId, typeArray){
+function displayEntryTable(apiUrl, userId, typeArray){
 
     const date = $("#dateDisplay").text().split("/").join("-");
-    $.when(getEntriesForDate(userId, date), getNotes(userId, date)).done((entryList, notes) => {
+    $.when(getEntriesForDate(apiUrl, userId, date), getNotes(apiUrl, userId, date)).done((entryList, notes) => {
         
         // get all the entries for the date currently displayed
         const entriesForDateArray = entryList[0];
@@ -375,7 +374,7 @@ function displayEntryTable(userId, typeArray){
 }
 
 // AJAX
-function sendEntriesToApi(userId, updatedEntryArray, newEntryArray, date, notes, typeArray){
+function sendEntriesToApi(apiUrl, userId, updatedEntryArray, newEntryArray, date, notes, typeArray){
     const token = $("meta[name='_csrf']").attr("content");
     const header = $("meta[name='_csrf_header']").attr("content");
 
@@ -399,8 +398,8 @@ function sendEntriesToApi(userId, updatedEntryArray, newEntryArray, date, notes,
         },
         data: JSON.stringify(data),
         success: () => {
-            getDataDisplayGraph(typeArray);
-            displayEntryTable(userId, typeArray);
+            getDataDisplayGraph(apiUrl, typeArray);
+            displayEntryTable(apiUrl, userId, typeArray);
         },
         error: (xhr) => {
             alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText);
@@ -414,7 +413,7 @@ function sendEntriesToApi(userId, updatedEntryArray, newEntryArray, date, notes,
     Will send them to API in two arrays. Back-end will delete entries
     based on which ones don't exist for the DayLog (a dumb semantic for date).
 */
-function updateEntriesAndNotes(userId, typeArray){
+function updateEntriesAndNotes(apiUrl, userId, typeArray){
     $('#saveChangesButton').click(() => {
         // array to hold previously existing entries
         let updatedEntryArray = new Array();
@@ -482,41 +481,6 @@ function updateEntriesAndNotes(userId, typeArray){
 
         const notes = $('#notesArea').val();
         const date = $("#dateDisplay").text().split("/").join("-");
-        sendEntriesToApi(userId, updatedEntryArray, newEntryArray, date, notes, typeArray);
-    });
-}
-
-// EDIT BUTTON: in progress. Not called.
-function editEntry(editButtonHTML, deleteButtonHTML){
-
-    $('.editButton').click((event) => {
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-        // get the row for the edit button
-        const rowId = $(this).parent().parent().attr("id");
-        const currentRow = $('#' + rowId);
-
-        // make the input not readonly
-        let input = currentRow.find('input');
-        input.prop('readOnly', false);
-        input.focus();
-
-        // make the edit and delete buttons disappear
-        $(this).remove();
-        currentRow.find('.deleteButton').remove();
-
-        // add a temporary done button
-        currentRow.append(
-            '<td><button id="doneButton" type="button" class="btn border-dark">done</button></td>'
-        );
-
-        // when 'doneButton' is clicked, remove it, set the value back to readonly, re-add edit and delete buttons
-        $('#doneButton').click(() => {
-            $(this).remove();
-            currentRow.append(editButtonHTML);
-            currentRow.append(deleteButtonHTML);
-        });
-
-
+        sendEntriesToApi(apiUrl, userId, updatedEntryArray, newEntryArray, date, notes, typeArray);
     });
 }
