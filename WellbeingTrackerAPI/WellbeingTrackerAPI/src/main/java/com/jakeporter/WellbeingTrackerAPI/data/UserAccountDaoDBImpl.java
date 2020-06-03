@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,7 +52,7 @@ public class UserAccountDaoDBImpl implements UserAccountDao{
     @Override
     @Transactional
     public UserAccount addUserAccount(UserAccount user) {
-        final String INSERT_USER = "INSERT INTO useraccount"
+        final String INSERT_USER = "INSERT INTO UserAccount"
                 + "(username, userpassword, firstname, lastname, email, creationtimestamp, timezone)"
                 + " VALUES(?,?,?,?,?,?,?)";
         LocalDateTime creationTime = LocalDateTime.now().withNano(0);
@@ -61,17 +62,17 @@ public class UserAccountDaoDBImpl implements UserAccountDao{
         // set user's creation time and ID
         int userId = jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
         user.setUserAccountId(userId);
-        creationTimestamp = (jdbc.queryForObject("SELECT creationtimestamp FROM useraccount WHERE useraccountid = ?", Timestamp.class, userId));
+        creationTimestamp = (jdbc.queryForObject("SELECT creationtimestamp FROM UserAccount WHERE useraccountid = ?", Timestamp.class, userId));
         user.setCreationTime(creationTimestamp.toLocalDateTime());
         
         
         // add ROLE_USER for user (hard-coded for a user to be added as a USER and not an ADMIN)
-        final String INSERT_USER_ROLE = "INSERT INTO user_role(useraccountid, roleid) VALUES(?,?)";
+        final String INSERT_USER_ROLE = "INSERT INTO User_Role(useraccountid, roleid) VALUES(?,?)";
         jdbc.update(INSERT_USER_ROLE, user.getUserAccountId(), 2);
         Role userRole = new Role();
         userRole.setRoleId(2);
         userRole.setRoleName("ROLE_USER");
-        Set<Role> roleList = Set.of(userRole);
+        Set<Role> roleList = Collections.singleton(userRole);
         user.setRoles(roleList);
         
         return user;
@@ -80,7 +81,7 @@ public class UserAccountDaoDBImpl implements UserAccountDao{
     @Override
     public UserAccount getUserAccountById(int userId) {
         try{
-            final String SELECT_USER_BY_ID = "SELECT * FROM useraccount WHERE useraccountid = ?";
+            final String SELECT_USER_BY_ID = "SELECT * FROM UserAccount WHERE useraccountid = ?";
             UserAccount user = jdbc.queryForObject(SELECT_USER_BY_ID, new UserAccountMapper(), userId);
             user.setRoles(getRolesForUser(user.getUserAccountId()));
             return user;
@@ -92,7 +93,7 @@ public class UserAccountDaoDBImpl implements UserAccountDao{
 
     @Override
     public List<UserAccount> getAllUserAccounts() {
-        final String SELECT_ALL_USER_ACCOUNTS = "SELECT * FROM useraccount";
+        final String SELECT_ALL_USER_ACCOUNTS = "SELECT * FROM UserAccount";
         return jdbc.query(SELECT_ALL_USER_ACCOUNTS, new UserAccountMapper());
     }
 
@@ -109,7 +110,7 @@ public class UserAccountDaoDBImpl implements UserAccountDao{
     @Override
     public UserAccount getUserByUsername(String username) {
         try{
-            final String SELECT_USER_BY_USERNAME = "SELECT * FROM useraccount WHERE username = ?";
+            final String SELECT_USER_BY_USERNAME = "SELECT * FROM UserAccount WHERE username = ?";
             UserAccount user = jdbc.queryForObject(SELECT_USER_BY_USERNAME, new UserAccountMapper(), username);
             user.setRoles(getRolesForUser(user.getUserAccountId()));
             return user;
@@ -120,9 +121,9 @@ public class UserAccountDaoDBImpl implements UserAccountDao{
     }
 
      private Set<Role> getRolesForUser(int userId) throws DataAccessException {
-        final String SELECT_ROLES_FOR_USER = "SELECT * FROM user_role "
-                + "JOIN role ON user_role.roleid = role.roleid "
-                + "WHERE user_role.useraccountid = ?";
+        final String SELECT_ROLES_FOR_USER = "SELECT * FROM User_Role "
+                + "JOIN role ON User_Role.roleid = role.roleid "
+                + "WHERE User_Role.useraccountid = ?";
         Set<Role> roles = new HashSet(jdbc.query(SELECT_ROLES_FOR_USER, new RoleMapper(), userId));
         return roles;
     }

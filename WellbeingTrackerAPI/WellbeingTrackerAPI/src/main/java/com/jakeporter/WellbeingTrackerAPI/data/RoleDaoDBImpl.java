@@ -50,7 +50,7 @@ public class RoleDaoDBImpl implements RoleDao {
 
     @Override
     public void deleteRole(int id) {
-        final String DELETE_USER_ROLE = "DELETE FROM user_role WHERE roleid = ?";      
+        final String DELETE_USER_ROLE = "DELETE FROM User_Role WHERE roleid = ?";
         final String DELETE_ROLE = "DELETE FROM role WHERE roleid = ?";
         jdbc.update(DELETE_USER_ROLE, id);
         jdbc.update(DELETE_ROLE, id);

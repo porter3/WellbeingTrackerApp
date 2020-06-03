@@ -44,7 +44,7 @@ public class DayLogDaoDBImpl implements DayLogDao{
 
     @Override
     public DayLog addDayLog(DayLog dayLog) {
-        final String INSERT_DAYLOG = "INSERT INTO daylog(useraccountid, logdate, notes)"
+        final String INSERT_DAYLOG = "INSERT INTO DayLog(useraccountid, logdate, notes)"
                 + " VALUES (?, ?, ?)";
         jdbc.update(INSERT_DAYLOG, dayLog.getUser().getUserAccountId(), dayLog.getLogDate(),
                 dayLog.getNotes());
@@ -56,7 +56,7 @@ public class DayLogDaoDBImpl implements DayLogDao{
 
     @Override
     public DayLog getDayLogById(int dayLogId) {
-        final String SELECT_DAYLOG_BY_ID = "SELECT * FROM daylog WHERE daylogid = ?";
+        final String SELECT_DAYLOG_BY_ID = "SELECT * FROM DayLog WHERE daylogid = ?";
         DayLog log = new DayLog();
         try{
             log = jdbc.queryForObject(SELECT_DAYLOG_BY_ID, new DayLogMapper(), dayLogId);
@@ -69,13 +69,13 @@ public class DayLogDaoDBImpl implements DayLogDao{
 
     @Override
     public List<DayLog> getAllDayLogs() {
-        final String SELECT_ALL_DAYLOGS = "SELECT * FROM daylog";
+        final String SELECT_ALL_DAYLOGS = "SELECT * FROM DayLog";
         return jdbc.query(SELECT_ALL_DAYLOGS, new DayLogMapper());
     }
 
     @Override
     public DayLog updateDayLog(DayLog updatedDayLog) {
-        final String UPDATE_DAYLOG = "UPDATE daylog SET useraccountid = ?, logdate = ?, notes = ? WHERE daylogid = ?";
+        final String UPDATE_DAYLOG = "UPDATE DayLog SET useraccountid = ?, logdate = ?, notes = ? WHERE daylogid = ?";
         jdbc.update(UPDATE_DAYLOG, updatedDayLog.getUser().getUserAccountId(), updatedDayLog.getLogDate(), 
                 updatedDayLog.getNotes(), updatedDayLog.getDayLogId());
         return getDayLogById(updatedDayLog.getDayLogId());
@@ -83,7 +83,7 @@ public class DayLogDaoDBImpl implements DayLogDao{
 
     @Override
     public void deleteDayLog(int dayLogId) {
-        final String DELETE_DAYLOG = "DELETE FROM daylog WHERE daylogid = ?";
+        final String DELETE_DAYLOG = "DELETE FROM DayLog WHERE daylogid = ?";
         jdbc.update(DELETE_DAYLOG, dayLogId);
     }
     

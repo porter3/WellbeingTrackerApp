@@ -31,7 +31,7 @@ public class MetricEntryDaoDBImpl implements MetricEntryDao{
 
     @Override
     public MetricEntry addMetricEntry(MetricEntry entry) {
-        final String INSERT_METRIC_ENTRY = "INSERT INTO metricentry"
+        final String INSERT_METRIC_ENTRY = "INSERT INTO MetricEntry"
                 + "(daylogid, metrictypeid, metricvalue, entrytime) VALUES"
                 + "(?, ?, ?, ?)";
         jdbc.update(INSERT_METRIC_ENTRY, entry.getDayLog().getDayLogId(), 
@@ -44,7 +44,7 @@ public class MetricEntryDaoDBImpl implements MetricEntryDao{
 
     @Override
     public MetricEntry getMetricEntryById(int entryId) {
-        final String SELECT_ENTRY_BY_ID = "SELECT * FROM metricentry WHERE metricentryid = ?";
+        final String SELECT_ENTRY_BY_ID = "SELECT * FROM MetricEntry WHERE metricentryid = ?";
         MetricEntry entry = new MetricEntry();
         try{
             entry = jdbc.queryForObject(SELECT_ENTRY_BY_ID, new MetricEntryMapper(), entryId);
@@ -57,13 +57,13 @@ public class MetricEntryDaoDBImpl implements MetricEntryDao{
     
     @Override
     public List<MetricEntry> getAllMetricEntriesSorted(){
-        final String SELECT_ALL_METRIC_ENTRIES = "SELECT * FROM metricentry INNER JOIN daylog ON metricentry.daylogid = daylog.DayLogId ORDER BY logdate, metricentryid";
+        final String SELECT_ALL_METRIC_ENTRIES = "SELECT * FROM MetricEntry INNER JOIN DayLog ON MetricEntry.daylogid = DayLog.DayLogId ORDER BY logdate, metricentryid";
         return jdbc.query(SELECT_ALL_METRIC_ENTRIES, new MetricEntryMapper());
     }
 
     @Override
     public MetricEntry editMetricEntry(MetricEntry updatedEntry) {
-        final String UPDATE_ENTRY = "UPDATE metricentry SET daylogid = ?, metrictypeid = ?, metricvalue = ?, entrytime = ? WHERE metricentryid = ?";
+        final String UPDATE_ENTRY = "UPDATE MetricEntry SET daylogid = ?, metrictypeid = ?, metricvalue = ?, entrytime = ? WHERE metricentryid = ?";
         jdbc.update(UPDATE_ENTRY, updatedEntry.getDayLog().getDayLogId(), updatedEntry.getMetricType().getMetricTypeId(),
                 updatedEntry.getMetricValue(), updatedEntry.getEntryTime(), updatedEntry.getMetricEntryId());
         return getMetricEntryById(updatedEntry.getMetricEntryId());
@@ -71,7 +71,7 @@ public class MetricEntryDaoDBImpl implements MetricEntryDao{
 
     @Override
     public void deleteMetricEntry(int entryId) {
-        final String DELETE_ENTRY = "DELETE FROM metricentry WHERE metricentryid = ?";
+        final String DELETE_ENTRY = "DELETE FROM MetricEntry WHERE metricentryid = ?";
         jdbc.update(DELETE_ENTRY, entryId);
     }
     

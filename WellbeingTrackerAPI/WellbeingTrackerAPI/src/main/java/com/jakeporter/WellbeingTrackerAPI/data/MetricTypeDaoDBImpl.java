@@ -46,7 +46,7 @@ public class MetricTypeDaoDBImpl implements MetricTypeDao{
     
     @Override
     public MetricType addMetricType(MetricType type) {
-        final String INSERT_METRIC_TYPE = "INSERT INTO metrictype(useraccountid, metricname, scale, unit)"
+        final String INSERT_METRIC_TYPE = "INSERT INTO MetricType(useraccountid, metricname, scale, unit)"
                 + " VALUES(?,?,?,?)";
         jdbc.update(INSERT_METRIC_TYPE, type.getUser().getUserAccountId(), type.getMetricName(),
                 type.getScale(), type.getUnit());
@@ -58,7 +58,7 @@ public class MetricTypeDaoDBImpl implements MetricTypeDao{
 
     @Override
     public MetricType getMetricTypeById(int typeId) {
-        final String SELECT_METRICTYPE_BY_ID = "SELECT * FROM metrictype WHERE metrictypeid = ?";
+        final String SELECT_METRICTYPE_BY_ID = "SELECT * FROM MetricType WHERE metrictypeid = ?";
         MetricType type = new MetricType();
         try{
             type = jdbc.queryForObject(SELECT_METRICTYPE_BY_ID, new MetricTypeMapper(), typeId);
@@ -71,7 +71,7 @@ public class MetricTypeDaoDBImpl implements MetricTypeDao{
 
     @Override
     public List<MetricType> getAllMetricTypes() {
-        final String SELECT_ALL_METRIC_TYPES = "SELECT * FROM metrictype";
+        final String SELECT_ALL_METRIC_TYPES = "SELECT * FROM MetricType";
         return jdbc.query(SELECT_ALL_METRIC_TYPES, new MetricTypeMapper());
     }
 
@@ -82,7 +82,7 @@ public class MetricTypeDaoDBImpl implements MetricTypeDao{
 
     @Override
     public void deleteMetricType(int typeId) {
-        final String DELETE_TYPE = "DELETE FROM metrictype WHERE metrictypeid = ?";
+        final String DELETE_TYPE = "DELETE FROM MetricType WHERE metrictypeid = ?";
         jdbc.update(DELETE_TYPE, typeId);
     }
 
