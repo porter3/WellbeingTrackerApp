@@ -3,6 +3,12 @@ $(document).ready(function () {
         $('#sidebar').toggleClass('active');
     });
 
+    // URL variables - only change localBuild
+    const localBuild = false;
+    const server = localBuild ? 'localhost' : 'wbt-war-rdsConnected-env.eba-fwuvtiv7.us-east-1.elasticbeanstalk';
+    const port = localBuild ? 8080 : 5000;
+    const apiUrl = 'http://' + server + ':' + port + '/api';
+
     const userId = $('#userId').text();
     
     displayTodaysDate();
@@ -22,7 +28,7 @@ function displayTodaysDate(){
     // format today's date
     // padStart pads the string with a certain character until it reaches the desired length
     const dd = String(today.getDate()).padStart(2, '0');
-    const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0
     const yyyy = today.getFullYear();
 
     today = mm + '/' + dd + '/' + yyyy;
@@ -72,10 +78,10 @@ function moveDateForward(userId, typeArray){
 function getNotes(userId, date){
     return $.ajax({
         type: "GET",
-        url: "http://localhost:8080/api/notes/" + userId + "/" + date,
+        url: apiUrl + '/notes/' + userId + '/' + date,
         success: () => {},
         error: (xhr) => {
-            alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText);
+            alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText + ' - NOTES NOT RETRIEVED');
         }
     });
 }
@@ -84,10 +90,10 @@ function getNotes(userId, date){
 function getDates(userId){
     return $.ajax({
         type: "GET",
-        url: "http://localhost:8080/api/dates/" + userId,
+        url:apiUrl + '/dates/' + userId,
         success: () => {},
         error: (xhr) => {
-            alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText);
+            alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText + ' - DATES NOT RETRIEVED');
         }
     });
 }
@@ -96,11 +102,11 @@ function getDates(userId){
 function getMetricTypes(userId){
     return $.ajax({
         type: "GET",
-        url: "http://localhost:8080/api/metrictypes/" + userId,
+        url: apiUrl + '/metrictypes/' + userId,
         startTime: performance.now(),
         success: () => {},
         error: (xhr) => {
-            alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText);
+            alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText +" - TYPES NOT RETRIEVED");
         }
     });
 }
@@ -109,7 +115,7 @@ function getMetricTypes(userId){
 function getAllMetricEntries(userId){
     return $.ajax({
         type: "GET",
-        url: "http://localhost:8080/api/metricentries/" + userId,
+        url: apiUrl + '/metricentries/' + userId,
         startTime: performance.now(),
         success: function(){
             // performance logging
@@ -126,7 +132,7 @@ function getAllMetricEntries(userId){
 function getEntriesForDate(userId, date){
     return $.ajax({
         type: "GET",
-        url: "http://localhost:8080/api/metricentries/" + userId + "/" + date,
+        url: apiUrl + '/metricentries/' + userId + '/' + date,
         success: () => {},
         error: (xhr) => {
             alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText);
@@ -386,7 +392,7 @@ function sendEntriesToApi(userId, updatedEntryArray, newEntryArray, date, notes,
     
     $.ajax({
         type: "POST",
-        url: "http://localhost:8080/api/updateLog/" + userId,
+        url: apiUrl + '/updateLog/' + userId,
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
