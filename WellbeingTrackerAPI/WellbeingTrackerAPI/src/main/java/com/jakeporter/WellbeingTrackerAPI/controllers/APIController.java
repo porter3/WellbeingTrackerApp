@@ -151,7 +151,7 @@ public class APIController {
         if (updatedEntries.length == 0){
             onlyNewEntries = true;
         }
-        if (updatedEntries.length == 0 && newEntries.length == 0 && notes.isBlank()){
+        if (updatedEntries.length == 0 && newEntries.length == 0 && notes.trim().isEmpty()){
             onlyNewEntries = false;
         }
         
@@ -209,7 +209,7 @@ public class APIController {
         
         // logic here dictates that a log won't be deleted if it has notes but no entries
         for (DayLog dayLog : userLogs){
-            if (lookupService.getMetricEntriesByDate(userId, dayLog.getLogDate()).isEmpty() && (dayLog.getNotes() == null || dayLog.getNotes().isBlank())){
+            if (lookupService.getMetricEntriesByDate(userId, dayLog.getLogDate()).isEmpty() && (dayLog.getNotes() == null || dayLog.getNotes().trim().isEmpty())){
                 deleteService.deleteDayLog(dayLog.getDayLogId());
             }
         }
