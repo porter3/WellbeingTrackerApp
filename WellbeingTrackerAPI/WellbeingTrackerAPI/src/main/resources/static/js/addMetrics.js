@@ -3,6 +3,10 @@ $(document).ready(() => {
         $('#sidebar').toggleClass('active');
     });
 
+    const localBuild = false;
+    const server = localBuild ? 'localhost:8080' : 'wbt-war-rdsConnected-env.eba-fwuvtiv7.us-east-1.elasticbeanstalk.com';
+    const apiUrl = 'http://' + server + '/api';
+
     const userId = $('#userId').text();
 
     const predefinedSleepTypes = [
@@ -153,17 +157,15 @@ $(document).ready(() => {
         {name: "", types: predefinedSubjectiveTypes}
     ];
 
-    displayMetricTypes(userId, allPredefinedTypes);
+    displayMetricTypes(apiUrl, userId, allPredefinedTypes);
 });
 
 // AJAX
-function getMetricTypes(userId){
+function getMetricTypes(apiUrl, userId){
     return $.ajax({
         type: "GET",
-        url: "http://localhost:8080/api/metrictypes/" + userId,
-        success: function (metricTypesForUser) {
-            
-        },
+        url: apiUrl + '/metrictypes/' + userId,
+        success: function () {},
         error: function(xhr){
             alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText);
         }
@@ -171,7 +173,7 @@ function getMetricTypes(userId){
 }
 
 // AJAX
-function sendAddedMetricTypesToApi(userId, metricTypeArray){
+function sendAddedMetricTypesToApi(apiUrl, userId, metricTypeArray){
 
     $('#addMetricsButton').click(() => { 
         const token = $("meta[name='_csrf']").attr("content");
@@ -183,7 +185,7 @@ function sendAddedMetricTypesToApi(userId, metricTypeArray){
         
         $.ajax({
             type: "POST",
-            url: "http://localhost:8080/api/addmetrictypes/" + userId,
+            url: apiUrl + '/addmetrictypes/' + userId,
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -199,9 +201,9 @@ function sendAddedMetricTypesToApi(userId, metricTypeArray){
     });
 }
 
-function displayMetricTypes(userId, allPredefinedTypes){
+function displayMetricTypes(apiUrl, userId, allPredefinedTypes){
 
-    $.when(getMetricTypes(userId)).done((metricTypesForUser) => {
+    $.when(getMetricTypes(apiUrl, userId)).done((metricTypesForUser) => {
 
         const metricDisplayArea = $('#metricDisplayArea');
         let typesUserDoesntHave = new Array();
@@ -301,6 +303,6 @@ function displayMetricTypes(userId, allPredefinedTypes){
             });
 
             // send metricTypes to API
-            sendAddedMetricTypesToApi(userId, typesToAddForUser);
+            sendAddedMetricTypesToApi(apiUrl, userId, typesToAddForUser);
     });
 }
