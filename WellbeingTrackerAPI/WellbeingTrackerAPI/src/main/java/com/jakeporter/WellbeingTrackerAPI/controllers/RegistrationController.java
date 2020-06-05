@@ -50,7 +50,7 @@ public class RegistrationController {
     
     @PostMapping("/adduser")
     public String addUser(HttpServletRequest request, Model model){
-        logger.info("User creation attempt started");
+        logger.debug("User creation attempt started");
         UserAccount user = addService.populateNewUserFromForm(request);
         violations.clear();
         validateService.validateNewAccountSettings(violations, user, request.getParameter("confirmPassword"));
@@ -61,7 +61,7 @@ public class RegistrationController {
         // encrypt password
         user.setPassword(encoder.encode(user.getPassword()));
         addService.createNewAccount(user);
-        logger.info("User created");
+        logger.info("-- User created --\n ID: {}, NAME: {} {}, USERNAME: {}, EMAIL: {}, CREATION TIME: {}, TIMEZONE: {}", user.getUserAccountId(), user.getFirstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getCreationTime(), user.getTimeZone());
 
         // TODO: log user in
         return "redirect:/login";
