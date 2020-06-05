@@ -23,6 +23,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList; 
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +45,8 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 @RequestMapping("/api")
 public class APIController {
+
+    Logger logger = LoggerFactory.getLogger(this.getClass());
         
     @Autowired
     AddService addService;
@@ -58,17 +62,6 @@ public class APIController {
     
     @Autowired
     ValidateService validateService;
-    
-
-    // Creates a new user account
-    @PostMapping("/createuser")
-    public ResponseEntity<UserAccount> createAccount(@RequestBody UserAccount user) throws InvalidUsernameException, InvalidPasswordException, InvalidEmailException{
-        // validate user
-        validateService.validateNewAccountSettings(user);
-        // add user to DB
-        user = addService.createNewAccount(user);
-        return new ResponseEntity(user, HttpStatus.CREATED);
-    }
     
     @PostMapping("/addmetrictypes/{userId}")
     public ResponseEntity<List<MetricType>> createMetricSettings(@PathVariable int userId, @RequestBody MetricType[] metricTypes) throws InvalidMetricTypeException{
@@ -207,7 +200,7 @@ public class APIController {
         List<DayLog> userLogs = lookupService.getDayLogsForUser(userId);
         
         
-        // logic here dictates that a log won't be deleted if it has notes but no entries
+        // a log won't be deleted if it has notes but no entries
         for (DayLog dayLog : userLogs){
             if (lookupService.getMetricEntriesByDate(userId, dayLog.getLogDate()).isEmpty() && (dayLog.getNotes() == null || dayLog.getNotes().trim().isEmpty())){
                 deleteService.deleteDayLog(dayLog.getDayLogId());
