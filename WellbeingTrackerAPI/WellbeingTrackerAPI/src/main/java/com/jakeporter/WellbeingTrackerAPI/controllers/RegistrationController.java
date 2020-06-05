@@ -7,6 +7,9 @@ import com.jakeporter.WellbeingTrackerAPI.service.ValidateService;
 import java.util.HashSet;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -23,12 +26,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 @CrossOrigin
 public class RegistrationController {
+
+    Logger logger = LoggerFactory.getLogger(this.getClass());
     
     @Autowired
     AddService addService;
-    
-    @Autowired
-    LookupService lookupService;
     
     @Autowired
     ValidateService validateService;
@@ -48,18 +50,19 @@ public class RegistrationController {
     
     @PostMapping("/adduser")
     public String addUser(HttpServletRequest request, Model model){
-        // populates UserAccount object from form
+        logger.info("User creation attempt started");
         UserAccount user = addService.populateNewUserFromForm(request);
         violations.clear();
-//      validate user in case client-side doesn't exist/work
         validateService.validateNewAccountSettings(violations, user, request.getParameter("confirmPassword"));
        if (!violations.isEmpty()){
+            logger.error("User creation rule violation");
             return "redirect:/signup";
         }
-        // encrypt user's password
+        // encrypt password
         user.setPassword(encoder.encode(user.getPassword()));
         addService.createNewAccount(user);
-        
+        logger.info("User created");
+
         // TODO: log user in
         return "redirect:/login";
     }
