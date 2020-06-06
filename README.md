@@ -1,6 +1,6 @@
 # Well-being Tracker
 
-## Demo link: https://tinyurl.com/ycm6w4e6
+### Demo link: https://tinyurl.com/ycm6w4e6
 At the moment, there's a bug that causes it to stall during the first login attempt and then work the second time you attempt to log in.
 
 This application's purpose is to allow a user to choose certain health-related metrics to track on a regular basis
