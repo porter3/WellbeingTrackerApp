@@ -105,7 +105,7 @@ function getMetricTypes(apiUrl, userId){
         startTime: performance.now(),
         success: (response) => { console.log('success? : ' , response) },
         error: (xhr) => {
-            alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText +" - TYPES NOT RETRIEVED");
+            alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText +" - TYPES NOT RETRIEVED - " + apiUrl + '/metrictypes/' + userId);
         }
     });
 }
@@ -122,7 +122,7 @@ function getAllMetricEntries(apiUrl, userId){
             console.log('getAllMetricEntries() took ', (timeToComplete / 1000).toFixed(3), ' seconds to complete');
         },
         error: (xhr) => {
-            alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText + ' - METRIC ENTRIES NOT RETRIEVED');
+            alert("Request status: " + xhr.status + " Status text: " + xhr.statusText + " " + xhr.responseText + ' - METRIC ENTRIES NOT RETRIEVED - ');
         }
     });
 }
