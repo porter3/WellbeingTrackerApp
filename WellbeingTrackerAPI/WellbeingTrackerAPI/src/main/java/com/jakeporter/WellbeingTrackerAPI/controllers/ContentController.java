@@ -10,6 +10,9 @@ import com.jakeporter.WellbeingTrackerAPI.service.LookupService;
 import com.jakeporter.WellbeingTrackerAPI.service.ValidateService;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @CrossOrigin
 public class ContentController {
+
+    Logger logger = LoggerFactory.getLogger(this.getClass());
     
     @Autowired
     ValidateService validateService;
@@ -47,6 +52,7 @@ public class ContentController {
     @GetMapping("/content")
     public String displayContentPage(Model model, @AuthenticationPrincipal UserDetails currentUser) {
         UserAccount user = lookupService.getUserByUsername(currentUser.getUsername());
+        logger.info("Generating content for user: {}", user.getUsername());
         model.addAttribute("currentUser", user);
         
         return "dataView_content";

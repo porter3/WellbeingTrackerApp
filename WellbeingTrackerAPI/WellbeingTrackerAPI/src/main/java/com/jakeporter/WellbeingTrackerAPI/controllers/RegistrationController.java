@@ -6,6 +6,7 @@ import com.jakeporter.WellbeingTrackerAPI.service.LookupService;
 import com.jakeporter.WellbeingTrackerAPI.service.ValidateService;
 import java.util.HashSet;
 import java.util.Set;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -59,11 +60,17 @@ public class RegistrationController {
             return "redirect:/signup";
         }
         // encrypt password
-        user.setPassword(encoder.encode(user.getPassword()));
+        String unEncryptPassword = user.getPassword();
+        user.setPassword(encoder.encode(unEncryptPassword));
         addService.createNewAccount(user);
         logger.info("-- User created --\n ID: {}, NAME: {} {}, USERNAME: {}, EMAIL: {}, CREATION TIME: {}, TIMEZONE: {}", user.getUserAccountId(), user.getFirstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getCreationTime(), user.getTimeZone());
 
-        // TODO: log user in
-        return "redirect:/login";
+        // TODO: log user in (can't just redirect to /content)
+        try {
+            request.login(user.getUsername(), unEncryptPassword);
+        } catch (ServletException e) {
+            logger.error("Login error - ", e.getMessage());
+        }
+        return "redirect:/content";
     }
 }

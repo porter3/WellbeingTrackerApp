@@ -21,7 +21,8 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList; 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,6 +104,8 @@ public class APIController {
     // get all metric types for a user (FOR GRAPH VIEW)
     @GetMapping("/metrictypes/{userId}")
     public ResponseEntity<List<MetricType>> getAllMetricTypesForUser(@PathVariable int userId){
+        List<MetricType> types = lookupService.getMetricTypesForUser(userId);
+        logger.info("Types: {}", types.toString());
         return new ResponseEntity(lookupService.getMetricTypesForUser(userId), HttpStatus.OK);
     }
     
