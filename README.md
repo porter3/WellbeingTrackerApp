@@ -33,5 +33,5 @@ exists between sugar intake and stress).
 
 --------------------
 
-Still a work in progress. Future goals include a done UI with React, recommendation engine, 
+Still a work in progress. Future goals include a redone UI with React, recommendation engine, 
 progressive web app conversion, and reading user nutrition data from an external API.
