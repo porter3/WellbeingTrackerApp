@@ -6,12 +6,8 @@ import com.jakeporter.WellbeingTrackerAPI.entities.MetricEntry;
 import com.jakeporter.WellbeingTrackerAPI.entities.MetricType;
 import com.jakeporter.WellbeingTrackerAPI.entities.NewEntryInfo;
 import com.jakeporter.WellbeingTrackerAPI.entities.UpdatedEntryInfo;
-import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
-import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidEmailException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidEntryException;
 import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidMetricTypeException;
-import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidPasswordException;
-import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidUsernameException;
 import com.jakeporter.WellbeingTrackerAPI.service.AddService;
 import com.jakeporter.WellbeingTrackerAPI.service.DeleteService;
 import com.jakeporter.WellbeingTrackerAPI.service.LookupService;
@@ -22,7 +18,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -135,7 +130,7 @@ public class APIController {
     // maybe could improve conditionals here, but it keeps breaking when I try to improve it so it's staying like this for now
     @PostMapping("/updateLog/{userId}")
     public ResponseEntity updateLogEntries(@PathVariable int userId, @RequestBody LogHolder holder) throws InvalidEntryException, InvalidMetricTypeException{
-    	long startTime = System.nanoTime(); // performance testing
+    	long startTime = System.currentTimeMillis(); // performance testing
         LocalDate convertedDate = LocalDate.parse(holder.getDate(), DateTimeFormatter.ofPattern("MM-dd-yyyy"));
         String notes = holder.getNotes();
         UpdatedEntryInfo[] updatedEntries = holder.getUpdatedEntries();
@@ -216,7 +211,7 @@ public class APIController {
         */
         addService.fillDayLogGaps(userId);
         
-        System.out.println("Time to complete update: " + (System.nanoTime() - startTime) + "ms");
+        logger.info("Time to complete update: " + (System.currentTimeMillis() - startTime) + "ms");
         return new ResponseEntity(HttpStatus.OK);
     }
 }
