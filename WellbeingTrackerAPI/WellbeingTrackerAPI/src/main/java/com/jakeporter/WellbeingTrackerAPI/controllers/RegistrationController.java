@@ -66,17 +66,13 @@ public class RegistrationController {
         logger.info("-- User created --\n ID: {}, NAME: {} {}, USERNAME: {}, EMAIL: {}, CREATION TIME: {}, TIMEZONE: {}",
                 user.getUserAccountId(), user.getFirstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getCreationTime(), user.getTimeZone());
 
-        logUserIn(request, user.getUsername(), unencryptedPassword);
+        try {
+            request.login(user.getUsername(), unencryptedPassword);
+        } catch (ServletException e) {
+            logger.error("Login error - ", e.getMessage());
+            return "redirect:/signup";
+        }
 
         return "redirect:/content";
     }
-
-    private void logUserIn(HttpServletRequest request, String username, String unencryptedPassword) {
-        try {
-            request.login(username, unencryptedPassword);
-        } catch (ServletException e) {
-            logger.error("Login error - ", e.getMessage());
-        }
-    }
-
 }
