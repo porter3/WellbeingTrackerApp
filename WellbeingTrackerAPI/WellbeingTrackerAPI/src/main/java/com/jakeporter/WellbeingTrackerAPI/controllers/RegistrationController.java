@@ -2,13 +2,11 @@ package com.jakeporter.WellbeingTrackerAPI.controllers;
 
 import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
 import com.jakeporter.WellbeingTrackerAPI.service.AddService;
-import com.jakeporter.WellbeingTrackerAPI.service.LookupService;
 import com.jakeporter.WellbeingTrackerAPI.service.ValidateService;
 import java.util.HashSet;
 import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,18 +57,26 @@ public class RegistrationController {
             logger.error("User creation rule violation");
             return "redirect:/signup";
         }
-        // encrypt password
-        String unEncryptPassword = user.getPassword();
-        user.setPassword(encoder.encode(unEncryptPassword));
-        addService.createNewAccount(user);
-        logger.info("-- User created --\n ID: {}, NAME: {} {}, USERNAME: {}, EMAIL: {}, CREATION TIME: {}, TIMEZONE: {}", user.getUserAccountId(), user.getFirstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getCreationTime(), user.getTimeZone());
 
-        // TODO: log user in (can't just redirect to /content)
+        // encrypt password
+        String unencryptedPassword = user.getPassword();
+        user.setPassword(encoder.encode(unencryptedPassword));
+
+        addService.createNewAccount(user);
+        logger.info("-- User created --\n ID: {}, NAME: {} {}, USERNAME: {}, EMAIL: {}, CREATION TIME: {}, TIMEZONE: {}",
+                user.getUserAccountId(), user.getFirstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getCreationTime(), user.getTimeZone());
+
+        logUserIn(request, user.getUsername(), unencryptedPassword);
+
+        return "redirect:/content";
+    }
+
+    private void logUserIn(HttpServletRequest request, String username, String unencryptedPassword) {
         try {
-            request.login(user.getUsername(), unEncryptPassword);
+            request.login(username, unencryptedPassword);
         } catch (ServletException e) {
             logger.error("Login error - ", e.getMessage());
         }
-        return "redirect:/content";
     }
+
 }
