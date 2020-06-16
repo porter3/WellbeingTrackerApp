@@ -17,6 +17,6 @@ public class HomeController {
     @GetMapping({"/", "/home"})
     public String displayHomePage() {
         
-        return "home";
+        return "index";
     }
 }
