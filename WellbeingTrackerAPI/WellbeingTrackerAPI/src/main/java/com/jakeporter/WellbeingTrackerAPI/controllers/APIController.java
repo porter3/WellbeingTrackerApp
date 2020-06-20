@@ -38,8 +38,8 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api")
+@CrossOrigin(origins = "*", allowCredentials = "true", allowedHeaders = "*")
 public class APIController {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -58,6 +58,11 @@ public class APIController {
     
     @Autowired
     ValidateService validateService;
+
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return new ResponseEntity<>("this is a test", HttpStatus.OK);
+    }
     
     @PostMapping("/addmetrictypes/{userId}")
     public ResponseEntity<List<MetricType>> createMetricSettings(@PathVariable int userId, @RequestBody MetricType[] metricTypes) throws InvalidMetricTypeException{

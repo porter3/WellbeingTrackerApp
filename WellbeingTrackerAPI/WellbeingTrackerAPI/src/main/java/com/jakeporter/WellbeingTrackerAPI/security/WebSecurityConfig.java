@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  */
 
 @Configuration
-@EnableWebSecurity // enables Spring Security's web security support and provides Spring MVC integration
+//@EnableWebSecurity // enables Spring Security's web security support and provides Spring MVC integration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
     // Get rid of explicit constructor and use factory method once switched to Java 11
@@ -35,30 +35,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Autowired
     UserDetailsService userDetails;
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.httpFirewall(new CustomStrictHttpFirewall());
-    }
+    
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http
+//                .csrf().disable()
+//                .authorizeRequests()
+//                    .antMatchers("/admin").hasRole("ADMIN")
+//                    .antMatchers("/", "/home", "/signup", "/logout", "/adduser", "/api/*").permitAll()
+//                    .antMatchers("/css/**", "/js/**", "/fonts/**", "/assets/**").permitAll()
+//                    .anyRequest().hasRole("USER")
+//                .and()
+//                .formLogin()
+//                    .loginPage("/login")
+//                    .failureUrl("/login?login_error=1")
+//                    .permitAll()
+//                .and()
+//                .logout()
+//                    .logoutSuccessUrl("/")
+//                    .permitAll();
+//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                    .antMatchers("/admin").hasRole("ADMIN")
-                    .antMatchers("/", "/home", "/signup", "/logout", "/adduser").permitAll()
-                    .antMatchers("/css/**", "/js/**", "/fonts/**", "/assets/**").permitAll()
-                    .anyRequest().hasRole("USER")
-                .and()
-                .formLogin()
-                    .loginPage("/login")
-                    .failureUrl("/login?login_error=1")
-                    .permitAll()
-                .and()
-                .logout()
-                    .logoutSuccessUrl("/")
-                    .permitAll();
-//        http.authorizeRequests().antMatchers("/").permitAll();
+        http.authorizeRequests().antMatchers("/").permitAll();
     }
     
     @Autowired
