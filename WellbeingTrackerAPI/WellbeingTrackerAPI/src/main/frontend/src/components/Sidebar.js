@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 
 export default function Sidebar() {
 
-    const isActive = useSelector(state => state.sidebar.sidebarIsActive)
+    const isActive = useSelector(state => state.sidebar.isActive)
     const navClass = isActive ? 'sidebar sidebarActive' : 'sidebar'
 
     return(

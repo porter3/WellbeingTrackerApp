@@ -1,7 +1,7 @@
 import TOGGLE_ACTIVE_STATUS from './sidebarTypes'
 
 const initialState = {
-    sidebarIsActive: false 
+    isActive: false 
 }
 
 const sidebarReducer = (state = initialState, action) => {
@@ -9,7 +9,7 @@ const sidebarReducer = (state = initialState, action) => {
         case TOGGLE_ACTIVE_STATUS:
             return {
                 ...state,
-                sidebarIsActive: !state.sidebarIsActive
+                isActive: !state.isActive
             }
         default:
             return state
