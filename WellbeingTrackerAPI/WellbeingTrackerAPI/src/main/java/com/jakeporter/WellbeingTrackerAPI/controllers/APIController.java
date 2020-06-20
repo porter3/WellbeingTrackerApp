@@ -40,8 +40,8 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api")
+@CrossOrigin(origins = "*", allowCredentials = "true", allowedHeaders = "*")
 public class APIController {
         
     @Autowired
@@ -58,7 +58,11 @@ public class APIController {
     
     @Autowired
     ValidateService validateService;
-    
+
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return new ResponseEntity<>("this is a test", HttpStatus.OK);
+    }
 
     // Creates a new user account
     @PostMapping("/createuser")
