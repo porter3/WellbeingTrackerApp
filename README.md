@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 # Well-being Tracker
-=======
-## Well-being Tracker
->>>>>>> react
 
 ### Demo link: https://tinyurl.com/ycm6w4e6
 
@@ -35,11 +31,9 @@ common sense (i.e. choosing to sleep less if a negative correlation exists betwe
 false patterns may even be beneficial if acted upon (i.e. choosing to eat less sugar when a nonsignificant positive correlation
 exists between sugar intake and stress).
 
-<<<<<<< HEAD
 --------------------
-=======
+
 Main page UI makes AJAX requests to a REST API built with Java/Spring Boot.
->>>>>>> react
 
 Still a work in progress. Future goals include a redone UI with React, recommendation engine, 
 progressive web app conversion, and reading user nutrition data from an external API.
