@@ -1,3 +1,2 @@
 *.properties
-node_modules
 logback-spring.xml
