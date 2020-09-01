@@ -1,4 +1,4 @@
-package com.jakeporter.WellbeingTrackerAPI.security;
+package com.jakeporter.WellbeingTracker.security;
 
 import org.springframework.security.web.firewall.HttpFirewall;
 
@@ -13,9 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpMethod;
-import org.springframework.security.web.firewall.DefaultHttpFirewall;
 import org.springframework.security.web.firewall.FirewalledRequest;
-import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.RequestRejectedException;
 
     public class CustomStrictHttpFirewall implements HttpFirewall {

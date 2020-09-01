@@ -1,6 +1,6 @@
-package com.jakeporter.WellbeingTrackerAPI.data;
+package com.jakeporter.WellbeingTracker.data;
 
-import com.jakeporter.WellbeingTrackerAPI.entities.MetricType;
+import com.jakeporter.WellbeingTracker.entities.MetricType;
 import java.util.List;
 
 /**

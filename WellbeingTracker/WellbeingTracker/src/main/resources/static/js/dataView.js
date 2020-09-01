@@ -5,7 +5,7 @@ $(document).ready(function () {
 
     // URL variables - only change localBuild
     const localBuild = false;
-    const server = localBuild ? 'localhost:8080' : 'wbt-war-rdsConnected-env.eba-fwuvtiv7.us-east-1.elasticbeanstalk.com';
+    const server = localBuild ? 'localhost:5000' : 'jar-java11.eba-fwuvtiv7.us-east-1.elasticbeanstalk.com';
     const apiUrl = 'http://' + server + '/api';
     const userId = $('#userId').text();
     

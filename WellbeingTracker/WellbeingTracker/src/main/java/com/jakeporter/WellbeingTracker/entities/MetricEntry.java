@@ -1,4 +1,4 @@
-package com.jakeporter.WellbeingTrackerAPI.entities;
+package com.jakeporter.WellbeingTracker.entities;
 
 import java.sql.Time;
 import java.util.Objects;

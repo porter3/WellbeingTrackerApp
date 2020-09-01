@@ -1,8 +1,7 @@
-package com.jakeporter.WellbeingTrackerAPI.data;
+package com.jakeporter.WellbeingTracker.data;
 
-import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
+import com.jakeporter.WellbeingTracker.entities.UserAccount;
 import java.util.List;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
  *

@@ -1,14 +1,13 @@
-package com.jakeporter.WellbeingTrackerAPI.service;
+package com.jakeporter.WellbeingTracker.service;
 
-import com.jakeporter.WellbeingTrackerAPI.data.UserAccountDao;
-import com.jakeporter.WellbeingTrackerAPI.entities.Role;
-import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
+import com.jakeporter.WellbeingTracker.data.UserAccountDao;
+import com.jakeporter.WellbeingTracker.entities.Role;
+import com.jakeporter.WellbeingTracker.entities.UserAccount;
 import java.util.HashSet;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

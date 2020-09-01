@@ -1,8 +1,8 @@
-package com.jakeporter.WellbeingTrackerAPI.controllers;
+package com.jakeporter.WellbeingTracker.controllers;
 
-import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
-import com.jakeporter.WellbeingTrackerAPI.service.AddService;
-import com.jakeporter.WellbeingTrackerAPI.service.ValidateService;
+import com.jakeporter.WellbeingTracker.entities.UserAccount;
+import com.jakeporter.WellbeingTracker.service.AddService;
+import com.jakeporter.WellbeingTracker.service.ValidateService;
 import java.util.HashSet;
 import java.util.Set;
 import javax.servlet.ServletException;

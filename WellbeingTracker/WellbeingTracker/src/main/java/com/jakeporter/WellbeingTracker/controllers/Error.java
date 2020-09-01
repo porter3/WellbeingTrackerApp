@@ -1,4 +1,4 @@
-package com.jakeporter.WellbeingTrackerAPI.controllers;
+package com.jakeporter.WellbeingTracker.controllers;
 
 import java.time.LocalDateTime;
 

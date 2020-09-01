@@ -1,4 +1,4 @@
-package com.jakeporter.WellbeingTrackerAPI.exceptions;
+package com.jakeporter.WellbeingTracker.exceptions;
 
 /**
  *

@@ -3,16 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.jakeporter.WellbeingTrackerAPI.service;
+package com.jakeporter.WellbeingTracker.service;
 
-import com.jakeporter.WellbeingTrackerAPI.entities.DayLog;
-import com.jakeporter.WellbeingTrackerAPI.entities.MetricEntry;
-import com.jakeporter.WellbeingTrackerAPI.entities.MetricType;
-import com.jakeporter.WellbeingTrackerAPI.entities.Role;
-import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
+import com.jakeporter.WellbeingTracker.entities.DayLog;
+import com.jakeporter.WellbeingTracker.entities.MetricEntry;
+import com.jakeporter.WellbeingTracker.entities.MetricType;
+import com.jakeporter.WellbeingTracker.entities.UserAccount;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.sql.Time;
 import java.time.Month;
 import org.junit.jupiter.api.AfterEach;

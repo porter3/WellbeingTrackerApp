@@ -1,13 +1,13 @@
-package com.jakeporter.WellbeingTrackerAPI.service;
+package com.jakeporter.WellbeingTracker.service;
 
-import com.jakeporter.WellbeingTrackerAPI.data.DayLogDao;
-import com.jakeporter.WellbeingTrackerAPI.data.MetricEntryDao;
-import com.jakeporter.WellbeingTrackerAPI.data.MetricTypeDao;
-import com.jakeporter.WellbeingTrackerAPI.data.UserAccountDao;
-import com.jakeporter.WellbeingTrackerAPI.entities.DayLog;
-import com.jakeporter.WellbeingTrackerAPI.entities.MetricEntry;
-import com.jakeporter.WellbeingTrackerAPI.entities.MetricType;
-import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
+import com.jakeporter.WellbeingTracker.data.DayLogDao;
+import com.jakeporter.WellbeingTracker.data.MetricEntryDao;
+import com.jakeporter.WellbeingTracker.data.MetricTypeDao;
+import com.jakeporter.WellbeingTracker.data.UserAccountDao;
+import com.jakeporter.WellbeingTracker.entities.DayLog;
+import com.jakeporter.WellbeingTracker.entities.MetricEntry;
+import com.jakeporter.WellbeingTracker.entities.MetricType;
+import com.jakeporter.WellbeingTracker.entities.UserAccount;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;

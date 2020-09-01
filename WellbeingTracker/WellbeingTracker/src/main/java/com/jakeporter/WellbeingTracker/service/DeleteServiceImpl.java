@@ -1,10 +1,9 @@
-package com.jakeporter.WellbeingTrackerAPI.service;
+package com.jakeporter.WellbeingTracker.service;
 
-import com.jakeporter.WellbeingTrackerAPI.data.DayLogDao;
-import com.jakeporter.WellbeingTrackerAPI.data.MetricEntryDao;
-import com.jakeporter.WellbeingTrackerAPI.data.MetricTypeDao;
-import com.jakeporter.WellbeingTrackerAPI.entities.MetricEntry;
-import java.util.List;
+import com.jakeporter.WellbeingTracker.data.DayLogDao;
+import com.jakeporter.WellbeingTracker.data.MetricEntryDao;
+import com.jakeporter.WellbeingTracker.data.MetricTypeDao;
+import com.jakeporter.WellbeingTracker.entities.MetricEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

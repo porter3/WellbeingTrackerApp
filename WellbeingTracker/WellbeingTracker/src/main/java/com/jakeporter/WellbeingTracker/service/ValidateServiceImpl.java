@@ -1,14 +1,14 @@
-package com.jakeporter.WellbeingTrackerAPI.service;
+package com.jakeporter.WellbeingTracker.service;
 
-import com.jakeporter.WellbeingTrackerAPI.data.UserAccountDao;
-import com.jakeporter.WellbeingTrackerAPI.entities.MetricEntry;
-import com.jakeporter.WellbeingTrackerAPI.entities.MetricType;
-import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
-import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidEmailException;
-import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidEntryException;
-import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidMetricTypeException;
-import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidPasswordException;
-import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidUsernameException;
+import com.jakeporter.WellbeingTracker.data.UserAccountDao;
+import com.jakeporter.WellbeingTracker.entities.MetricEntry;
+import com.jakeporter.WellbeingTracker.entities.MetricType;
+import com.jakeporter.WellbeingTracker.entities.UserAccount;
+import com.jakeporter.WellbeingTracker.exceptions.InvalidEmailException;
+import com.jakeporter.WellbeingTracker.exceptions.InvalidEntryException;
+import com.jakeporter.WellbeingTracker.exceptions.InvalidMetricTypeException;
+import com.jakeporter.WellbeingTracker.exceptions.InvalidPasswordException;
+import com.jakeporter.WellbeingTracker.exceptions.InvalidUsernameException;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;

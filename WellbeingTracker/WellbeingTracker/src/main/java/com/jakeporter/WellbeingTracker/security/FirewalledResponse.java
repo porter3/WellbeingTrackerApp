@@ -1,4 +1,4 @@
-package com.jakeporter.WellbeingTrackerAPI.security;
+package com.jakeporter.WellbeingTracker.security;
 
 import java.io.IOException;
 import java.util.regex.Pattern;

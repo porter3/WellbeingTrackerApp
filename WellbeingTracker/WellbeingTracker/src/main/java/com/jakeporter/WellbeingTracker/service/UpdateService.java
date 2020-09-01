@@ -1,8 +1,8 @@
-package com.jakeporter.WellbeingTrackerAPI.service;
+package com.jakeporter.WellbeingTracker.service;
 
-import com.jakeporter.WellbeingTrackerAPI.entities.DayLog;
-import com.jakeporter.WellbeingTrackerAPI.entities.MetricEntry;
-import com.jakeporter.WellbeingTrackerAPI.entities.MetricType;
+import com.jakeporter.WellbeingTracker.entities.DayLog;
+import com.jakeporter.WellbeingTracker.entities.MetricEntry;
+import com.jakeporter.WellbeingTracker.entities.MetricType;
 
 /**
  *

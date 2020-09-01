@@ -1,13 +1,10 @@
-package com.jakeporter.WellbeingTrackerAPI.controllers;
+package com.jakeporter.WellbeingTracker.controllers;
 
-import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
-import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidEmailException;
-import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidPasswordException;
-import com.jakeporter.WellbeingTrackerAPI.exceptions.InvalidUsernameException;
-import com.jakeporter.WellbeingTrackerAPI.service.AddService;
-import com.jakeporter.WellbeingTrackerAPI.service.DeleteService;
-import com.jakeporter.WellbeingTrackerAPI.service.LookupService;
-import com.jakeporter.WellbeingTrackerAPI.service.ValidateService;
+import com.jakeporter.WellbeingTracker.entities.UserAccount;
+import com.jakeporter.WellbeingTracker.service.AddService;
+import com.jakeporter.WellbeingTracker.service.DeleteService;
+import com.jakeporter.WellbeingTracker.service.LookupService;
+import com.jakeporter.WellbeingTracker.service.ValidateService;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,12 +32,6 @@ public class ContentController {
     Logger logger = LoggerFactory.getLogger(this.getClass());
     
     @Autowired
-    ValidateService validateService;
-    
-    @Autowired
-    AddService addService;
-    
-    @Autowired
     LookupService lookupService;
     
     @Autowired
@@ -52,18 +43,13 @@ public class ContentController {
     @GetMapping("/content")
     public String displayContentPage(Model model, @AuthenticationPrincipal UserDetails currentUser) {
         UserAccount user = lookupService.getUserByUsername(currentUser.getUsername());
+        if (user == null) {
+            return "Oops, something went wrong.";
+        }
         logger.info("Generating content for user: {}", user.getUsername());
         model.addAttribute("currentUser", user);
         
         return "dataView_content";
-    }
-
-    @GetMapping("/reactContent")
-    public String displayContentPageReact(Model model, @AuthenticationPrincipal UserDetails currentUser){
-        UserAccount user = lookupService.getUserByUsername(currentUser.getUsername());
-        model.addAttribute("currentUser", user);
-        
-        return "enter_ViewData";
     }
     
     // used the longer @RequestMapping annotation just to compare to the shortcut versions

@@ -1,8 +1,8 @@
-package com.jakeporter.WellbeingTrackerAPI.data;
+package com.jakeporter.WellbeingTracker.data;
 
-import com.jakeporter.WellbeingTrackerAPI.data.RoleDaoDBImpl.RoleMapper;
-import com.jakeporter.WellbeingTrackerAPI.entities.Role;
-import com.jakeporter.WellbeingTrackerAPI.entities.UserAccount;
+import com.jakeporter.WellbeingTracker.data.RoleDaoDBImpl.RoleMapper;
+import com.jakeporter.WellbeingTracker.entities.Role;
+import com.jakeporter.WellbeingTracker.entities.UserAccount;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -12,12 +12,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 

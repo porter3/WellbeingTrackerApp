@@ -1,6 +1,6 @@
-package com.jakeporter.WellbeingTrackerAPI.data;
+package com.jakeporter.WellbeingTracker.data;
 
-import com.jakeporter.WellbeingTrackerAPI.entities.DayLog;
+import com.jakeporter.WellbeingTracker.entities.DayLog;
 import java.util.List;
 
 /**

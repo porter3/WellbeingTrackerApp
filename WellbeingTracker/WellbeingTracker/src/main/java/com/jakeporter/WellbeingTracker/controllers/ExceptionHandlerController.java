@@ -20,9 +20,9 @@ import org.springframework.web.context.request.WebRequest;
 
 @ControllerAdvice
 @RestController
-public class ExceptionHandler {
+public class ExceptionHandlerController {
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(InvalidUsernameException.class)
+    @ExceptionHandler(InvalidUsernameException.class)
     // WebRequest: generic interface for a web request
     public final ResponseEntity<Error> handleInvalidUsernameException(InvalidUsernameException e, WebRequest request){
         Error error = new Error();
@@ -30,35 +30,35 @@ public class ExceptionHandler {
         return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
     }
     
-    @org.springframework.web.bind.annotation.ExceptionHandler(InvalidPasswordException.class)
+    @ExceptionHandler(InvalidPasswordException.class)
     public final ResponseEntity<Error> handleInvalidPasswordException(InvalidPasswordException e, WebRequest request){
         Error error = new Error();
         error.setMessage(e.getMessage());
         return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
     }
     
-    @org.springframework.web.bind.annotation.ExceptionHandler(InvalidEmailException.class)
+    @ExceptionHandler(InvalidEmailException.class)
     public final ResponseEntity<Error> handleInvalidEmailException(InvalidEmailException e, WebRequest request){
         Error error = new Error();
         error.setMessage(e.getMessage());
         return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
     }
     
-    @org.springframework.web.bind.annotation.ExceptionHandler(InvalidMetricTypeException.class)
+    @ExceptionHandler(InvalidMetricTypeException.class)
     public final ResponseEntity<Error> handleInvalidMetricTypeException(InvalidMetricTypeException e, WebRequest request){
         Error error = new Error();
         error.setMessage(e.getMessage());
         return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
     }
     
-    @org.springframework.web.bind.annotation.ExceptionHandler(InvalidEntryException.class)
+    @ExceptionHandler(InvalidEntryException.class)
     public final ResponseEntity<Error> handleInvalidEntryException(InvalidMetricTypeException e, WebRequest request){
         Error error = new Error();
         error.setMessage(e.getMessage());
         return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
     }
     
-    @org.springframework.web.bind.annotation.ExceptionHandler(DataAccessException.class)
+    @ExceptionHandler(DataAccessException.class)
     public final ResponseEntity<Error> handleDataAccessException(DataAccessException e, WebRequest request){
         Error error = new Error();
         error.setMessage("Something you're looking for doesn't exist.");

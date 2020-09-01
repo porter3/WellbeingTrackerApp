@@ -1,11 +1,10 @@
-package com.jakeporter.WellbeingTrackerAPI.security;
+package com.jakeporter.WellbeingTracker.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
  */
 
 @Configuration
-//@EnableWebSecurity // enables Spring Security's web security support and provides Spring MVC integration
+@EnableWebSecurity // enables Spring Security's web security support and provides Spring MVC integration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
     // Get rid of explicit constructor and use factory method once switched to Java 11
@@ -36,29 +35,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Autowired
     UserDetailsService userDetails;
     
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .csrf().disable()
-//                .authorizeRequests()
-//                    .antMatchers("/admin").hasRole("ADMIN")
-//                    .antMatchers("/", "/home", "/signup", "/logout", "/adduser", "/api/*").permitAll()
-//                    .antMatchers("/css/**", "/js/**", "/fonts/**", "/assets/**").permitAll()
-//                    .anyRequest().hasRole("USER")
-//                .and()
-//                .formLogin()
-//                    .loginPage("/login")
-//                    .failureUrl("/login?login_error=1")
-//                    .permitAll()
-//                .and()
-//                .logout()
-//                    .logoutSuccessUrl("/")
-//                    .permitAll();
-//    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/").permitAll();
+        http
+                .authorizeRequests()
+                    .antMatchers("/admin").hasRole("ADMIN")
+                    .antMatchers("/", "/home", "/signup", "/logout", "/adduser", "/api/*").permitAll()
+                    .antMatchers("/css/**", "/js/**", "/fonts/**", "/assets/**").permitAll()
+                    .anyRequest().hasRole("USER")
+                .and()
+                .formLogin()
+                    .loginPage("/login")
+                    .failureUrl("/login?login_error=1")
+                    .permitAll()
+                .and()
+                .logout()
+                    .logoutSuccessUrl("/")
+                    .permitAll();
     }
     
     @Autowired

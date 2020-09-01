@@ -9,12 +9,12 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.jakeporter</groupId>
-	<artifactId>WellbeingTrackerAPI</artifactId>
+	<artifactId>WellbeingTracker</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>WellbeingTrackerAPI</name>
+	<name>WellbeingTracker</name>
 	<description>Demo project for Spring Boot</description>
 
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<profiles>
 		<profile>
@@ -42,13 +42,6 @@
 	</profiles>
 
 	<dependencies>
-
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-starter-tomcat</artifactId>-->
-<!--			<scope>provided</scope>-->
-<!--		</dependency>-->
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
@@ -112,50 +105,10 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>com.jakeporter.WellbeingTrackerAPI.WellBeingTrackerApiApplication</mainClass>
+							<mainClass>com.jakeporter.WellbeingTracker.App</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>com.github.eirslett</groupId>
-				<artifactId>frontend-maven-plugin</artifactId>
-				<version>1.6</version>
-				<configuration>
-					<workingDirectory>frontend</workingDirectory>
-					<installDirectory>target</installDirectory>
-				</configuration>
-				<executions>
-					<execution>
-						<id>install node and npm</id>
-						<goals>
-							<goal>install-node-and-npm</goal>
-						</goals>
-						<configuration>
-							<nodeVersion>v8.9.4</nodeVersion>
-							<npmVersion>5.6.0</npmVersion>
-						</configuration>
-					</execution>
-					<execution>
-						<id>npm install</id>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						<configuration>
-							<arguments>install</arguments>
-						</configuration>
-					</execution>
-					<execution>
-						<id>npm run build</id>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						<configuration>
-							<arguments>run build</arguments>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
