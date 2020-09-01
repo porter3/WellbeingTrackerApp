@@ -1,0 +1,61 @@
+label{
+    margin-top: 8px;
+}
+
+#content{
+    margin-top: 15px;
+}
+
+.metricInput{
+    width: 100px !important;
+}
+
+.btn-info, .btn-info:hover, .btn-info:active, .btn-info:visited {
+    background-color: #283F3B !important;
+}
+
+#dateDisplay{
+    font-size: x-large;
+    margin-left: 30px;
+}
+
+#dateButtons{
+    margin-left: 40px;
+}
+
+#saveChangesButton{
+    margin-top: 20px;
+    margin-left: 26px;
+}
+
+#saveChangesButton:hover{
+    background-color: black;
+    color: white;
+}
+
+
+/* back and forward buttons */
+
+.selector {
+text-decoration: none;
+display: inline-block;
+padding: 8px 16px;
+background-color: #333C3C;
+color: #fff;
+border-radius: 50%;
+}
+
+.selector:visited{
+    background-color: #333C3C;
+    color: #fff;
+}
+
+.selector:hover {
+background-color: #fafafa;
+color: #333C3C;
+border-radius: 60%
+}
+.form-control:focus {
+    border: 1px solid #333C3C;
+    box-shadow: 0 0 0 0.2rem #333C3C;
+}

@@ -1,0 +1,30 @@
+#header{
+    margin: 20px 0px;
+}
+
+.subtypeHeader{
+    margin-top: 30px;
+}
+
+.item:hover{
+    background-color: black;
+    color: white;
+}
+
+#content{
+    margin-top: 40px;
+}
+
+#addButtonRow{
+    margin-bottom: 30px;
+}
+
+#addMetricsButton{
+    width: 140px;
+    height: 50px;
+}
+
+#addMetricsButton:hover{
+    background-color: black;
+    color: white;
+}

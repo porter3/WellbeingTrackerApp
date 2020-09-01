@@ -1,0 +1,76 @@
+.wrapper {
+    display: flex;
+    align-items: stretch;
+}
+
+#sidebar { /* means the sidebar is visible on desktops */
+    min-width: 250px;
+    max-width: 250px;
+    min-height: 100vh;
+}
+
+#sidebar {
+    margin-left: -250px;
+}
+#sidebar.active {
+    margin-left: 0;
+}
+
+@import "https://fonts.googleapis.com/css?family=Source+Code+Pro:200&display=swap";
+
+body {
+    font-family: 'Source Code Pro', monospace;
+    background: #fafafa;
+}
+
+a, a:hover, a:focus, .sidebarLink, .sidebarLink:hover, .sidebarLink:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.btn-info, .btn-info:hover, .btn-info:active, .btn-info:visited {
+    background-color: #000000 !important;
+}
+
+#sidebar {
+    /* don't forget to add all the previously mentioned styles here too */
+    background: #333C3C;
+    color: #fff;
+    transition: all 0.3s;
+}
+
+#sidebar .sidebar-header {
+    padding: 20px;
+    background: #333C3C;
+}
+
+#sidebar ul.components {
+    padding: 20px 0;
+    border-bottom: 1px solid #97B4B2;
+}
+
+#sidebar ul p {
+    color: #fff;
+    padding: 10px;
+}
+
+#sidebar ul li a {
+    padding: 10px;
+    font-size: 1.1em;
+    display: block;
+}
+#sidebar ul li a:hover {
+    color: #333C3C;
+    background: #fff;
+}
+
+#sidebar ul li.active > a, a[aria-expanded="true"] {
+    color: #fff;
+    background: #586F7C;
+}
+ul ul a {
+    font-size: 0.9em !important;
+    padding-left: 30px !important;
+    background: #628D80;
+}

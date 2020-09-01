@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en"
+xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <script src="https://kit.fontawesome.com/37225b9be6.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" type="text/css">
+        <link rel="stylesheet" href="css/signUp.css" type="text/css">
+
+        <title>the well-being tracker</title>
+    </head>
+    <body>
+        <div class="container">
+            <div class="text-center">
+                <h3>sign up</h3>
+            </div>
+            <div id="formRow" class="row">
+                <div class="col-md-6">
+                    <form method="POST" action="adduser">
+                        <div class="form-group">
+                            <label for="email">email</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="firstName">first name</label>
+                            <input type="text" class="form-control" id="firstName" name="firstName" placeholder="first name">
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">last name</label>
+                            <input type="text" class="form-control" id="lastName" name="lastName" placeholder="last name">
+                        </div>
+                        <div class="form-group" id="usernameGroup">
+                            <label for="username">username</label>
+                            <input type="text" class="form-control" id="username" name="username" placeholder="username" onfocusout="usernameAlert()">
+                            <small hidden id="usernameError" class="text-danger">
+                                username is already taken
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">password</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="password">
+                            <small hidden id="passwordError" class="text-danger">
+                                password must be between 8-50 characters, as well as contain at least 1 uppercase letter, 1 lowercase letter, and 1 number
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">confirm password</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="confirm password">
+                            <small hidden id="confirmPasswordError" class="text-danger">
+                                passwords do not match
+                            </small>
+                        </div> 
+                        <div class="form-group">
+                            <label for="timeZone">time zone</label>
+                            <select class="form-control" id="timeZone" name="timeZone">
+                                <option value="-12:00">(GMT -12:00) Eniwetok, Kwajalein</option>
+                                <option value="-11:00">(GMT -11:00) Midway Island, Samoa</option>
+                                <option value="-10:00">(GMT -10:00) Hawaii</option>
+                                <option value="-09:50">(GMT -9:30) Taiohae</option>
+                                <option value="-09:00">(GMT -9:00) Alaska</option>
+                                <option value="-08:00">(GMT -8:00) Pacific Time (US &amp; Canada)</option>
+                                <option value="-07:00">(GMT -7:00) Mountain Time (US &amp; Canada)</option>
+                                <option value="-06:00">(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
+                                <option value="-05:00" selected>(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
+                                <option value="-04:50">(GMT -4:30) Caracas</option>
+                                <option value="-04:00">(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</option>
+                                <option value="-03:50">(GMT -3:30) Newfoundland</option>
+                                <option value="-03:00">(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
+                                <option value="-02:00">(GMT -2:00) Mid-Atlantic</option>
+                                <option value="-01:00">(GMT -1:00) Azores, Cape Verde Islands</option>
+                                <option value="+00:00">(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
+                                <option value="+01:00">(GMT +1:00) Brussels, Copenhagen, Madrid, Paris</option>
+                                <option value="+02:00">(GMT +2:00) Kaliningrad, South Africa</option>
+                                <option value="+03:00">(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</option>
+                                <option value="+03:50">(GMT +3:30) Tehran</option>
+                                <option value="+04:00">(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</option>
+                                <option value="+04:50">(GMT +4:30) Kabul</option>
+                                <option value="+05:00">(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
+                                <option value="+05:50">(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</option>
+                                <option value="+05:75">(GMT +5:45) Kathmandu, Pokhara</option>
+                                <option value="+06:00">(GMT +6:00) Almaty, Dhaka, Colombo</option>
+                                <option value="+06:50">(GMT +6:30) Yangon, Mandalay</option>
+                                <option value="+07:00">(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
+                                <option value="+08:00">(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</option>
+                                <option value="+08:75">(GMT +8:45) Eucla</option>
+                                <option value="+09:00">(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</option>
+                                <option value="+09:50">(GMT +9:30) Adelaide, Darwin</option>
+                                <option value="+10:00">(GMT +10:00) Eastern Australia, Guam, Vladivostok</option>
+                                <option value="+10:50">(GMT +10:30) Lord Howe Island</option>
+                                <option value="+11:00">(GMT +11:00) Magadan, Solomon Islands, New Caledonia</option>
+                                <option value="+11:50">(GMT +11:30) Norfolk Island</option>
+                                <option value="+12:00">(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
+                                <option value="+12:75">(GMT +12:45) Chatham Islands</option>
+                                <option value="+13:00">(GMT +13:00) Apia, Nukualofa</option>
+                                <option value="+14:00">(GMT +14:00) Line Islands, Tokelau</option>
+                            </select>
+                        </div>
+                        <input type="hidden"                        
+                            th:name="${_csrf.parameterName}"
+                            th:value="${_csrf.token}"/>
+                        <button id="submitButton" type="submit" class="btn btn-outline-dark">sign up</button>
+                    </form>
+                </div>
+                <div class="col-md-4 offset-md-2 errors">
+                    <p class="alert-danger rounded"
+                    th:each="violation : ${violations}"
+                    th:text="${violation}"></p>
+                </div>
+            </div>
+
+            
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <script src="js/signUp.js"></script>
+    </body>
+</html>
